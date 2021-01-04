@@ -239,18 +239,17 @@ function gameIO() {
       drawObjects: function () {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-        /*
         game.objects.forEach(obj => {
-          if (obj.type === 'object') {
-            if (obj.objType !== 0) return;
-            if (obj.subObjType === 0) return
+          if (obj.type === 'bullet') {
+            ////if (obj.objType !== 0) return;
+            ////if (obj.subObjType === 0) return
             this.ctx.beginPath();
             this.ctx.fillStyle = "#000";
             this.ctx.arc(this.c.width - 250 / this.ratio + obj.visual.position.x / 10 / this.ratio, this.c.height - 300 / this.ratio + obj.visual.position.y / 10 / this.ratio, 5 / this.ratio, 0, 2 * Math.PI);
             this.ctx.fill();
           }
         });
-        */
+
       },
       drawGrid: function () {
         this.ctx.strokeStyle = "#000000";
@@ -342,7 +341,7 @@ function gameIO() {
       parent: null,
       objects: [],
       belowObjects: [],
-      add: function (object, scale, drawLayer) {
+      add: function (object, drawLayer, scale) {
         if (object.parent != null) {
           console.log("You can only have 1 parent per object");
           console.log(object);
@@ -397,18 +396,20 @@ function gameIO() {
       }
     }
   }
-  game.image = function (image, x, y, width, height, opacity) {
+  game.image = function (image, x, y, width, height, opacity, offsetX, offsetY) {
     var element = new game.object();
     element.image = image || null;
     element.position = new game.Vector2(x || 0, y || 0);
     element.width = width || 100;
     element.height = height || 100;
+    element.offsetX = offsetX || 0;
+    element.offsetY = offsetY || 0;
     element.opacity = opacity || 1;
     element.type = "image";
     element.renderSpecific = function (ctx, ratio) {
       try {
         ctx.rotate(1.5708);
-        ctx.drawImage(this.image, -this.width / 2 / ratio, -this.height / 2 / ratio, this.width / ratio, this.height / ratio);
+        ctx.drawImage(this.image, ((-this.width / 2) + this.offsetX) / ratio, ((-this.height / 2) + this.offsetY) / ratio, this.width / ratio, this.height / ratio);
         ctx.rotate(-1.5708);
       } catch (e) {
       }
@@ -1062,6 +1063,7 @@ function gameIO() {
         drawLayer: packet.drawLayer
       };
       if (obj.type === "player") obj.cannon = new game.object();
+      if (obj.type === "player") obj.turrets = [];
       if (packet.objType !== undefined) obj.objType = packet.objType;
       if (packet.subObjType !== undefined) obj.subObjType = packet.subObjType;
       if (game.types[packet.b] === undefined) {
@@ -1077,7 +1079,13 @@ function gameIO() {
         obj.cannon.position.y = obj.new.position.y;
         obj.cannon.cannon = obj.new.mouseAngle;
       }
-
+      if (obj.turrets !== undefined) {
+        obj.turrets.forEach(turret => {
+          turret.position.x = obj.new.position.x;
+          turret.position.y = obj.new.position.y;
+          turret.rotation = obj.new.mouseAngle + turret.offsetAngle;
+        });
+      }
       game.objects.push(obj);
       return;
     },
@@ -1141,6 +1149,9 @@ function gameIO() {
             game.objects[i].visual.parent.remove(game.objects[i].visual);
           if (game.objects[i].cannon != null) if (game.objects[i].cannon.parent != null)
             game.objects[i].cannon.parent.remove(game.objects[i].cannon);
+          if (game.objects[i].turrets != null) game.objects[i].turrets.forEach(turret => {
+            if (turret != null) turret.parent.remove(turret);
+          });
           game.objects.splice(i, 1);
           break;
         }
@@ -1212,6 +1223,9 @@ function gameIO() {
           game.objects[i].visual.parent.remove(game.objects[i].visual);
         if (game.objects[i].cannon != null) if (game.objects[i].cannon.parent != null)
           game.objects[i].cannon.parent.remove(game.objects[i].cannon);
+        if (game.objects[i].turrets != null) game.objects[i].turrets.forEach(turret => {
+          if (turret.parent != null) turret.parent.remove(turret);
+        });
         game.objects.splice(i, 1);
       }
     }
@@ -1235,6 +1249,13 @@ function gameIO() {
         obj.cannon.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
         obj.cannon.position.y = game.lerp(obj.old.position.y, obj.new.position.y);
         obj.cannon.rotation = game.lerp(obj.old.mouseAngle, obj.new.mouseAngle);
+      }
+      if (obj.turrets !== undefined) {
+        obj.turrets.forEach(turret => {
+          turret.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
+          turret.position.y = game.lerp(obj.old.position.y, obj.new.position.y);
+          turret.rotation = game.lerp(obj.old.mouseAngle + turret.offsetAngle, obj.new.mouseAngle + turret.offsetAngle);
+        });
       }
       game.types[obj.type].tickUpdate(obj);
     }

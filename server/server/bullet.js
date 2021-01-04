@@ -8,17 +8,24 @@ let bullets = [
     },
     {   //* SHOTGUN PELLET
         type: 1,
-        damage: 2,
-        extraSpeed: 1,
-        extraLifespan: 0.8,
+        damage: 1.5,
+        extraSpeed: 0.9,
+        extraLifespan: 0.6,
         scale: 0.6,
     },
     {   //* SNIPER BULLET
         type: 2,
         damage: 10,
-        extraSpeed: 2.2,
+        extraSpeed: 2,
         extraLifespan: 2,
-        scale: 1.2,
+        scale: 1,
+    },
+    {   //* MACHINE GUN PELLET
+        type: 3,
+        damage: 4,
+        extraSpeed: 1,
+        extraLifespan: 1,
+        scale: 0.8,
     },
 ]
 
@@ -43,9 +50,10 @@ game.addType(
         obj.damage = bulletProps.damage;
 
         obj.extraSpeed = bulletProps.extraSpeed;
+        if (obj.bulletType === 1) obj.extraSpeed = obj.extraSpeed * 0.7 + obj.extraSpeed * Math.random();
 
         obj.ownerID = extra.ownerID;
-        obj.body.position = [extra.pos[0] - Math.cos(obj.body.angle) * 20, extra.pos[1] - Math.sin(obj.body.angle) * 20];
+        obj.body.position = extra.pos//[extra.pos[0] - Math.cos(obj.body.angle) * 20, extra.pos[1] - Math.sin(obj.body.angle) * 20];
         obj.needsUpdate = true;
     },
     // Tick Update

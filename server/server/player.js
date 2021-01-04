@@ -67,30 +67,34 @@ let tankProps = [
     ],
 ]
 
+let turretsPrefabs = [];
+
 game.addType(
     // Type
     "player",
     // Create
     function (obj, extra) {
+        //@ Body and basics
         obj.body = new game.body(0.8);
         obj.body.position = [1500, 1500];
         obj.body.type = 1;
 
         //!TANK
         obj.health = 100;
-        obj.tank = 0;
-        obj.tier = 0;
+        obj.tank = 1;
+        obj.tier = 2;
 
         obj.tank === 0 ? obj.tier = 0 : null;
         obj.props = tankProps[obj.tank][obj.tier];
 
         //!SHOOTING
+        obj.turrets = [{ type: 2 }]
+        //obj.turrets = [{ type: 2, offsetX: -10, offsetY: -5, offsetAngle: Math.PI / 12 }, { type: 2, offsetX: 10, offsetY: -5, offsetAngle: -Math.PI / 12 }, { type: 2, offsetX: -6, offsetY: 0, offsetAngle: Math.PI / 16 }, { type: 2, offsetX: 6, offsetY: 0, offsetAngle: -Math.PI / 16 }, { type: 2, offsetX: 0, offsetY: 10, offsetAngle: 0 }];
         obj.shootCooldown = 0;
         obj.maxCooldown = 5;
 
         //? Others
         obj.body.addShape(new game.rectangle(obj.props.hitbox.h * DEFAULT_SCALE * obj.props.tankSize, obj.props.hitbox.w * DEFAULT_SCALE * obj.props.tankSize));
-
         obj.body.damping = 0.9;
         obj.direction = 0;
         obj.playerInput = new game.playerInput();
@@ -132,6 +136,8 @@ game.addType(
         packet.h = obj.body.shapes[0].height;
         packet.scale = obj.props.tankSize;
         packet.angle = obj.playerMouse.angle;
+
+        packet.turrets = obj.turrets;
     }
 );
 
@@ -166,7 +172,52 @@ const handleMovement = (obj) => {
 
 const shoot = (obj) => {
     if (obj.shootCooldown === 0) {
-        game.create("bullet", { type: 2, pos: obj.body.position, angle: obj.playerMouse.angle, velocity: obj.body.velocity, ownerID: obj.id });
+        obj.turrets.forEach(turret => {
+            let offsetX = turret.offsetX || 0;
+            let offsetY = turret.offsetY || 0;
+            let offsetAngle = turret.offsetAngle || 0;
+
+            let newAngle;
+            let distance;
+            let turretAngle;
+            let angleScale = 3.1;
+            let finalPosition
+            let bulletAngle;
+            switch (turret.type) {
+                case 1:
+                    newAngle = 2 * Math.PI - obj.playerMouse.angle;
+                    distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
+                    turretAngle = Math.atan2(-offsetY, offsetX);
+                    finalPosition = {
+                        x: Math.sin(newAngle + turretAngle) * distance,
+                        y: Math.cos(newAngle + turretAngle) * distance
+                    }
+                    bulletAngle = obj.playerMouse.angle + offsetAngle;
+
+                    for (let i = 0; i < 6; i++) {
+                        let spread = Math.random() * (Math.PI / 8);
+                        let sign = (Math.random() > 0.5) ? 1 : -1;
+                        bulletAngle = bulletAngle - (spread * sign) / 2;
+                        game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
+                    }
+                    break;
+                default:
+                    newAngle = 2 * Math.PI - obj.playerMouse.angle;
+                    distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
+                    turretAngle = Math.atan2(-offsetY, offsetX);
+                    finalPosition = {
+                        x: Math.sin(newAngle + turretAngle) * distance,
+                        y: Math.cos(newAngle + turretAngle) * distance
+                    }
+                    bulletAngle = obj.playerMouse.angle + offsetAngle;
+                    game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
+                    break
+            }
+        });
+        /*
+            obj.body.velocity[0] = -Math.cos(obj.body.angle) * 600 * obj.extraSpeed;
+            obj.body.velocity[1] = -Math.sin(obj.body.angle) * 600 * obj.extraSpeed;
+        */
         obj.shootCooldown = obj.maxCooldown;
     }
 }

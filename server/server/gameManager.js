@@ -2,18 +2,23 @@
 const MAP_SIZE = 2000;
 const WALL_SIZE = 50;
 
+const TREE_COUNT = 40;
+const ROCK_COUNT = 10;
+
 game.create("wall", { x: MAP_SIZE / 2, y: -WALL_SIZE / 2, w: MAP_SIZE + WALL_SIZE * 2, h: WALL_SIZE });
 game.create("wall", { x: MAP_SIZE / 2, y: MAP_SIZE + WALL_SIZE / 2, w: MAP_SIZE + WALL_SIZE * 2, h: WALL_SIZE });
 game.create("wall", { x: -WALL_SIZE / 2, y: MAP_SIZE / 2, w: WALL_SIZE, h: MAP_SIZE + WALL_SIZE * 2 });
 game.create("wall", { x: MAP_SIZE + WALL_SIZE / 2, y: MAP_SIZE / 2, w: WALL_SIZE, h: MAP_SIZE + WALL_SIZE * 2 });
 
+const TYPE_TREE = 0, TYPE_ROCK = 1;
+
 //*Spawnables
-for (let i = 0; i < 60; i++) {
-    game.create("object", [0]);
+for (let i = 0; i < TREE_COUNT; i++) {
+    game.create("object", [TYPE_TREE]);
 }
 
-for (let i = 0; i < 20; i++) {
-    game.create("object", [1]);
+for (let i = 0; i < ROCK_COUNT; i++) {
+    game.create("object", [TYPE_ROCK]);
 }
 
 // Disable any equations between the current passthrough body and the character

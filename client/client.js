@@ -7,19 +7,43 @@ window.onload = function () {
     var mouse = new game.mouse();
 
     const TYPE_TREE = 0, TYPE_ROCK = 1;
-    const BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2;
+    const BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, BULLET_MACHINEGUN = 3;
+    const TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, TURRET_MACHINEGUN = 3;
 
     game.addType(
         "player",
         function (obj, packet) {
+            obj.turrets = [];
             let tank = new Image();
             tank.src = `./client/images/tanks/${packet.tank}/${packet.tier}/tank.png`;
             obj.visual = new game.image(tank, 0, 0, 160 * packet.scale, 160 * packet.scale);
-            let cannon = new Image();
-            cannon.src = `./client/images/cannons/cannon.png`;
-            obj.cannon = new game.image(cannon, 0, 0, 220 * packet.scale, 220 * packet.scale);
             scene.add(obj.visual, 1);
+
+            let cannon = new Image();
+            cannon.src = `./client/images/cannons/default.png`;
+            obj.cannon = new game.image(cannon, 0, 0, 220 * packet.scale, 220 * packet.scale);
             scene.add(obj.cannon, 5);
+
+            packet.turrets.forEach(turret => {
+                let turretImg = new Image();
+                switch (turret.type) {
+                    case TURRET_DEFAULT:
+                        turretImg.src = `./client/images/turrets/default.png`;
+                        break;
+                    case TURRET_SHOTGUN:
+                        turretImg.src = `./client/images/turrets/shotgun.png`;
+                        break;
+                    case TURRET_SNIPER:
+                        turretImg.src = `./client/images/turrets/sniper.png`;
+                        break;
+                }
+                let turretObj = new game.image(turretImg, 0, 0, 220, 220);
+                turretObj.offsetX = turret.offsetX || 0;
+                turretObj.offsetY = turret.offsetY || 0;
+                turretObj.offsetAngle = turret.offsetAngle || 0;
+                obj.turrets.push(turretObj);
+                scene.add(turretObj, 3);
+            });
         }
     );
     game.addType(
@@ -63,9 +87,13 @@ window.onload = function () {
                 case BULLET_SNIPER:
                     bullet.src = `./client/images/bullets/sniper.png`;
                     break;
+                case BULLET_MACHINEGUN:
+                    bullet.src = `./client/images/bullets/shotgun.png`;
+                    break;
             }
             // obj.visual = new game.circle(packet.x, packet.y, 10 * packet.scale, "#000");
             obj.visual = new game.image(bullet, 0, 0, 30 * packet.scale, 30 * packet.scale);
+
             scene.add(obj.visual);
         }
     );
