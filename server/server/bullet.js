@@ -1,0 +1,92 @@
+let bullets = [
+    {   //* DEFAULT
+        type: 0,
+        damage: 5,
+        extraSpeed: 1,
+        extraLifespan: 1,
+        scale: 1,
+    },
+    {   //* SHOTGUN PELLET
+        type: 1,
+        damage: 2,
+        extraSpeed: 1,
+        extraLifespan: 0.8,
+        scale: 0.6,
+    },
+    {   //* SNIPER BULLET
+        type: 2,
+        damage: 10,
+        extraSpeed: 2.2,
+        extraLifespan: 2,
+        scale: 1.2,
+    },
+]
+
+game.addType(
+    // Type
+    "bullet",
+    // Create
+    function (obj, extra) {
+        //extra = { pos[], angle }
+        let bulletProps = bullets[extra.type];
+        obj.bulletType = bulletProps.type;
+        obj.scale = bulletProps.scale;
+
+        obj.body = new game.body(0);
+        obj.body.type = 5;
+        obj.body.angle = extra.angle;
+        obj.body.addShape(new game.circle(10 * obj.scale));
+
+        obj.lifespan = 0;
+        obj.lifespanCap = 40 * bulletProps.extraLifespan;
+
+        obj.damage = bulletProps.damage;
+
+        obj.extraSpeed = bulletProps.extraSpeed;
+
+        obj.ownerID = extra.ownerID;
+        obj.body.position = [extra.pos[0] - Math.cos(obj.body.angle) * 20, extra.pos[1] - Math.sin(obj.body.angle) * 20];
+        obj.needsUpdate = true;
+    },
+    // Tick Update
+    function (obj) {
+        handleMovement(obj);
+        obj.lifespan++;
+        if (obj.lifespan >= obj.lifespanCap) game.remove(obj);
+
+        obj.body.owner = obj;
+    },
+    // Packet Update
+    function (obj, packet) {
+        packet.angle = obj.body.angle;
+    },
+    // Add
+    function (obj, packet) {
+        packet.x = obj.body.position[0];
+        packet.y = obj.body.position[1];
+        packet.angle = obj.body.angle;
+        packet.bulletType = obj.bulletType;
+        packet.scale = obj.scale;
+    }
+);
+
+const handleMovement = (obj) => {
+    obj.body.velocity[0] = -Math.cos(obj.body.angle) * 600 * obj.extraSpeed;
+    obj.body.velocity[1] = -Math.sin(obj.body.angle) * 600 * obj.extraSpeed;
+}
+
+game.addCollision('bullet', 'object', (bullet, object) => {
+    game.remove(bullet);
+    object.health -= bullet.damage;
+});
+/*
+game.addCollision('bullet', 'wall', (bullet, wall) => {
+    game.remove(bullet);
+});
+*/
+game.addCollision('bullet', 'player', (bullet, player) => {
+    if (bullet.ownerID !== player.id) {
+        game.remove(bullet);
+        player.health -= bullet.damage;
+    }
+});
