@@ -8,10 +8,16 @@ app.get("/status", function (req, res) {
     res.send("ok");
 });
 
+let key = '6YHQLQxcPwtuqw7D9DnkhTfhrEH3swbk43wkp3FGDqdZjMHCYb';
+
 let pathToCheck = path.resolve("..", "client", "index.html");
 if (fs.existsSync(pathToCheck)) {
     app.use("/client", express.static(path.resolve("..", "client")));
     app.get("/", function (req, res) {
+        let pathToCheck = path.resolve("..", "client", "index2.html");
+        res.sendFile(pathToCheck);
+    });
+    app.get("/6YHQLQxcPwtuqw7D9DnkhTfhrEH3swbk43wkp3FGDqdZjMHCYb", function (req, res) {
         let pathToCheck = path.resolve("..", "client", "index.html");
         res.sendFile(pathToCheck);
     });

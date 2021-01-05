@@ -1,9 +1,11 @@
 body {
     overscroll-behavior-x: none;
     overscroll-behavior-y: none;
+    margin: 0px;
 }
 
 #menu {
+    font-family: Arial;
     position: absolute;
     text-align: center;
     display: flex;
@@ -13,10 +15,19 @@ body {
     right: 0;
     width: 100%;
     height: 100%;
-    background-color: #24409f;
+    background-image: url("https://media.discordapp.net/attachments/772187679294226452/796039773559062558/unknown.png?width=705&height=396");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#Menu {
+    font-size: 4rem;
+    text-align: center;
+    color: aliceblue;
 }
 
 #playMenu {
+    font-size: 60px;
     text-align: center;
     height: 100px;
 }

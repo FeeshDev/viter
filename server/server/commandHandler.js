@@ -1,5 +1,6 @@
 global.executeCommand = (userSelf, command, accessCode) => {
     let commandArray = command.split(':');
+    console.log(`Command "${command}" requested.`)
     switch (commandArray[0]) {
         case "tank":
             try {
