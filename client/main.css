@@ -5,7 +5,7 @@ body {
 }
 
 #menu {
-    font-family: Arial;
+    font-family: 'Montserrat', sans-serif;
     position: absolute;
     text-align: center;
     display: flex;
@@ -18,6 +18,10 @@ body {
     background-image: url("https://media.discordapp.net/attachments/772187679294226452/796039773559062558/unknown.png?width=705&height=396");
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+p {
+    font-size: 40px;
 }
 
 #Menu {
@@ -33,12 +37,17 @@ body {
 }
 
 #playButton {
+    font-family: 'Montserrat', sans-serif;
     margin-top: 10px;
     width: 200px;
     height: 60px;
+    font-size: 20px;
 }
 
 #nameInput {
+    text-indent: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
     margin-top: 10px;
     width: 200px;
     height: 60px;
