@@ -25,6 +25,7 @@ p {
 }
 
 #Menu {
+    display: flex;
     font-size: 4rem;
     text-align: center;
     color: aliceblue;
@@ -42,6 +43,9 @@ p {
     width: 200px;
     height: 60px;
     font-size: 20px;
+}
+#playButton:hover {
+    cursor: pointer;
 }
 
 #nameInput {
