@@ -111,6 +111,7 @@ game.addType(
         obj.playerInput = new game.playerInput();
         obj.needsUpdate = true;
         obj.playerMouse = { angle: 0 };
+        obj.startingTime = Date.now();
 
         obj.handleHitbox = () => {
             obj.props = tankProps[obj.tank][obj.tier];
@@ -135,7 +136,7 @@ game.addType(
         });
         if (obj.playerMouse.clicking) shoot(obj);
 
-        if (obj.health <= 0) { game.remove(obj); obj.type = 'spectator'; obj.death(); obj = undefined }
+        if (obj.health <= 0) { game.remove(obj); obj.type = 'spectator'; obj.death(obj.startingTime); obj = undefined }
     },
     // Packet Update
     function (obj, packet) {
