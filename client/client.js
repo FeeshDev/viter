@@ -1,4 +1,5 @@
 window.onload = function () {
+    //! Constants and vars
     var game = new gameIO();
     var renderer = new game.renderer();
     renderer.clearScreen = false;
@@ -10,17 +11,22 @@ window.onload = function () {
     const BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, BULLET_MACHINEGUN = 3;
     const TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, TURRET_MACHINEGUN = 3;
 
+    //#region Add types
     game.addType(
         "player",
         function (obj, packet) {
             obj.turrets = [];
+
+            obj.playerName = new game.text(packet.playerName, 0, 0, "#fff", "Arial", 26);
+            scene.add(obj.playerName, 2);
+
             let tank = new Image();
             tank.src = `./client/images/tanks/${packet.tank}/${packet.tier}/tank.png`;
             obj.visual = new game.image(tank, 0, 0, 160 * packet.scale, 160 * packet.scale);
             scene.add(obj.visual, 1);
 
             let cannon = new Image();
-            cannon.src = `./client/images/cannons/default.png`;
+            cannon.src = `./client/images/turrets/default.png`;
             obj.cannon = new game.image(cannon, 0, 0, 220 * packet.scale, 220 * packet.scale);
             scene.add(obj.cannon, 5);
 
@@ -28,13 +34,19 @@ window.onload = function () {
                 let turretImg = new Image();
                 switch (turret.type) {
                     case TURRET_DEFAULT:
-                        turretImg.src = `./client/images/turrets/default.png`;
+                        turretImg.src = `./client/images/cannons/default.png`;
                         break;
                     case TURRET_SHOTGUN:
-                        turretImg.src = `./client/images/turrets/shotgun.png`;
+                        turretImg.src = `./client/images/cannons/shotgun.png`;
                         break;
                     case TURRET_SNIPER:
-                        turretImg.src = `./client/images/turrets/sniper.png`;
+                        turretImg.src = `./client/images/cannons/sniper.png`;
+                        break;
+                    case TURRET_MACHINEGUN:
+                        turretImg.src = `./client/images/cannons/machinegun.png`;
+                        break;
+                    default:
+                        turretImg.src = `./client/images/cannons/default.png`;
                         break;
                 }
                 let turretObj = new game.image(turretImg, 0, 0, 220, 220);
@@ -97,6 +109,23 @@ window.onload = function () {
             scene.add(obj.visual);
         }
     );
+    //#endregion
+
+    //@ Others
+    const playGame = () => {
+        if (game.ws.readyState == 1)
+            game.currentPackets.push({ type: "playPacket", name: document.getElementById("nameInput").value });
+        document.getElementById("menu").style.display = "none";
+        main();
+    }
+
+    window.runCommand = (string) => {
+        if (game.ws.readyState == 1)
+            game.currentPackets.push({ type: "requestCommand", command: string, accessCode: localStorage["accessCode"] });
+    }
+
+    document.getElementById("playButton").onclick = () => playGame();
+
     game.packetFunctions["setID"] = function (packet) {
         for (var i = 0; i < game.objects.length; i++) {
             if (game.objects[i].id == packet.id) {
@@ -105,11 +134,11 @@ window.onload = function () {
         }
         scene.camera.position = game.me.visual.position;
     };
+
     game.createSocket("ws://localhost:80/ws");
-    window.crateSock = (sock) => {
-        game.createSocket(sock);
-    }
-    function main() {
+
+    //! Main Loop
+    const main = () => {
         if (controls.changed) {
             controls.changed = false;
             if (game.ws.readyState == 1)
@@ -131,5 +160,4 @@ window.onload = function () {
         renderer.drawObjects();
         requestFrame(main);
     }
-    main();
 }

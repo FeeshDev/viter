@@ -22,10 +22,10 @@ let bullets = [
     },
     {   //* MACHINE GUN PELLET
         type: 3,
-        damage: 4,
+        damage: 2.5,
         extraSpeed: 1,
         extraLifespan: 1,
-        scale: 0.8,
+        scale: 0.65,
     },
 ]
 
@@ -87,11 +87,11 @@ game.addCollision('bullet', 'object', (bullet, object) => {
     game.remove(bullet);
     object.health -= bullet.damage;
 });
-/*
+
 game.addCollision('bullet', 'wall', (bullet, wall) => {
     game.remove(bullet);
 });
-*/
+
 game.addCollision('bullet', 'player', (bullet, player) => {
     if (bullet.ownerID !== player.id) {
         game.remove(bullet);

@@ -27,6 +27,7 @@ game.addType(
         obj.props = objects[obj.objType];
 
         obj.health = obj.props.health ? obj.props.health : 100;
+        obj.maxHealth = obj.props.health ? obj.props.health : 100;
 
         obj.body = new game.body(0);
         obj.body.type = obj.props.bodyType;
@@ -40,17 +41,33 @@ game.addType(
 
         obj.needsUpdate = true;
 
+        /* //! GLOBAL DISPLAY CODE
+        if (obj.objType === 0) if (obj.subObjType === 1) game.globalCoords.push({ t: "g", i: obj.id, pos: { x: obj.body.position[0], y: obj.body.position[1] } });
+        if (obj.objType === 0) if (obj.subObjType === 1) game.broadcast({ t: "g", i: obj.id, pos: { x: obj.body.position[0], y: obj.body.position[1] } });
+        */
     },
     // Tick Update
     function (obj) {
-        if (obj.health <= 0) game.remove(obj);
+        if (obj.health <= 0) {
+            /* //! GLOBAL DISPLAY CODE
+            for (let i = 0; i < game.globalCoords.length; i++) {
+                let element = game.globalCoords[i];
+                if (element.i === obj.id) game.globalCoords.splice(i, 1);
+            }
+
+            if (obj.objType === 0) if (obj.subObjType === 1) game.broadcast({ t: "h", i: obj.id });
+            */
+            game.remove(obj)
+        };
     },
     // Packet Update
     function (obj, packet) {
-        //if (obj.objType === 0) if (obj.subObjType === 1) game.broadcast({ t: "g", obj: { x: obj.body.position[0], y: obj.body.position[1] } });
+        packet.health = obj.health;
     },
     // Add
     function (obj, packet) {
+        packet.maxHealth = obj.maxHealth;
+        packet.health = obj.health;
         packet.objType = obj.objType;
         if (obj.subObjType > -1) packet.subObjType = obj.subObjType;
         packet.scale = obj.scale;

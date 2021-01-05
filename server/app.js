@@ -29,23 +29,29 @@ global.getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+game.globalCoords = [];
+
 //* REQUIREMENTS
 require("./server/object.js");
 require("./server/player.js");
 require("./server/wall.js");
 require("./server/bullet.js");
 require("./server/gameManager.js")
+require("./server/commandHandler.js")
 
 //! WEBSOCKET EVENTS
 game.wsopen = function (ws) {
     console.log("Client Connected");
+    ws.self = game.create("spectator");
+    /*
     if (ws.self === undefined || ws.self.type == "spectator") {
         ws.self = game.create("player");
-    }
+        //!ws.currentPackets.push({ type: "i", list: game.globalCoords })
+    }*/
 }
 
 game.wsclose = function (ws) {
-    game.remove(ws.self);
+    if (ws.self) game.remove(ws.self);
 }
 
 //@ PACKETS
@@ -64,6 +70,27 @@ game.addPacketType(
         if (ws.self !== undefined) {
             ws.self.playerMouse = packet.object;
         }
+    }
+);
+
+game.addPacketType(
+    "playPacket",
+    function (packet, ws) {
+        if (ws.self === undefined || ws.self.type == "spectator") {
+            if (ws.self.type == "spectator") game.remove(ws.self);
+            let playerName = packet.name != "" ? packet.name : "viter.io";
+            ws.self = game.create("player", { name: playerName });
+            ws.self.death = () => {
+                ws.currentPackets.push({ type: "d" })
+            }
+        }
+    }
+);
+
+game.addPacketType(
+    "requestCommand",
+    function (packet, ws) {
+        executeCommand(ws.self, packet.command, packet.accessCode);
     }
 );
 /*game.addPacketType(

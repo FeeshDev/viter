@@ -67,7 +67,17 @@ let tankProps = [
     ],
 ]
 
-let turretsPrefabs = [];
+let turrets = [
+    [{ type: 0, turretCD: 0, turretMaxCD: 10 }], //* Default
+    [{ type: 1, turretCD: 0, turretMaxCD: 15 }], //* Shotgun
+    [{ type: 2, turretCD: 0, turretMaxCD: 20 }], //* Sniper
+    [{ type: 3, turretCD: 0, turretMaxCD: 3 }], //* Machine Gun
+    [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }], //* Twin
+    [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Triplet
+    [{ type: 1, turretCD: 0, turretMaxCD: 10, offsetX: -4, offsetAngle: Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetX: 4, offsetAngle: -Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Shotgun Triplet
+    [{ type: 2, turretCD: 0, turretMaxCD: 10, offsetX: -20, offsetAngle: -Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetX: 20, offsetAngle: Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Focused Sniper
+    [{ type: 3, turretCD: 0, turretMaxCD: 2, offsetY: 20 }, { type: 3, turretCD: 0, turretMaxCD: 2 }] //* Sprayer
+]
 
 game.addType(
     // Type
@@ -78,20 +88,21 @@ game.addType(
         obj.body = new game.body(0.8);
         obj.body.position = [1500, 1500];
         obj.body.type = 1;
+        obj.name = extra.name.slice(0, 20);
 
         //!TANK
         obj.health = 100;
-        obj.tank = 1;
-        obj.tier = 2;
+        obj.maxHealth = 100;
+        obj.tank = 0;
+        obj.tier = 0;
 
         obj.tank === 0 ? obj.tier = 0 : null;
         obj.props = tankProps[obj.tank][obj.tier];
 
         //!SHOOTING
-        obj.turrets = [{ type: 2 }]
+        obj.turretIndex = 1;
+        obj.turrets = turrets[obj.turretIndex];
         //obj.turrets = [{ type: 2, offsetX: -10, offsetY: -5, offsetAngle: Math.PI / 12 }, { type: 2, offsetX: 10, offsetY: -5, offsetAngle: -Math.PI / 12 }, { type: 2, offsetX: -6, offsetY: 0, offsetAngle: Math.PI / 16 }, { type: 2, offsetX: 6, offsetY: 0, offsetAngle: -Math.PI / 16 }, { type: 2, offsetX: 0, offsetY: 10, offsetAngle: 0 }];
-        obj.shootCooldown = 0;
-        obj.maxCooldown = 5;
 
         //? Others
         obj.body.addShape(new game.rectangle(obj.props.hitbox.h * DEFAULT_SCALE * obj.props.tankSize, obj.props.hitbox.w * DEFAULT_SCALE * obj.props.tankSize));
@@ -100,10 +111,18 @@ game.addType(
         obj.playerInput = new game.playerInput();
         obj.needsUpdate = true;
         obj.playerMouse = { angle: 0 };
+
+        obj.handleHitbox = () => {
+            obj.props = tankProps[obj.tank][obj.tier];
+            obj.body.shapes[0] = new game.rectangle(obj.props.hitbox.h * DEFAULT_SCALE * obj.props.tankSize, obj.props.hitbox.w * DEFAULT_SCALE * obj.props.tankSize);
+        }
+
+        obj.updateTurrets = () => {
+            obj.turrets = turrets[obj.turretIndex];
+        }
     },
     // Tick Update
     function (obj) {
-        obj.shootCooldown <= 0 ? null : obj.shootCooldown--
         //obj.health = Math.max(Math.min(obj.health + 0.1, 100), 0);
         obj.body.angularVelocity = 0;
         obj.body.angularForce = 0;
@@ -111,25 +130,26 @@ game.addType(
         obj.body.angle = obj.direction * (Math.PI / 180);
         handleMovement(obj);
 
+        obj.turrets.forEach(turret => {
+            if (turret.turretCD > 0) turret.turretCD--;
+        });
         if (obj.playerMouse.clicking) shoot(obj);
 
-        if (obj.health <= 0) {
-            game.clients.forEach(client => {
-                if (client.self.id === obj.id) {
-                    game.remove(client.self);
-                    client.self = game.create('player');
-                }
-            });
-        }
+        if (obj.health <= 0) { game.remove(obj); obj.type = 'spectator'; obj.death(); obj = undefined }
     },
     // Packet Update
     function (obj, packet) {
+        packet.health = obj.health;
         packet.tank = obj.tank;
         packet.tier = obj.tier;
         packet.angle = obj.playerMouse.angle;
+
+        packet.turrets = obj.turrets;
     },
     // Add
     function (obj, packet) {
+        packet.health = obj.health;
+        packet.maxHealth = 100;
         packet.tank = obj.tank;
         packet.tier = obj.tier;
         packet.w = obj.body.shapes[0].width;
@@ -138,6 +158,7 @@ game.addType(
         packet.angle = obj.playerMouse.angle;
 
         packet.turrets = obj.turrets;
+        packet.playerName = obj.name;
     }
 );
 
@@ -171,53 +192,63 @@ const handleMovement = (obj) => {
 }
 
 const shoot = (obj) => {
-    if (obj.shootCooldown === 0) {
-        obj.turrets.forEach(turret => {
-            let offsetX = turret.offsetX || 0;
-            let offsetY = turret.offsetY || 0;
-            let offsetAngle = turret.offsetAngle || 0;
+    obj.turrets.forEach(turret => {
+        if (turret.turretCD !== 0) return;
+        let offsetX = turret.offsetX || 0;
+        let offsetY = turret.offsetY || 0;
+        let offsetAngle = turret.offsetAngle || 0;
 
-            let newAngle;
-            let distance;
-            let turretAngle;
-            let angleScale = 3.1;
-            let finalPosition
-            let bulletAngle;
-            switch (turret.type) {
-                case 1:
-                    newAngle = 2 * Math.PI - obj.playerMouse.angle;
-                    distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
-                    turretAngle = Math.atan2(-offsetY, offsetX);
-                    finalPosition = {
-                        x: Math.sin(newAngle + turretAngle) * distance,
-                        y: Math.cos(newAngle + turretAngle) * distance
-                    }
-                    bulletAngle = obj.playerMouse.angle + offsetAngle;
+        let newAngle;
+        let distance;
+        let turretAngle;
+        let angleScale = 3.1;
+        let finalPosition
+        let bulletAngle;
+        switch (turret.type) {
+            case 1:
+                newAngle = 2 * Math.PI - obj.playerMouse.angle;
+                distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
+                turretAngle = Math.atan2(-offsetY, offsetX);
+                finalPosition = {
+                    x: Math.sin(newAngle + turretAngle) * distance,
+                    y: Math.cos(newAngle + turretAngle) * distance
+                }
+                bulletAngle = obj.playerMouse.angle + offsetAngle;
 
-                    for (let i = 0; i < 6; i++) {
-                        let spread = Math.random() * (Math.PI / 8);
-                        let sign = (Math.random() > 0.5) ? 1 : -1;
-                        bulletAngle = bulletAngle - (spread * sign) / 2;
-                        game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
-                    }
-                    break;
-                default:
-                    newAngle = 2 * Math.PI - obj.playerMouse.angle;
-                    distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
-                    turretAngle = Math.atan2(-offsetY, offsetX);
-                    finalPosition = {
-                        x: Math.sin(newAngle + turretAngle) * distance,
-                        y: Math.cos(newAngle + turretAngle) * distance
-                    }
-                    bulletAngle = obj.playerMouse.angle + offsetAngle;
+                for (let i = 0; i < 6; i++) {
+                    let spread = Math.random() * (Math.PI / 8);
+                    let sign = (Math.random() > 0.5) ? 1 : -1;
+                    bulletAngle = bulletAngle - (spread * sign) / 2;
                     game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
-                    break
-            }
-        });
-        /*
-            obj.body.velocity[0] = -Math.cos(obj.body.angle) * 600 * obj.extraSpeed;
-            obj.body.velocity[1] = -Math.sin(obj.body.angle) * 600 * obj.extraSpeed;
-        */
-        obj.shootCooldown = obj.maxCooldown;
-    }
+                }
+                break;
+            case 3:
+                newAngle = 2 * Math.PI - obj.playerMouse.angle;
+                distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
+                turretAngle = Math.atan2(-offsetY, offsetX);
+                finalPosition = {
+                    x: Math.sin(newAngle + turretAngle) * distance,
+                    y: Math.cos(newAngle + turretAngle) * distance
+                }
+                bulletAngle = obj.playerMouse.angle + offsetAngle;
+
+                let spread = Math.random() * (Math.PI / 4);
+                let sign = (Math.random() > 0.5) ? 1 : -1;
+                bulletAngle = bulletAngle - (spread * sign) / 2;
+                game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
+                break;
+            default:
+                newAngle = 2 * Math.PI - obj.playerMouse.angle;
+                distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
+                turretAngle = Math.atan2(-offsetY, offsetX);
+                finalPosition = {
+                    x: Math.sin(newAngle + turretAngle) * distance,
+                    y: Math.cos(newAngle + turretAngle) * distance
+                }
+                bulletAngle = obj.playerMouse.angle + offsetAngle;
+                game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
+                break
+        }
+        turret.turretCD = turret.turretMaxCD;
+    });
 }

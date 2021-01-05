@@ -172,10 +172,8 @@ function gameIO() {
   }
   game.renderer = function (canvas) {
     if (canvas === undefined) {
-      canvas = document.createElement("canvas");
-      canvas.id = "canvas"
+      canvas = document.getElementById('canvas');
       canvas.style.position = "absolute";
-      document.body.appendChild(canvas);
       document.body.style.margin = "0";
       document.body.style.padding = "0";
       document.body.style.overflow = "hidden";
@@ -239,17 +237,20 @@ function gameIO() {
       drawObjects: function () {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-        game.objects.forEach(obj => {
-          if (obj.type === 'bullet') {
-            ////if (obj.objType !== 0) return;
-            ////if (obj.subObjType === 0) return
-            this.ctx.beginPath();
-            this.ctx.fillStyle = "#000";
-            this.ctx.arc(this.c.width - 250 / this.ratio + obj.visual.position.x / 10 / this.ratio, this.c.height - 300 / this.ratio + obj.visual.position.y / 10 / this.ratio, 5 / this.ratio, 0, 2 * Math.PI);
-            this.ctx.fill();
-          }
+        /*
+        if (game.globalObjects === undefined) return;
+        game.globalObjects.forEach(obj => {
+          console.log(obj)
+          //if (obj.type === 'bullet') {
+          ////if (obj.objType !== 0) return;
+          ////if (obj.subObjType === 0) return
+          this.ctx.beginPath();
+          this.ctx.fillStyle = "#000";
+          this.ctx.arc(this.c.width - 250 / this.ratio + obj.pos.x / 10 / this.ratio, this.c.height - 300 / this.ratio + obj.pos.y / 10 / this.ratio, 5 / this.ratio, 0, 2 * Math.PI);
+          this.ctx.fill();
+          //}
         });
-
+        */
       },
       drawGrid: function () {
         this.ctx.strokeStyle = "#000000";
@@ -739,20 +740,20 @@ function gameIO() {
     element.type = "roundRectangle";
     element.strokeStyle = -1;
     element.lineWidth = 4;
-    /*element.renderSpecific = function( ctx, ratio ) {
+    element.renderSpecific = function (ctx, ratio) {
       ctx.fillStyle = this.color;
       ctx.beginPath();
-      ctx.moveTo( (-this.width/2+this.radius)*this.size/ratio, -this.height*this.size/2/ratio);
-      ctx.lineTo( (this.width/2-this.radius)*this.size/ratio, -this.height*this.size/2/ratio);
-      ctx.quadraticCurveTo( this.width*this.size/2/ratio, -this.height*this.size/2/ratio, this.width*this.size/2/ratio, (-this.height/2+this.radius)*this.size/ratio);
-      ctx.lineTo(this.width*this.size/2/ratio, (this.height/2-this.radius)*this.size/ratio);
-      ctx.quadraticCurveTo(this.width*this.size/2/ratio, this.height*this.size/2/ratio, (this.width/2-this.radius)*this.size/ratio, this.height*this.size/2/ratio);
-      ctx.lineTo((-this.width/2+this.radius)*this.size/ratio, this.height*this.size/2/ratio);
-      ctx.quadraticCurveTo(-this.width*this.size/2/ratio, this.height*this.size/2/ratio, -this.width*this.size/2/ratio, (this.height/2-this.radius)*this.size/ratio);
-      ctx.lineTo(-this.width*this.size/2/ratio, (-this.height/2+this.radius)*this.size/ratio);
-      ctx.quadraticCurveTo(-this.width*this.size/2/ratio, -this.height*this.size/2/ratio, (-this.width/2+this.radius)*this.size/ratio, -this.height*this.size/2/ratio);
+      ctx.moveTo((-this.width / 2 + this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
+      ctx.lineTo((this.width / 2 - this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
+      ctx.quadraticCurveTo(this.width * this.size / 2 / ratio, -this.height * this.size / 2 / ratio, this.width * this.size / 2 / ratio, (-this.height / 2 + this.radius) * this.size / ratio);
+      ctx.lineTo(this.width * this.size / 2 / ratio, (this.height / 2 - this.radius) * this.size / ratio);
+      ctx.quadraticCurveTo(this.width * this.size / 2 / ratio, this.height * this.size / 2 / ratio, (this.width / 2 - this.radius) * this.size / ratio, this.height * this.size / 2 / ratio);
+      ctx.lineTo((-this.width / 2 + this.radius) * this.size / ratio, this.height * this.size / 2 / ratio);
+      ctx.quadraticCurveTo(-this.width * this.size / 2 / ratio, this.height * this.size / 2 / ratio, -this.width * this.size / 2 / ratio, (this.height / 2 - this.radius) * this.size / ratio);
+      ctx.lineTo(-this.width * this.size / 2 / ratio, (-this.height / 2 + this.radius) * this.size / ratio);
+      ctx.quadraticCurveTo(-this.width * this.size / 2 / ratio, -this.height * this.size / 2 / ratio, (-this.width / 2 + this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
       ctx.fill();
-    }*/
+    }
     return element;
   }
   game.polygon = function (x, y, points, color) {
@@ -1064,6 +1065,12 @@ function gameIO() {
       };
       if (obj.type === "player") obj.cannon = new game.object();
       if (obj.type === "player") obj.turrets = [];
+      if (obj.type === "player") obj.playerName = new game.object();
+      if (packet.maxHealth !== undefined && packet.health !== undefined) obj.healthBar = new game.object();
+
+      if (packet.maxHealth !== undefined) obj.maxHealth = packet.maxHealth;
+      if (packet.health !== undefined) obj.health = packet.health;
+
       if (packet.objType !== undefined) obj.objType = packet.objType;
       if (packet.subObjType !== undefined) obj.subObjType = packet.subObjType;
       if (game.types[packet.b] === undefined) {
@@ -1078,6 +1085,14 @@ function gameIO() {
         obj.cannon.position.x = obj.new.position.x;
         obj.cannon.position.y = obj.new.position.y;
         obj.cannon.cannon = obj.new.mouseAngle;
+      }
+      if (obj.playerName) {
+        obj.playerName.position.x = obj.new.position.x;
+        obj.playerName.position.y = obj.new.position.y + 60;
+      }
+      if (obj.healthBar) {
+        obj.healthBar.position.x = obj.new.position.x;
+        obj.healthBar.position.y = obj.new.position.y - 60;
       }
       if (obj.turrets !== undefined) {
         obj.turrets.forEach(turret => {
@@ -1106,6 +1121,45 @@ function gameIO() {
       obj.actualOld.rotation = obj.new.rotation;
       obj.actualOld.mouseAngle = obj.new.mouseAngle;
       obj.new.position = new game.Vector2(packet.a[1], packet.a[2]);
+
+      obj.tank = packet.tank;
+      obj.tier = packet.tier;
+      if (obj.tank !== undefined) obj.visual.image.src = `./client/images/tanks/${obj.tank}/${obj.tier}/tank.png`;
+      if (packet.turrets !== undefined)
+        obj.turrets.forEach(turret => {
+          turret.parent.remove(turret);
+        });
+      obj.turrets = [];
+      if (packet.turrets !== undefined)
+        packet.turrets.forEach(turret => {
+          let turretImg = new Image();
+          switch (turret.type) {
+            case 0:
+              turretImg.src = `./client/images/cannons/default.png`;
+              break;
+            case 1:
+              turretImg.src = `./client/images/cannons/shotgun.png`;
+              break;
+            case 2:
+              turretImg.src = `./client/images/cannons/sniper.png`;
+              break;
+            case 3:
+              turretImg.src = `./client/images/cannons/machinegun.png`;
+              break;
+            default:
+              turretImg.src = `./client/images/cannons/default.png`;
+              break;
+          }
+          let turretObj = new game.image(turretImg, 0, 0, 220, 220);
+          turretObj.offsetX = turret.offsetX || 0;
+          turretObj.offsetY = turret.offsetY || 0;
+          turretObj.offsetAngle = turret.offsetAngle || 0;
+          obj.turrets.push(turretObj);
+          game.scenes[0].add(turretObj, 3);
+        });
+
+      obj.health = packet.health;
+
       if (isNaN(obj.old.position.x)) {
         obj.old.position.x = obj.new.position.x;
         obj.actualOld.position.x = obj.new.position.x;
@@ -1152,6 +1206,10 @@ function gameIO() {
           if (game.objects[i].turrets != null) game.objects[i].turrets.forEach(turret => {
             if (turret != null) turret.parent.remove(turret);
           });
+          if (game.objects[i].playerName != null) if (game.objects[i].playerName.parent != null)
+            game.objects[i].playerName.parent.remove(game.objects[i].playerName);
+          if (game.objects[i].healthBar != null) if (game.objects[i].healthBar.parent != null)
+            game.objects[i].healthBar.parent.remove(game.objects[i].healthBar);
           game.objects.splice(i, 1);
           break;
         }
@@ -1168,7 +1226,21 @@ function gameIO() {
     // Add global object
     "g": function (packet) {
       game.globalObjects.push(packet.obj);
-      console.log(packet.obj)
+    },
+    // Remove global object
+    "h": function (packet) {
+      for (let i = 0; i < game.globalObjects.length; i++) {
+        const element = game.globalObjects[i];
+        if (element.i === packet.i) game.globalObjects.splice(i, 1);
+      }
+    },
+    // Set globals array
+    "i": function (packet) {
+      game.globalObjects = packet.list;
+    },
+    // Death
+    "d": function (packet) {
+      document.getElementById('menu').style.display = "block";
     }
   };
   game.addPacketType = function (type, func) {
@@ -1226,6 +1298,10 @@ function gameIO() {
         if (game.objects[i].turrets != null) game.objects[i].turrets.forEach(turret => {
           if (turret.parent != null) turret.parent.remove(turret);
         });
+        if (game.objects[i].playerName != null) if (game.objects[i].playerName.parent != null)
+          game.objects[i].playerName.parent.remove(game.objects[i].playerName);
+        if (game.objects[i].healthBar != null) if (game.objects[i].healthBar.parent != null)
+          game.objects[i].healthBar.parent.remove(game.objects[i].healthBar);
         game.objects.splice(i, 1);
       }
     }
@@ -1249,6 +1325,17 @@ function gameIO() {
         obj.cannon.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
         obj.cannon.position.y = game.lerp(obj.old.position.y, obj.new.position.y);
         obj.cannon.rotation = game.lerp(obj.old.mouseAngle, obj.new.mouseAngle);
+      }
+      if (obj.playerName) {
+        obj.playerName.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
+        obj.playerName.position.y = game.lerp(obj.old.position.y, obj.new.position.y) + 60;
+      }
+      if (obj.healthBar) {
+        obj.healthBar.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
+        obj.healthBar.position.y = game.lerp(obj.old.position.y, obj.new.position.y) - 60;
+
+        if (obj.healthBar.type !== "roundRectangle") { if (obj.health < obj.maxHealth) { obj.healthBar = new game.roundRectangle(0, 0, (obj.health / obj.maxHealth) * 100, 10, 5, "#FF0000"); this.scenes[0].add(obj.healthBar); } }
+        else { obj.healthBar.width = (obj.health / obj.maxHealth) * 100; }
       }
       if (obj.turrets !== undefined) {
         obj.turrets.forEach(turret => {
