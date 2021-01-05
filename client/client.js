@@ -17,7 +17,7 @@ window.onload = function () {
         function (obj, packet) {
             obj.turrets = [];
 
-            obj.playerName = new game.text(packet.playerName, 0, 0, "#fff", "Arial", 26);
+            obj.playerName = new game.text(packet.playerName, 0, 0, "#fff", "Montserrat", 26);
             scene.add(obj.playerName, 2);
 
             let tank = new Image();
