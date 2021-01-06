@@ -8,26 +8,83 @@ app.get("/status", function (req, res) {
     res.send("ok");
 });
 
+const JavaScriptObfuscator = require('javascript-obfuscator');
+
+const obfuscate = false;
+
 let key = '6YHQLQxcPwtuqw7D9DnkhTfhrEH3swbk43wkp3FGDqdZjMHCYb';
 
 let pathToCheck = path.resolve("..", "client", "index.html");
 if (fs.existsSync(pathToCheck)) {
-    app.use("/client", express.static(path.resolve("..", "client")));
     app.get("/", function (req, res) {
+        app.use("/client/main.css", express.static(path.resolve("..", "client", "main.css")));
         let pathToCheck = path.resolve("..", "client", "index2.html");
         res.sendFile(pathToCheck);
     });
-    app.get("/6YHQLQxcPwtuqw7D9DnkhTfhrEH3swbk43wkp3FGDqdZjMHCYb", function (req, res) {
+    app.get(`/${key}`, function (req, res) {
+        app.use("/client", express.static(path.resolve("..", "client")));
         let pathToCheck = path.resolve("..", "client", "index.html");
         res.sendFile(pathToCheck);
     });
+    app.get("/client/js/", function (req, res) {
+        res.send("Don't even try :)");
+    });
+}
+
+const obfuscatePathToFile = function (dirPath) {
+    let writePath = dirPath.replace('clean_js', path.join('client', 'static', 'js'));
+    fs.readFile(dirPath, "utf8", function (err, data) {
+        var obfuscationResult = JavaScriptObfuscator.obfuscate(data, {
+            optionsPreset: 'low-obfuscation',
+            debugProtection: true,
+            debugProtectionInterval: true,
+            disableConsoleOutput: true,
+            stringArrayEncoding: ['base64'],
+            reservedNames: [
+                'hrefInc'
+            ]
+            //disableConsoleOutput: true,
+            //identifierNamesGenerator: 'hexadecimal',
+            //target: 'browser',
+        });
+
+        fs.writeFile(writePath, obfuscationResult, 'utf-8', function (err) {
+            if (err) return console.log(err);
+        });
+
+    });
+}
+
+const obfuscateClientCode = function () {
+    fs.readdir(path.resolve("..", "client", "js"), function (err, files) {
+        files.forEach(function (file) {
+            if (!file.includes(".js")) {
+                /*
+                fs.readdir(path.join("..", "client", file), function (err, files) {
+                    files.forEach(function (file2) {
+                        obfuscatePathToFile(path.join(__dirname, "clean_js", file, file2));
+                    });
+                });
+                */
+            } else {
+                fs.copyFile(path.resolve("..", "client", "js", file), path.resolve("..", "client", "clean_js", file), (err) => {
+                    if (err) throw err;
+                    console.log(`${file} was copied to clean_js/${file}`);
+                });
+
+                obfuscatePathToFile(path.resolve("..", "client", "js", file));
+            }
+        });
+        console.log('Obfuscation process ended.');
+    });
+}
+
+if (obfuscate) {
+    obfuscateClientCode();
 }
 
 //* GLOBALS
 global.game = new gameIO.game({ port: 80, enablews: false, app: app });
-
-//game.world.setGlobalStiffness(1e18);
-//game.world.defaultContactMaterial.restitution = 0.1;
 
 global.getRandomInt = (min, max) => {
     min = Math.ceil(min);
