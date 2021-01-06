@@ -101,8 +101,14 @@ game.addType(
 
         //!SHOOTING
         obj.turretIndex = 1;
-        obj.turrets = turrets[obj.turretIndex];
-        //obj.turrets = [{ type: 2, offsetX: -10, offsetY: -5, offsetAngle: Math.PI / 12 }, { type: 2, offsetX: 10, offsetY: -5, offsetAngle: -Math.PI / 12 }, { type: 2, offsetX: -6, offsetY: 0, offsetAngle: Math.PI / 16 }, { type: 2, offsetX: 6, offsetY: 0, offsetAngle: -Math.PI / 16 }, { type: 2, offsetX: 0, offsetY: 10, offsetAngle: 0 }];
+        obj.turrets = [];
+        turrets[obj.turretIndex].forEach((t, i) => {
+            obj.turrets.push({});
+            for (const prop in t) {
+                obj.turrets[i][prop] = t[prop];
+            }
+        });
+        // obj.turrets = [{ type: 2, offsetX: -10, offsetY: -5, offsetAngle: Math.PI / 12, turretCD: 0, turretMaxCD: 10 }, { type: 2, offsetX: 10, offsetY: -5, offsetAngle: -Math.PI / 12, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: -6, offsetY: 0, offsetAngle: Math.PI / 16, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: 6, offsetY: 0, offsetAngle: -Math.PI / 16, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: 0, offsetY: 10, offsetAngle: 0, turretCD: 0, turretMaxCD: 10 }];
 
         //? Others
         obj.body.addShape(new game.rectangle(obj.props.hitbox.h * DEFAULT_SCALE * obj.props.tankSize, obj.props.hitbox.w * DEFAULT_SCALE * obj.props.tankSize));
