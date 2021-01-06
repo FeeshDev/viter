@@ -10,7 +10,7 @@ app.get("/status", function (req, res) {
 
 const JavaScriptObfuscator = require('javascript-obfuscator');
 
-const obfuscate = false;
+const obfuscate = true;
 
 let key = '6YHQLQxcPwtuqw7D9DnkhTfhrEH3swbk43wkp3FGDqdZjMHCYb';
 
@@ -32,7 +32,7 @@ if (fs.existsSync(pathToCheck)) {
 }
 
 const obfuscatePathToFile = function (dirPath) {
-    let writePath = dirPath.replace('clean_js', path.join('client', 'static', 'js'));
+    //let writePath = dirPath.replace('clean_js', path.join('client', 'static', 'js'));
     fs.readFile(dirPath, "utf8", function (err, data) {
         var obfuscationResult = JavaScriptObfuscator.obfuscate(data, {
             optionsPreset: 'low-obfuscation',
@@ -48,7 +48,7 @@ const obfuscatePathToFile = function (dirPath) {
             //target: 'browser',
         });
 
-        fs.writeFile(writePath, obfuscationResult, 'utf-8', function (err) {
+        fs.writeFile(dirPath, obfuscationResult, 'utf-8', function (err) {
             if (err) return console.log(err);
         });
 
@@ -75,8 +75,8 @@ const obfuscateClientCode = function () {
                 obfuscatePathToFile(path.resolve("..", "client", "js", file));
             }
         });
-        console.log('Obfuscation process ended.');
     });
+    console.log('Obfuscation process ended.');
 }
 
 if (obfuscate) {
