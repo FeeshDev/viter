@@ -10,7 +10,7 @@ app.get("/status", function (req, res) {
 
 const JavaScriptObfuscator = require('javascript-obfuscator');
 
-const obfuscate = true;
+const obfuscate = false;
 
 let key = '6YHQLQxcPwtuqw7D9DnkhTfhrEH3swbk43wkp3FGDqdZjMHCYb';
 
