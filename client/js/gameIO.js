@@ -214,7 +214,7 @@ function gameIO() {
                 this.ctx.setTransform(1, 0, 0, 1, 0, 0);
                 this.ctx.fillStyle = themes[this.theme].backgroundColor;
                 this.ctx.globalAlpha = 1;
-                this.ctx.fillRect(this.c.width / 2 - game.me.visual.position.x / this.ratio, this.c.height / 2 - game.me.visual.position.y / this.ratio, 2000 / this.ratio, 2000 / this.ratio);
+                this.ctx.fillRect(this.c.width / 2 - game.me.visual.position.x / this.ratio, this.c.height / 2 - game.me.visual.position.y / this.ratio, 4000 / this.ratio, 4000 / this.ratio);
             },
             drawMinimap: function () {
                 this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -230,7 +230,7 @@ function gameIO() {
 
                 this.ctx.beginPath();
                 this.ctx.fillStyle = "#fff";
-                this.ctx.arc(this.c.width - 250 / this.ratio + game.me.visual.position.x / 10 / this.ratio, this.c.height - 300 / this.ratio + game.me.visual.position.y / 10 / this.ratio, 5 / this.ratio, 0, 2 * Math.PI);
+                this.ctx.arc(this.c.width - 250 / this.ratio + game.me.visual.position.x / 20 / this.ratio, this.c.height - 300 / this.ratio + game.me.visual.position.y / 20 / this.ratio, 5 / this.ratio, 0, 2 * Math.PI);
                 this.ctx.fill();
                 //this.ctx.fillRect(this.c.width / 2 - game.me.visual.position.x / this.ratio, this.c.height / 2 - game.me.visual.position.y / this.ratio, 2000 / this.ratio, 2000 / this.ratio);
             },

@@ -86,7 +86,7 @@ game.addType(
     function (obj, extra) {
         //@ Body and basics
         obj.body = new game.body(0.8);
-        obj.body.position = [1500, 1500];
+        obj.body.position = [getRandomInt(1, 3999), getRandomInt(1, 3999)];
         obj.body.type = 1;
         obj.name = extra.name.slice(0, 20);
 

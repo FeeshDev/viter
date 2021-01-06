@@ -31,7 +31,7 @@ game.addType(
 
         obj.body = new game.body(0);
         obj.body.type = obj.props.bodyType;
-        extras ? obj.body.position = extras.pos : obj.body.position = [getRandomInt(1, 1999), getRandomInt(1, 1999)];
+        extras ? obj.body.position = extras.pos : obj.body.position = [getRandomInt(1, 3999), getRandomInt(1, 3999)];
         obj.body.angle = Math.random() * 2 * Math.PI;
         obj.ttfloat = Math.random() * 24 + 24;
         obj.scale = obj.props.scale();

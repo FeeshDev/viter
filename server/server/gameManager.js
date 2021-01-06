@@ -1,9 +1,9 @@
 //* MAP CONFIG
-const MAP_SIZE = 2000;
-const WALL_SIZE = 50;
+const MAP_SIZE = 4000;
+const WALL_SIZE = 100;
 
-const TREE_COUNT = 20;
-const ROCK_COUNT = 10;
+const TREE_COUNT = 60;
+const ROCK_COUNT = 30;
 
 game.create("wall", { x: MAP_SIZE / 2, y: -WALL_SIZE / 2, w: MAP_SIZE + WALL_SIZE * 2, h: WALL_SIZE });
 game.create("wall", { x: MAP_SIZE / 2, y: MAP_SIZE + WALL_SIZE / 2, w: MAP_SIZE + WALL_SIZE * 2, h: WALL_SIZE });
