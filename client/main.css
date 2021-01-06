@@ -56,3 +56,34 @@ p {
     width: 200px;
     height: 60px;
 }
+
+#death-screen {
+    display: none;
+    font-size: 4rem;
+    text-align: center;
+    color: aliceblue;
+    width: 100%;
+    height: 100%;
+    background-color: #069950;
+    position: absolute;
+}
+
+#death-menu {
+    position: relative;
+    top: 25vh;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#return {
+    margin-top: 10px;
+    width: 200px;
+    height: 60px;
+    font-size: 20px;
+}
+#return:hover {
+    cursor: pointer;
+}
+
+#time, #return, #ded {
+    font-family: 'Montserrat', sans-serif;
+}

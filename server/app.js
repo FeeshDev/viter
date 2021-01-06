@@ -143,8 +143,8 @@ game.addPacketType(
             if (ws.self.type == "spectator") game.remove(ws.self);
             let playerName = packet.name != "" ? packet.name : "viter.io";
             ws.self = game.create("player", { name: playerName });
-            ws.self.death = () => {
-                ws.currentPackets.push({ type: "d" })
+            ws.self.death = (t) => {
+                ws.currentPackets.push({ type: "d", time: Date.now() - t })
             }
         }
     }
