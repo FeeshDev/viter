@@ -1240,7 +1240,24 @@ function gameIO() {
     },
     // Death
     "d": function (packet) {
-      document.getElementById('menu').style.display = "block";
+      document.getElementById('death-screen').style.display = "block";
+      let ms = packet.time;
+      let seconds = ~~(ms / 1000);
+      let minutes = ~~(seconds / 60);
+      let hours = ~~(minutes / 60);
+      ms -= seconds * 1000;
+      seconds -= minutes * 60
+      minutes -= hours * 60;
+      let totalTime = "Time alive: ";
+      if (hours) totalTime += `${hours}h `;
+      if (minutes) totalTime += `${minutes}m `;
+      if (seconds) totalTime += `${seconds}s `;
+      totalTime += `${ms}ms`;
+      document.getElementById('time').innerHTML = totalTime;
+      document.getElementById("return").addEventListener("click", () => {
+        document.getElementById('death-screen').style.display = "none";
+        document.getElementById('menu').style.display = "flex";
+      });
     }
   };
   game.addPacketType = function (type, func) {
