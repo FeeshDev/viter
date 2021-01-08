@@ -39,7 +39,7 @@ window.onload = function () {
                 scene.add(obj.cannon, 5);
             } else {
                 cannon.onload = () => {
-                    obj.cannon = new game.image(cannon, 0, 0, 160 * packet.scale, 160 * packet.scale);
+                    obj.cannon = new game.image(cannon, 0, 0, 220 * packet.scale, 220 * packet.scale);
                     scene.add(obj.cannon, 5);
                 };
             }
