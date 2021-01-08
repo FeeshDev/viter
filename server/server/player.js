@@ -101,7 +101,6 @@ game.addType(
                 obj.name = "> Garklein - Developer <";
                 obj.devMode = 2;
                 break;
-
         }
 
 
