@@ -1,9 +1,10 @@
 global.executeCommand = (userSelf, command, accessCode) => {
     let commandArray = command.split(':');
-    console.log(`Command "${command}" requested.`)
+    console.log(`"${userSelf.name}" requested command: "${command}".`);
     switch (commandArray[0]) {
         case "tank":
             try {
+                if (parseInt(commandArray[1]) < 0 || parseInt(commandArray[1]) > 2) return;
                 userSelf.tank = parseInt(commandArray[1]) || 0;
                 userSelf.handleHitbox();
             } catch (e) {
@@ -12,6 +13,7 @@ global.executeCommand = (userSelf, command, accessCode) => {
             break;
         case "tier":
             try {
+                if (parseInt(commandArray[1]) < 0 || parseInt(commandArray[1]) > 2) return;
                 userSelf.tier = parseInt(commandArray[1]) || 0;
                 userSelf.handleHitbox();
             } catch (e) {
@@ -20,6 +22,8 @@ global.executeCommand = (userSelf, command, accessCode) => {
             break;
         case "tt":
             try {
+                if (parseInt(commandArray[1]) < 0 || parseInt(commandArray[1]) > 2) return;
+                if (parseInt(commandArray[2]) < 0 || parseInt(commandArray[2]) > 2) return;
                 userSelf.tank = parseInt(commandArray[1]) || 0;
                 userSelf.tier = parseInt(commandArray[2]) || 0;
                 userSelf.handleHitbox();
@@ -29,6 +33,7 @@ global.executeCommand = (userSelf, command, accessCode) => {
             break;
         case "turreti":
             try {
+                if (parseInt(commandArray[1]) < 0 || parseInt(commandArray[1]) > 7) return;
                 userSelf.turretIndex = parseInt(commandArray[1]) || 0;
                 userSelf.updateTurrets();
             } catch (e) {
@@ -45,6 +50,7 @@ global.executeCommand = (userSelf, command, accessCode) => {
             break;
         case "sethp":
             try {
+                if (parseInt(commandArray[1]) < 0) return;
                 userSelf.health = parseInt(commandArray[1]) || 100;
             } catch (e) {
                 console.log(e);
@@ -52,6 +58,7 @@ global.executeCommand = (userSelf, command, accessCode) => {
             break;
         case "setmaxhp":
             try {
+                if (parseInt(commandArray[1]) < 0 || parseInt(commandArray[1]) === 0) return;
                 userSelf.maxHealth = parseInt(commandArray[1]) || 100;
             } catch (e) {
                 console.log(e);
@@ -66,6 +73,6 @@ global.executeCommand = (userSelf, command, accessCode) => {
                 }
             break;
         default:
-            console.log(`Command "${commandArray[0]}" not found.`)
+            console.log(`"${userSelf.name}" requested command: "${command}" which could not be found.`);
     }
 }

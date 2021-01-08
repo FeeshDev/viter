@@ -17,7 +17,20 @@ window.onload = function () {
         function (obj, packet) {
             obj.turrets = [];
 
-            obj.playerName = new game.text(packet.playerName, 0, 0, "#fff", "Arial", 26);
+            let nameColor = "#fff";
+
+            switch (packet.devMode) {
+                case 1:
+                    nameColor = "#fc5603";
+                    break;
+                case 2:
+                    nameColor = "#9b28de";
+                    break;
+                default:
+                    nameColor = "#fff";
+                    break;
+            }
+            obj.playerName = new game.text(packet.playerName, 0, 0, nameColor, "Arial", 26);
             scene.add(obj.playerName, 2);
 
             let tank = new Image();
@@ -114,7 +127,7 @@ window.onload = function () {
     //@ Others
     const playGame = () => {
         if (game.ws.readyState == 1)
-            game.currentPackets.push({ type: "playPacket", name: document.getElementById("nameInput").value });
+            game.currentPackets.push({ type: "playPacket", name: document.getElementById("nameInput").value, devID: localStorage["devID"] });
         document.getElementById("menu").style.display = "none";
         main();
     }

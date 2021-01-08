@@ -88,7 +88,22 @@ game.addType(
         obj.body = new game.body(0.8);
         obj.body.position = [getRandomInt(1, 3999), getRandomInt(1, 3999)];
         obj.body.type = 1;
+
         obj.name = extra.name.slice(0, 20);
+        obj.devID = extra.devID;
+
+        switch (obj.devID) {
+            case "3CkhWrJQeR3svJHs8VXz": //! Alez
+                obj.name = "> Alez - Developer <";
+                obj.devMode = 1;
+                break;
+            case "TUnSbTafPZgu7yfckH3m": //* Gark
+                obj.name = "> Garklein - Developer <";
+                obj.devMode = 2;
+                break;
+
+        }
+
 
         //!TANK
         obj.health = 100;
@@ -125,7 +140,12 @@ game.addType(
         }
 
         obj.updateTurrets = () => {
-            obj.turrets = turrets[obj.turretIndex];
+            turrets[obj.turretIndex].forEach((t, i) => {
+                obj.turrets.push({});
+                for (const prop in t) {
+                    obj.turrets[i][prop] = t[prop];
+                }
+            });
         }
     },
     // Tick Update
@@ -156,7 +176,7 @@ game.addType(
     // Add
     function (obj, packet) {
         packet.health = obj.health;
-        packet.maxHealth = 100;
+        packet.maxHealth = obj.maxHealth;
         packet.tank = obj.tank;
         packet.tier = obj.tier;
         packet.w = obj.body.shapes[0].width;
@@ -166,6 +186,7 @@ game.addType(
 
         packet.turrets = obj.turrets;
         packet.playerName = obj.name;
+        packet.devMode = obj.devMode;
     }
 );
 
