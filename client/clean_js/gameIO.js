@@ -432,8 +432,10 @@ function gameIO() {
     element.renderSpecific = function (ctx, ratio) {
       ctx.font = this.otherParams + " " + this.fontSize / ratio + "px " + this.font;
       var width = ctx.measureText(this.text).width;
+      let biggest = ctx.measureText("WWWWWWWWWWWWWWWWWWWWp");
       element.width = width * ratio;
       ctx.fillStyle = this.fillStyle;
+      if (width > biggest.width) this.text = "spammy name";
       switch (element.align) {
         case "right":
           ctx.fillText(this.text, Math.floor(-width), this.fontSize / 3 / ratio);
