@@ -148,7 +148,7 @@ window.onload = function () {
         scene.camera.position = game.me.visual.position;
     };
 
-    game.createSocket(`ws://${window.location.hostname}${window.location.port ? ":" : ""}${window.location.port}/ws`);
+    game.createSocket(`wss://${window.location.hostname}${window.location.port ? ":" : ""}${window.location.port}/wss`);
 
     //! Main Loop
     const main = () => {

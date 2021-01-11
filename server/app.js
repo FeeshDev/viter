@@ -77,10 +77,17 @@ if (obfuscate) {
     obfuscateClientCode();
 }*/
 
-console.log(__dirname)
+let cert = undefined;
 
-//* GLOBALS
-global.game = new gameIO.game({ port: 5000, enablews: false, app: app });
+if (fs.existsSync(path.resolve("/", "etc", "letsencrypt"))) {
+    console.log("Certificate detected!")
+    let privateKey = fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "privkey.pem"), 'utf8');
+    let certificate = fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "cert.pem"), 'utf8');
+    cert = { key: privateKey, cert: certificate };
+}
+
+// GLOBALS
+global.game = new gameIO.game({ port: 5000, enablews: false, app: app, certs: cert });
 
 global.getRandomInt = (min, max) => {
     min = Math.ceil(min);
