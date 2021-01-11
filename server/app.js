@@ -77,6 +77,8 @@ if (obfuscate) {
     obfuscateClientCode();
 }*/
 
+console.log(__dirname)
+
 //* GLOBALS
 global.game = new gameIO.game({ port: 5000, enablews: false, app: app });
 
