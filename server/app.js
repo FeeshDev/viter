@@ -84,7 +84,7 @@ if (obfuscate) {
 }
 
 //* GLOBALS
-global.game = new gameIO.game({ port: 5000, enablews: false, app: app });
+global.game = new gameIO.game({ port: 5000, enablews: false, app: app, certs: true });
 
 global.getRandomInt = (min, max) => {
     min = Math.ceil(min);
