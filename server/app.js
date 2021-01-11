@@ -31,6 +31,7 @@ if (fs.existsSync(pathToCheck)) {
     });
 }
 
+/*
 const obfuscatePathToFile = function (dirPath) {
     //let writePath = dirPath.replace('clean_js', path.join('client', 'static', 'js'));
     fs.readFile(dirPath, "utf8", function (err, data) {
@@ -59,13 +60,6 @@ const obfuscateClientCode = function () {
     fs.readdir(path.resolve("..", "client", "js"), function (err, files) {
         files.forEach(function (file) {
             if (!file.includes(".js")) {
-                /*
-                fs.readdir(path.join("..", "client", file), function (err, files) {
-                    files.forEach(function (file2) {
-                        obfuscatePathToFile(path.join(__dirname, "clean_js", file, file2));
-                    });
-                });
-                */
             } else {
                 fs.copyFile(path.resolve("..", "client", "js", file), path.resolve("..", "client", "clean_js", file), (err) => {
                     if (err) throw err;
@@ -81,7 +75,7 @@ const obfuscateClientCode = function () {
 
 if (obfuscate) {
     obfuscateClientCode();
-}
+}*/
 
 //* GLOBALS
 global.game = new gameIO.game({ port: 5000, enablews: false, app: app, certs: true });
