@@ -22,13 +22,27 @@ window.onload = function () {
 
             let tank = new Image();
             tank.src = `./client/images/tanks/${packet.tank}/${packet.tier}/tank.png`;
-            obj.visual = new game.image(tank, 0, 0, 160 * packet.scale, 160 * packet.scale);
-            scene.add(obj.visual, 1);
+            if (tank.complete) {
+                obj.visual = new game.image(tank, 0, 0, 160 * packet.scale, 160 * packet.scale);
+                scene.add(obj.visual, 1);
+            } else {
+                tank.onload = () => {
+                    obj.visual = new game.image(tank, 0, 0, 160 * packet.scale, 160 * packet.scale);
+                    scene.add(obj.visual, 1);
+                };
+            }
 
             let cannon = new Image();
             cannon.src = `./client/images/turrets/default.png`;
-            obj.cannon = new game.image(cannon, 0, 0, 220 * packet.scale, 220 * packet.scale);
-            scene.add(obj.cannon, 5);
+            if (cannon.complete) {
+                obj.cannon = new game.image(cannon, 0, 0, 220 * packet.scale, 220 * packet.scale);
+                scene.add(obj.cannon, 5);
+            } else {
+                cannon.onload = () => {
+                    obj.cannon = new game.image(cannon, 0, 0, 220 * packet.scale, 220 * packet.scale);
+                    scene.add(obj.cannon, 5);
+                };
+            }
 
             packet.turrets.forEach(turret => {
                 let turretImg = new Image();
