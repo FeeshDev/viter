@@ -81,8 +81,8 @@ let cert = undefined;
 
 if (fs.existsSync(path.resolve("/", "etc", "letsencrypt"))) {
     console.log("Certificate detected!")
-    let privateKey = fs.readFileSync(path.resolve("/", "home", "alez", "secure", "privkey.key"), 'utf8');
-    let certificate = fs.readFileSync(path.resolve("/", "home", "alez", "secure", "cert.crt"), 'utf8');
+    let privateKey = fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "privkey.pem"), 'utf8');
+    let certificate = fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "cert.pem"), 'utf8');
     cert = { key: privateKey, cert: certificate };
 }
 
