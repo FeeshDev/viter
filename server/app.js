@@ -17,6 +17,7 @@ let key = '6YHQLQxcPwtuqw7D9DnkhTfhrEH3swbk43wkp3FGDqdZjMHCYb';
 let pathToCheck = path.resolve("..", "client", "index.html");
 if (fs.existsSync(pathToCheck)) {
     app.get("/", function (req, res) {
+        console.log("pog")
         app.use("/client/main.css", express.static(path.resolve("..", "client", "main.css")));
         let pathToCheck = path.resolve("..", "client", "index2.html");
         res.sendFile(pathToCheck);
@@ -88,7 +89,7 @@ if (fs.existsSync(path.resolve("/", "etc", "letsencrypt"))) {
 }
 
 // GLOBALS
-global.game = new gameIO.game({ port: 5000, enablews: false, app: app });
+global.game = new gameIO.game({ port: 5000, enablews: false, app: app, certs: cert });
 
 global.getRandomInt = (min, max) => {
     min = Math.ceil(min);
