@@ -17,7 +17,6 @@ let key = '6YHQLQxcPwtuqw7D9DnkhTfhrEH3swbk43wkp3FGDqdZjMHCYb';
 let pathToCheck = path.resolve("..", "client", "index.html");
 if (fs.existsSync(pathToCheck)) {
     app.get("/", function (req, res) {
-        console.log("pog")
         app.use("/client/main.css", express.static(path.resolve("..", "client", "main.css")));
         let pathToCheck = path.resolve("..", "client", "index2.html");
         res.sendFile(pathToCheck);
