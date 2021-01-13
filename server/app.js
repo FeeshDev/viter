@@ -81,10 +81,14 @@ let cert = undefined;
 
 if (fs.existsSync(path.resolve("/", "etc", "letsencrypt"))) {
     console.log("Certificate detected!")
-    let privateKey = fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "privkey.pem"));
-    let certificate = fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "cert.pem"));
-    cert = { key: privateKey, cert: certificate };
+    cert = {
+        key: fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "privkey.pem")),
+        cert: fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "cert.pem"))
+    };
+    console.log(cert);
 }
+
+console.log(cert)
 
 // GLOBALS
 global.game = new gameIO.game({ port: 5000, enablews: false, app: app, certs: cert });
