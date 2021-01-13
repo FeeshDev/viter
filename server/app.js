@@ -83,7 +83,7 @@ if (fs.existsSync(path.resolve("/", "etc", "letsencrypt"))) {
     console.log("Certificate detected!")
     cert = {
         key: fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "privkey.pem")),
-        cert: fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "cert.pem"))
+        cert: fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "fullchain.pem"))
     };
     console.log(cert);
 }
