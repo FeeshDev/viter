@@ -85,13 +85,10 @@ if (fs.existsSync(path.resolve("/", "etc", "letsencrypt"))) {
         key: fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "privkey.pem")),
         cert: fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "fullchain.pem"))
     };
-    console.log(cert);
 }
 
-console.log(cert)
-
 // GLOBALS
-global.game = new gameIO.game({ port: 5000, enablews: false, app: app, certs: cert });
+global.game = new gameIO.game({ port: 5000, enablews: false, app: app });
 
 global.getRandomInt = (min, max) => {
     min = Math.ceil(min);
