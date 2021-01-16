@@ -33,7 +33,8 @@ global.executeCommand = (userSelf, command, accessCode) => {
             break;
         case "turreti":
             try {
-                if (parseInt(commandArray[1]) < 0 || parseInt(commandArray[1]) > 8) return;
+                let turretIndex = Math.round(parseInt(commandArray[1]));
+                if (!turretIndex || turretIndex < 0 || turretIndex > 8) return;
                 userSelf.turretIndex = parseInt(commandArray[1]) || 0;
                 userSelf.updateTurrets();
             } catch (e) {
