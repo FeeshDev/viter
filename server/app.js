@@ -88,7 +88,7 @@ if (fs.existsSync(path.resolve("/", "etc", "letsencrypt"))) {
 }
 
 // GLOBALS
-global.game = new gameIO.game({ port: 443, enablews: false, app: app, certs: cert });
+global.game = new gameIO.game({ port: cert ? 443 : 80, enablews: false, app: app, certs: cert });
 
 global.getRandomInt = (min, max) => {
     min = Math.ceil(min);
@@ -96,7 +96,7 @@ global.getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-game.globalCoords = [];
+game.globalCoordPackets = [];
 
 //* REQUIREMENTS
 require("./server/object.js");
@@ -147,8 +147,10 @@ game.addPacketType(
             if (ws.self.type == "spectator") game.remove(ws.self);
             let playerName = packet.name != "" ? packet.name : "viter.io";
             ws.self = game.create("player", { name: playerName, devID: packet.devID });
+            if (ws.currentPackets !== []) ws.currentPackets.push({ type: "i", list: game.globalCoordPackets });
+            ws.currentPackets.push({ type: "s", scale: MAP_SCALE });
             ws.self.death = (t) => {
-                ws.currentPackets.push({ type: "d", time: Date.now() - t })
+                ws.currentPackets.push({ type: "d", time: Date.now() - t });
             }
             console.log(`"${playerName}" started playing.`);
         }

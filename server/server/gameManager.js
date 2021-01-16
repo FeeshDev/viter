@@ -1,25 +1,36 @@
 //* MAP CONFIG
-const MAP_SIZE = 4000;
-const WALL_SIZE = 100;
+global.MAP_SCALE = 1;
 
-const TREE_COUNT = 60;
-const ROCK_COUNT = 30;
+global.MAP_SIZE = 2000 * MAP_SCALE;
+const WALL_SIZE = 50 * MAP_SCALE;
 
 game.create("wall", { x: MAP_SIZE / 2, y: -WALL_SIZE / 2, w: MAP_SIZE + WALL_SIZE * 2, h: WALL_SIZE });
 game.create("wall", { x: MAP_SIZE / 2, y: MAP_SIZE + WALL_SIZE / 2, w: MAP_SIZE + WALL_SIZE * 2, h: WALL_SIZE });
 game.create("wall", { x: -WALL_SIZE / 2, y: MAP_SIZE / 2, w: WALL_SIZE, h: MAP_SIZE + WALL_SIZE * 2 });
 game.create("wall", { x: MAP_SIZE + WALL_SIZE / 2, y: MAP_SIZE / 2, w: WALL_SIZE, h: MAP_SIZE + WALL_SIZE * 2 });
 
+const TREE_COUNT = 100, ROCK_COUNT = 1;
 const TYPE_TREE = 0, TYPE_ROCK = 1;
 
+const spawnables = [{ type: "object", subtype: TYPE_TREE, max: TREE_COUNT }, { type: "object", subtype: TYPE_ROCK, max: ROCK_COUNT }];
+
 //*Spawnables
+
+spawnables.forEach(spawnable => {
+    if (spawnable.max > 0) {
+        for (let i = 0; i < spawnable.max; i++) {
+            game.create(spawnable.type, [spawnable.subtype]);
+        }
+    }
+});
+/*
 for (let i = 0; i < TREE_COUNT; i++) {
     game.create("object", [TYPE_TREE]);
 }
 
 for (let i = 0; i < ROCK_COUNT; i++) {
     game.create("object", [TYPE_ROCK]);
-}
+}*/
 
 // Disable any equations between the current passthrough body and the character
 /*

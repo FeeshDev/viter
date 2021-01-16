@@ -2,19 +2,23 @@ let objects = [
     { //* Tree
         size: 22,
         health: 80,
+        respawn: true,
         scale: () => { return getRandomInt(10, 20) / 10 },
         shape: 'circle',
         damping: 0,
         subTypes: [0, 1],
         bodyType: 2,
+        global: false,
     },
     { //* Rock
         size: 22,
         health: 200,
+        respawn: true,
         scale: () => { return getRandomInt(10, 15) / 10 },
         shape: 'circle',
         damping: 0,
         bodyType: 3,
+        global: true,
     }
 ]
 game.addType(
@@ -31,7 +35,7 @@ game.addType(
 
         obj.body = new game.body(0);
         obj.body.type = obj.props.bodyType;
-        extras ? obj.body.position = extras.pos : obj.body.position = [getRandomInt(1, 3999), getRandomInt(1, 3999)];
+        extras ? obj.body.position = extras.pos : obj.body.position = [getRandomInt(0, MAP_SIZE), getRandomInt(0, MAP_SIZE)];
         obj.body.angle = Math.random() * 2 * Math.PI;
         obj.ttfloat = Math.random() * 24 + 24;
         obj.scale = obj.props.scale();
@@ -41,23 +45,26 @@ game.addType(
 
         obj.needsUpdate = true;
 
-        /* //! GLOBAL DISPLAY CODE
-        if (obj.objType === 0) if (obj.subObjType === 1) game.globalCoords.push({ t: "g", i: obj.id, pos: { x: obj.body.position[0], y: obj.body.position[1] } });
-        if (obj.objType === 0) if (obj.subObjType === 1) game.broadcast({ t: "g", i: obj.id, pos: { x: obj.body.position[0], y: obj.body.position[1] } });
-        */
+        //! GLOBAL DISPLAY CODE
+        if (obj.props.global) {
+            game.globalCoordPackets.push({ t: "g", i: obj.id, pos: { x: obj.body.position[0], y: obj.body.position[1] } });
+            game.broadcast({ t: "g", i: obj.id, pos: { x: obj.body.position[0], y: obj.body.position[1] } });
+        }
     },
     // Tick Update
     function (obj) {
         if (obj.health <= 0) {
-            /* //! GLOBAL DISPLAY CODE
-            for (let i = 0; i < game.globalCoords.length; i++) {
-                let element = game.globalCoords[i];
-                if (element.i === obj.id) game.globalCoords.splice(i, 1);
+            //! GLOBAL DISPLAY CODE
+            if (obj.props.global) {
+                for (let i = 0; i < game.globalCoordPackets.length; i++) {
+                    let element = game.globalCoordPackets[i];
+                    if (element.i === obj.id) game.globalCoordPackets.splice(i, 1);
+                }
+                game.broadcast({ t: "h", i: obj.id });
             }
 
-            if (obj.objType === 0) if (obj.subObjType === 1) game.broadcast({ t: "h", i: obj.id });
-            */
-            game.remove(obj)
+            obj.props.respawn ? game.create("object", [obj.objType]) : null;
+            game.remove(obj);
         };
     },
     // Packet Update

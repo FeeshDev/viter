@@ -41,6 +41,7 @@ function gameIO() {
     particles: [],
     envs: {}
   };
+  game.gameScale = 1;
   game.gamepad = function () {
     var gamepads = [];
     if (navigator.getGamepads !== undefined)
@@ -214,7 +215,7 @@ function gameIO() {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
         this.ctx.fillStyle = themes[this.theme].backgroundColor;
         this.ctx.globalAlpha = 1;
-        this.ctx.fillRect(this.c.width / 2 - game.me.visual.position.x / this.ratio, this.c.height / 2 - game.me.visual.position.y / this.ratio, 4000 / this.ratio, 4000 / this.ratio);
+        this.ctx.fillRect(this.c.width / 2 - game.me.visual.position.x / this.ratio, this.c.height / 2 - game.me.visual.position.y / this.ratio, 2000 * game.gameScale / this.ratio, 2000 * game.gameScale / this.ratio);
       },
       drawMinimap: function () {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -230,27 +231,25 @@ function gameIO() {
 
         this.ctx.beginPath();
         this.ctx.fillStyle = "#fff";
-        this.ctx.arc(this.c.width - 250 / this.ratio + game.me.visual.position.x / 20 / this.ratio, this.c.height - 300 / this.ratio + game.me.visual.position.y / 20 / this.ratio, 5 / this.ratio, 0, 2 * Math.PI);
+        this.ctx.arc(this.c.width - 250 / this.ratio + game.me.visual.position.x / (10 * game.gameScale) / this.ratio, this.c.height - 300 / this.ratio + game.me.visual.position.y / (10 * game.gameScale) / this.ratio, 5 / this.ratio, 0, 2 * Math.PI);
         this.ctx.fill();
         //this.ctx.fillRect(this.c.width / 2 - game.me.visual.position.x / this.ratio, this.c.height / 2 - game.me.visual.position.y / this.ratio, 2000 / this.ratio, 2000 / this.ratio);
       },
       drawObjects: function () {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-        /*
         if (game.globalObjects === undefined) return;
         game.globalObjects.forEach(obj => {
-          console.log(obj)
           //if (obj.type === 'bullet') {
           ////if (obj.objType !== 0) return;
           ////if (obj.subObjType === 0) return
+          if (!obj) return;
           this.ctx.beginPath();
           this.ctx.fillStyle = "#000";
-          this.ctx.arc(this.c.width - 250 / this.ratio + obj.pos.x / 10 / this.ratio, this.c.height - 300 / this.ratio + obj.pos.y / 10 / this.ratio, 5 / this.ratio, 0, 2 * Math.PI);
+          this.ctx.arc(this.c.width - 250 / this.ratio + obj.pos.x / (10 * game.gameScale) / this.ratio, this.c.height - 300 / this.ratio + obj.pos.y / (10 * game.gameScale) / this.ratio, 5 / this.ratio, 0, 2 * Math.PI);
           this.ctx.fill();
           //}
         });
-        */
       },
       drawGrid: function () {
         this.ctx.strokeStyle = "#000000";
@@ -1225,12 +1224,17 @@ function gameIO() {
         game.onGetEnvs(game.envs);
       }
     },
+    //Set map / game scale
+    "s": function (packet) {
+      game.gameScale = packet.scale;
+    },
     // Add global object
     "g": function (packet) {
-      game.globalObjects.push(packet.obj);
+      game.globalObjects.push({ i: packet.i, pos: packet.pos });
     },
     // Remove global object
     "h": function (packet) {
+      console.log("called");
       for (let i = 0; i < game.globalObjects.length; i++) {
         const element = game.globalObjects[i];
         if (element.i === packet.i) game.globalObjects.splice(i, 1);
