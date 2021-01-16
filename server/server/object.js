@@ -18,7 +18,7 @@ let objects = [
         shape: 'circle',
         damping: 0,
         bodyType: 3,
-        global: true,
+        global: false,
     }
 ]
 game.addType(

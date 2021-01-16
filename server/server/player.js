@@ -65,18 +65,65 @@ let tankProps = [
             tankSize: 1,
         }
     ],
-]
+];
+
+/**
+ * Generates a turret object.
+ * @param {number} type The turret type.
+ * @param {number} maxCD Millliseconds between shots.
+ * @param {number=} offsetX X offset. In pixels.
+ * @param {number=} offsetY Y offset. In pixels.
+ * @param {number=} offsetAngle Angle offset. Clockwise in radians.
+ */
+function t(type, maxCD, offsetX, offsetY, offsetAngle) {
+    let l;
+    switch(type) {
+        case 0: 
+            l = 41.8
+            break;
+        case 2:
+            l = 51.04;
+            break;
+
+        // Shotgun and machine gun have the same length
+        default: 
+            l = 32.56
+            break;
+    }
+    let returnObj = {
+        type: type,
+        turretCD: 0,
+        turretMaxCD: maxCD,
+        length: l
+    }
+    if (offsetX !== undefined) returnObj.offsetX = offsetX;
+    if (offsetY !== undefined) returnObj.offsetY = offsetY;
+    if (offsetAngle !== undefined) returnObj.offsetAngle = offsetAngle;
+    return returnObj;
+}
+
+// let turrets = [
+//     [{ type: 0, turretCD: 0, turretMaxCD: 10 }], //* Default
+//     [{ type: 1, turretCD: 0, turretMaxCD: 15 }], //* Shotgun
+//     [{ type: 2, turretCD: 0, turretMaxCD: 20 }], //* Sniper
+//     [{ type: 3, turretCD: 0, turretMaxCD: 3 }], //* Machine Gun
+//     [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }], //* Twin
+//     [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Triplet
+//     [{ type: 1, turretCD: 0, turretMaxCD: 10, offsetX: -4, offsetAngle: Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetX: 4, offsetAngle: -Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Shotgun Triplet
+//     [{ type: 2, turretCD: 0, turretMaxCD: 10, offsetX: -20, offsetAngle: -Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetX: 20, offsetAngle: Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Focused Sniper
+//     [{ type: 3, turretCD: 0, turretMaxCD: 2, offsetY: 20 }, { type: 3, turretCD: 0, turretMaxCD: 2 }] //* Sprayer
+// ]
 
 let turrets = [
-    [{ type: 0, turretCD: 0, turretMaxCD: 10 }], //* Default
-    [{ type: 1, turretCD: 0, turretMaxCD: 15 }], //* Shotgun
-    [{ type: 2, turretCD: 0, turretMaxCD: 20 }], //* Sniper
-    [{ type: 3, turretCD: 0, turretMaxCD: 3 }], //* Machine Gun
-    [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }], //* Twin
-    [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Triplet
-    [{ type: 1, turretCD: 0, turretMaxCD: 10, offsetX: -4, offsetAngle: Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetX: 4, offsetAngle: -Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Shotgun Triplet
-    [{ type: 2, turretCD: 0, turretMaxCD: 10, offsetX: -20, offsetAngle: -Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetX: 20, offsetAngle: Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Focused Sniper
-    [{ type: 3, turretCD: 0, turretMaxCD: 2, offsetY: 20 }, { type: 3, turretCD: 0, turretMaxCD: 2 }] //* Sprayer
+    [t(0, 10)], //* Default
+    [t(1, 15)], //* Shotgun
+    [t(2, 20)], //* Sniper
+    [t(3, 3)], //* Machine Gun
+    [t(0, 10, -10), t(0, 10, 10)], //* Twin
+    [t(0, 10, -10), t(0, 10, 10), t(0, 10, 0, 10)], //* Triplet
+    [t(1, 10, -4, 0, Math.PI / 10), t(1, 10, 4, 0, -Math.PI / 10), t(1, 10, 0, 10)], //* Shotgun Triplet
+    [t(2, 10, -20, 0, -Math.PI / 20), t(2, 10, 20, 0, Math.PI / 20), t(2, 10, 0, 10)], //* Focused Sniper
+    [t(3, 2, 0, 20), t(3, 2)] //* Sprayer
 ]
 
 game.addType(
@@ -139,6 +186,7 @@ game.addType(
         }
 
         obj.updateTurrets = () => {
+            obj.turrets = [];
             turrets[obj.turretIndex].forEach((t, i) => {
                 obj.turrets.push({});
                 for (const prop in t) {

@@ -9,7 +9,7 @@ game.create("wall", { x: MAP_SIZE / 2, y: MAP_SIZE + WALL_SIZE / 2, w: MAP_SIZE 
 game.create("wall", { x: -WALL_SIZE / 2, y: MAP_SIZE / 2, w: WALL_SIZE, h: MAP_SIZE + WALL_SIZE * 2 });
 game.create("wall", { x: MAP_SIZE + WALL_SIZE / 2, y: MAP_SIZE / 2, w: WALL_SIZE, h: MAP_SIZE + WALL_SIZE * 2 });
 
-const TREE_COUNT = 100, ROCK_COUNT = 1;
+const TREE_COUNT = 35 * MAP_SCALE, ROCK_COUNT = 20 * MAP_SCALE;
 const TYPE_TREE = 0, TYPE_ROCK = 1;
 
 const spawnables = [{ type: "object", subtype: TYPE_TREE, max: TREE_COUNT }, { type: "object", subtype: TYPE_ROCK, max: ROCK_COUNT }];
