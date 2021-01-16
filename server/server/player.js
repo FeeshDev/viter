@@ -232,6 +232,8 @@ const shoot = (obj) => {
         let finalPosition
         let bulletAngle;
         switch (turret.type) {
+
+            // Shotgun
             case 1:
                 newAngle = 2 * Math.PI - obj.playerMouse.angle;
                 distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
@@ -249,6 +251,8 @@ const shoot = (obj) => {
                     game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
                 }
                 break;
+
+            // Machine Gun
             case 3:
                 newAngle = 2 * Math.PI - obj.playerMouse.angle;
                 distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
@@ -264,6 +268,7 @@ const shoot = (obj) => {
                 bulletAngle = bulletAngle - (spread * sign) / 2;
                 game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
                 break;
+                
             default:
                 newAngle = 2 * Math.PI - obj.playerMouse.angle;
                 distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
