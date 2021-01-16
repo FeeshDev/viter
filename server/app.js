@@ -87,6 +87,17 @@ if (fs.existsSync(path.resolve("/", "etc", "letsencrypt"))) {
     };
 }
 
+if (cert) {
+    let app2 = express();
+    app2.get("/*", function (req, res) {
+        res.redirect(301, 'https://viter.io');
+    });
+    let port = 80;
+    app2.listen(port, () => {
+        console.log(`Redirecter listening on port ${port}.`)
+    });
+}
+
 // GLOBALS
 global.game = new gameIO.game({ port: cert ? 443 : 80, enablews: false, app: app, certs: cert });
 
