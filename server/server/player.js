@@ -2,6 +2,8 @@ const DEFAULT_SCALE = 0.5;
 
 let hitboxes = [{ w: 180, h: 210 }, { w: 150, h: 150 }, { w: 214, h: 200 }];
 
+const bullets = [1, 0.6, 1, 0.65]; // bullet scales
+
 let tankProps = [
     [ //* Tank 0
         { //* Tier 0
@@ -65,18 +67,68 @@ let tankProps = [
             tankSize: 1,
         }
     ],
-]
+];
+
+/**
+ * Generates a turret object.
+ * @param {number} type The turret type.
+ * @param {number} maxCD Millliseconds between shots.
+ * @param {number=} offsetX X offset. In pixels.
+ * @param {number=} offsetY Y offset. In pixels.
+ * @param {number=} offsetAngle Angle offset. Clockwise in radians.
+ */
+function t(type, maxCD, offsetX = 0, offsetY = 0, offsetAngle = 0) {
+    let l;
+    switch(type) {
+        case 0: 
+            l = 41.8
+            break;
+        case 2:
+            l = 51.04;
+            break;
+
+        // Shotgun and machine gun have the same length
+        default: 
+            l = 32.56
+            break;
+    }
+    let bs = bullets[type];
+    return {
+        type: type,
+        turretCD: 0,
+        turretMaxCD: maxCD,
+        length: l,
+        bulletSize: bs,
+        distance: Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY + l - bs) * 2),
+        turretAngle: Math.atan2(-offsetY - l + bs, offsetX),
+        offsetX: offsetX,
+        offsetY: offsetY,
+        offsetAngle: offsetAngle
+    };
+}
+
+// let turrets = [
+//     [{ type: 0, turretCD: 0, turretMaxCD: 10 }], //* Default
+//     [{ type: 1, turretCD: 0, turretMaxCD: 15 }], //* Shotgun
+//     [{ type: 2, turretCD: 0, turretMaxCD: 20 }], //* Sniper
+//     [{ type: 3, turretCD: 0, turretMaxCD: 3 }], //* Machine Gun
+//     [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }], //* Twin
+//     [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Triplet
+//     [{ type: 1, turretCD: 0, turretMaxCD: 10, offsetX: -4, offsetAngle: Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetX: 4, offsetAngle: -Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Shotgun Triplet
+//     [{ type: 2, turretCD: 0, turretMaxCD: 10, offsetX: -20, offsetAngle: -Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetX: 20, offsetAngle: Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Focused Sniper
+//     [{ type: 3, turretCD: 0, turretMaxCD: 2, offsetY: 20 }, { type: 3, turretCD: 0, turretMaxCD: 2 }] //* Sprayer
+// ]
 
 let turrets = [
-    [{ type: 0, turretCD: 0, turretMaxCD: 10 }], //* Default
-    [{ type: 1, turretCD: 0, turretMaxCD: 15 }], //* Shotgun
-    [{ type: 2, turretCD: 0, turretMaxCD: 20 }], //* Sniper
-    [{ type: 3, turretCD: 0, turretMaxCD: 3 }], //* Machine Gun
-    [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }], //* Twin
-    [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Triplet
-    [{ type: 1, turretCD: 0, turretMaxCD: 10, offsetX: -4, offsetAngle: Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetX: 4, offsetAngle: -Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Shotgun Triplet
-    [{ type: 2, turretCD: 0, turretMaxCD: 10, offsetX: -20, offsetAngle: -Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetX: 20, offsetAngle: Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Focused Sniper
-    [{ type: 3, turretCD: 0, turretMaxCD: 2, offsetY: 20 }, { type: 3, turretCD: 0, turretMaxCD: 2 }] //* Sprayer
+    [t(0, 10)], //* Default
+    [t(1, 15)], //* Shotgun
+    [t(2, 20)], //* Sniper
+    [t(3, 3)], //* Machine Gun
+    [t(0, 10, -10), t(0, 10, 10)], //* Twin
+    [t(0, 10, -20), t(0, 10, 20), t(0, 10, 0, 10)], //* Triplet
+    [t(1, 10, -4, 0, Math.PI / 10), t(1, 10, 4, 0, -Math.PI / 10), t(1, 10, 0, 10)], //* Shotgun Triplet
+    [t(2, 10, -10, 0, -0.03), t(2, 10, 10, 0, 0.03), t(2, 10, 0, 0)], //* Focused Sniper
+    [t(3, 2, 0, 20), t(3, 2)] //* Sprayer
 ]
 
 game.addType(
@@ -118,9 +170,7 @@ game.addType(
         obj.turrets = [];
         turrets[obj.turretIndex].forEach((t, i) => {
             obj.turrets.push({});
-            for (const prop in t) {
-                obj.turrets[i][prop] = t[prop];
-            }
+            for (const prop in t) obj.turrets[i][prop] = t[prop];
         });
         // obj.turrets = [{ type: 2, offsetX: -10, offsetY: -5, offsetAngle: Math.PI / 12, turretCD: 0, turretMaxCD: 10 }, { type: 2, offsetX: 10, offsetY: -5, offsetAngle: -Math.PI / 12, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: -6, offsetY: 0, offsetAngle: Math.PI / 16, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: 6, offsetY: 0, offsetAngle: -Math.PI / 16, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: 0, offsetY: 10, offsetAngle: 0, turretCD: 0, turretMaxCD: 10 }];
 
@@ -139,11 +189,10 @@ game.addType(
         }
 
         obj.updateTurrets = () => {
+            obj.turrets = [];
             turrets[obj.turretIndex].forEach((t, i) => {
                 obj.turrets.push({});
-                for (const prop in t) {
-                    obj.turrets[i][prop] = t[prop];
-                }
+                for (const prop in t) obj.turrets[i][prop] = t[prop];
             });
         }
     },
@@ -221,27 +270,16 @@ const handleMovement = (obj) => {
 const shoot = (obj) => {
     obj.turrets.forEach(turret => {
         if (turret.turretCD !== 0) return;
-        let offsetX = turret.offsetX || 0;
-        let offsetY = turret.offsetY || 0;
-        let offsetAngle = turret.offsetAngle || 0;
-
-        let newAngle;
-        let distance;
-        let turretAngle;
         let angleScale = 3.1;
-        let finalPosition
-        let bulletAngle;
+        let bulletAngle = obj.playerMouse.angle + turret.offsetAngle;
+        let finalPosition = {
+            x: Math.sin(2 * Math.PI - obj.playerMouse.angle + turret.turretAngle) * turret.distance,
+            y: Math.cos(2 * Math.PI - obj.playerMouse.angle + turret.turretAngle) * turret.distance
+        }
         switch (turret.type) {
-            case 1:
-                newAngle = 2 * Math.PI - obj.playerMouse.angle;
-                distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
-                turretAngle = Math.atan2(-offsetY, offsetX);
-                finalPosition = {
-                    x: Math.sin(newAngle + turretAngle) * distance,
-                    y: Math.cos(newAngle + turretAngle) * distance
-                }
-                bulletAngle = obj.playerMouse.angle + offsetAngle;
 
+            // Shotgun
+            case 1:
                 for (let i = 0; i < 6; i++) {
                     let spread = Math.random() * (Math.PI / 8);
                     let sign = (Math.random() > 0.5) ? 1 : -1;
@@ -249,30 +287,16 @@ const shoot = (obj) => {
                     game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
                 }
                 break;
-            case 3:
-                newAngle = 2 * Math.PI - obj.playerMouse.angle;
-                distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
-                turretAngle = Math.atan2(-offsetY, offsetX);
-                finalPosition = {
-                    x: Math.sin(newAngle + turretAngle) * distance,
-                    y: Math.cos(newAngle + turretAngle) * distance
-                }
-                bulletAngle = obj.playerMouse.angle + offsetAngle;
 
+            // Machine Gun
+            case 3:
                 let spread = Math.random() * (Math.PI / 4);
                 let sign = (Math.random() > 0.5) ? 1 : -1;
                 bulletAngle = bulletAngle - (spread * sign) / 2;
                 game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
                 break;
+                
             default:
-                newAngle = 2 * Math.PI - obj.playerMouse.angle;
-                distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY) * 2);
-                turretAngle = Math.atan2(-offsetY, offsetX);
-                finalPosition = {
-                    x: Math.sin(newAngle + turretAngle) * distance,
-                    y: Math.cos(newAngle + turretAngle) * distance
-                }
-                bulletAngle = obj.playerMouse.angle + offsetAngle;
                 game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
                 break
         }

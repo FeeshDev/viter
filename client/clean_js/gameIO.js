@@ -432,7 +432,7 @@ function gameIO() {
     element.renderSpecific = function (ctx, ratio) {
       ctx.font = this.otherParams + " " + this.fontSize / ratio + "px " + this.font;
       var width = ctx.measureText(this.text).width;
-      let biggestWidth = (ctx.measureText("@").width << 4) * 1.25 * ratio;
+      let biggestWidth = ctx.measureText("@").width * 20 * ratio;
       element.width = width * ratio;
       ctx.fillStyle = this.fillStyle;
       if (width > biggestWidth) this.text = "spammy name";
