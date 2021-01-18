@@ -96,5 +96,6 @@ game.addCollision('bullet', 'player', (bullet, player) => {
     if (bullet.ownerID !== player.id) {
         game.remove(bullet);
         player.health -= bullet.damage;
+        player.regen = Date.now() + 2000; // next regen in 20 s
     }
 });

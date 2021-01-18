@@ -1353,8 +1353,14 @@ function gameIO() {
         obj.healthBar.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
         obj.healthBar.position.y = game.lerp(obj.old.position.y, obj.new.position.y) - 60;
 
-        if (obj.healthBar.type !== "roundRectangle") { if (obj.health < obj.maxHealth) { obj.healthBar = new game.roundRectangle(0, 0, (obj.health / obj.maxHealth) * 100, 10, 5, "#FF0000"); this.scenes[0].add(obj.healthBar); } }
-        else { obj.healthBar.width = (obj.health / obj.maxHealth) * 100; }
+        if (obj.healthBar.type !== "roundRectangle") { 
+          if (obj.health < obj.maxHealth) { 
+            obj.healthBar = new game.roundRectangle(0, 0, (obj.health / obj.maxHealth) * 100, 10, 5, "#FF0000"); 
+            this.scenes[0].add(obj.healthBar); 
+          } 
+        } else {
+          obj.healthBar.width = (obj.health / obj.maxHealth) * 100;
+        }
       }
       if (obj.turrets !== undefined) {
         obj.turrets.forEach(turret => {

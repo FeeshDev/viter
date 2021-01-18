@@ -182,6 +182,7 @@ game.addType(
         obj.needsUpdate = true;
         obj.playerMouse = { angle: 0 };
         obj.startingTime = Date.now();
+        obj.regen = Date.now();
 
         obj.handleHitbox = () => {
             obj.props = tankProps[obj.tank][obj.tier];
@@ -202,6 +203,14 @@ game.addType(
         obj.body.angularVelocity = 0;
         obj.body.angularForce = 0;
 
+        if (obj.health <= 0) { 
+            game.remove(obj); obj.type = 'spectator'; 
+            obj.death(obj.startingTime); 
+            obj = undefined 
+        }
+
+        if (Date.now() > obj.regen) obj.health = Math.min(obj.health + 0.3, obj.maxHealth);
+
         obj.body.angle = obj.direction * (Math.PI / 180);
         handleMovement(obj);
 
@@ -210,7 +219,6 @@ game.addType(
         });
         if (obj.playerMouse.clicking) shoot(obj);
 
-        if (obj.health <= 0) { game.remove(obj); obj.type = 'spectator'; obj.death(obj.startingTime); obj = undefined }
     },
     // Packet Update
     function (obj, packet) {
