@@ -4,68 +4,45 @@ let hitboxes = [{ w: 180, h: 210 }, { w: 150, h: 150 }, { w: 214, h: 200 }];
 
 const bullets = [1, 0.6, 1, 0.65]; // bullet scales
 
-let tankProps = [
+/**
+ * Generates a tank body
+ * @param {number} hitboxIndex the index of the hitbox
+ * @param {number} speedMod speed multiplier
+ * @param {number=} healthMod health multiplier
+ * @param {number=} scale size multiplier
+ */
+
+function b(hitboxIndex, speedMod, healthMod, scale = 1) {
+    return {
+        hitbox: hitboxes[hitboxIndex],
+        speedMod: speedMod,
+        healthMod: healthMod,
+        tankSize: scale,
+    };
+}
+
+let tankBodies = [
     [ //* Tank 0
-        { //* Tier 0
-            //* Default - 0.0
-            hitbox: hitboxes[0],
-            speedMod: 1,
-            healthMod: 1,
-            tankSize: 1,
-        }
+        //* Tier 0
+        b(0, 1, 1, 1) //* Default - 0.0
     ],
     [ //* Tank 1
-        { //* Tier 0
-            //* Serpent MK I - 1.0
-            hitbox: hitboxes[1],
-            speedMod: 1.2,
-            healthMod: 1,
-            tankSize: 1,
-        },
-        { //* Tier 1
-            //* Serpent MK II - 1.1
-            hitbox: hitboxes[1],
-            speedMod: 1.4,
-            healthMod: 0.8,
-            tankSize: 1,
-        },
-        { //* Tier 2
-            //* Basilisk - 1.2
-            hitbox: hitboxes[1],
-            speedMod: 2,
-            healthMod: 0.5,
-            tankSize: 1,
-        },
-        { //* Tier 3
-            //* Basilisk - 1.3
-            hitbox: hitboxes[1],
-            speedMod: 4,
-            healthMod: 999,
-            tankSize: 10,
-        }
+        //* Tier 0
+        b(1, 1.2, 1, 1), //* Serpent MK I - 1.0
+        //* Tier 1
+        b(1, 1.4, 0.8, 1), //* Serpent MK II - 1.1
+        //* Tier 2
+        b(1, 2, 0.5, 1), //* Basilisk - 1.2
+        //* Tier 3
+        b(1, 4, 999, 10), //* idk hacker thing - 1.3
     ],
     [ //* Tank 2
-        { //* Tier 0
-            //* Squire MK I - 2.0
-            hitbox: hitboxes[0],
-            speedMod: 1,
-            healthMod: 1.2,
-            tankSize: 1,
-        },
-        { //* Tier 1
-            //* Squire MK II - 2.1
-            hitbox: hitboxes[2],
-            speedMod: 0.8,
-            healthMod: 1.4,
-            tankSize: 1,
-        },
-        { //* Tier 2
-            //* Knight - 2.2
-            hitbox: hitboxes[2],
-            speedMod: 0.6,
-            healthMod: 2,
-            tankSize: 1,
-        }
+        //* Tier 0
+        b(0, 1, 1.2, 1), //* Squire MK I - 2.0
+        //* Tier 1
+        b(2, 0.8, 1.4, 1), //* Squire MK II - 2.1
+        //* Tier 2
+        b(1, 0.6, 2, 1), //* Knight - 2.2
     ],
 ];
 
@@ -79,16 +56,16 @@ let tankProps = [
  */
 function t(type, maxCD, offsetX = 0, offsetY = 0, offsetAngle = 0) {
     let l;
-    switch(type) {
-        case 0: 
-            l = 41.8
+    switch (type) {
+        case 0:
+            l = 41.8;
             break;
         case 2:
             l = 51.04;
             break;
 
         // Shotgun and machine gun have the same length
-        default: 
+        default:
             l = 32.56
             break;
     }
@@ -106,18 +83,6 @@ function t(type, maxCD, offsetX = 0, offsetY = 0, offsetAngle = 0) {
         offsetAngle: offsetAngle
     };
 }
-
-// let turrets = [
-//     [{ type: 0, turretCD: 0, turretMaxCD: 10 }], //* Default
-//     [{ type: 1, turretCD: 0, turretMaxCD: 15 }], //* Shotgun
-//     [{ type: 2, turretCD: 0, turretMaxCD: 20 }], //* Sniper
-//     [{ type: 3, turretCD: 0, turretMaxCD: 3 }], //* Machine Gun
-//     [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }], //* Twin
-//     [{ type: 0, turretCD: 0, turretMaxCD: 10, offsetX: -10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetX: 10 }, { type: 0, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Triplet
-//     [{ type: 1, turretCD: 0, turretMaxCD: 10, offsetX: -4, offsetAngle: Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetX: 4, offsetAngle: -Math.PI / 10 }, { type: 1, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Shotgun Triplet
-//     [{ type: 2, turretCD: 0, turretMaxCD: 10, offsetX: -20, offsetAngle: -Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetX: 20, offsetAngle: Math.PI / 20 }, { type: 2, turretCD: 0, turretMaxCD: 10, offsetY: 10 }], //* Focused Sniper
-//     [{ type: 3, turretCD: 0, turretMaxCD: 2, offsetY: 20 }, { type: 3, turretCD: 0, turretMaxCD: 2 }] //* Sprayer
-// ]
 
 let turrets = [
     [t(0, 10)], //* Default
@@ -163,7 +128,7 @@ game.addType(
         obj.tier = 0;
 
         obj.tank === 0 ? obj.tier = 0 : null;
-        obj.props = tankProps[obj.tank][obj.tier];
+        obj.props = tankBodies[obj.tank][obj.tier];
 
         //!SHOOTING
         obj.turretIndex = 1;
@@ -185,7 +150,7 @@ game.addType(
         obj.regen = Date.now();
 
         obj.handleHitbox = () => {
-            obj.props = tankProps[obj.tank][obj.tier];
+            obj.props = tankBodies[obj.tank][obj.tier];
             obj.body.shapes[0] = new game.rectangle(obj.props.hitbox.h * DEFAULT_SCALE * obj.props.tankSize, obj.props.hitbox.w * DEFAULT_SCALE * obj.props.tankSize);
         }
 
@@ -203,10 +168,10 @@ game.addType(
         obj.body.angularVelocity = 0;
         obj.body.angularForce = 0;
 
-        if (obj.health <= 0) { 
-            game.remove(obj); obj.type = 'spectator'; 
-            obj.death(obj.startingTime); 
-            obj = undefined 
+        if (obj.health <= 0) {
+            game.remove(obj); obj.type = 'spectator';
+            obj.death(obj.startingTime);
+            obj = undefined;
         }
 
         if (Date.now() > obj.regen) obj.health = Math.min(obj.health + 0.3, obj.maxHealth);
@@ -303,7 +268,7 @@ const shoot = (obj) => {
                 bulletAngle = bulletAngle - (spread * sign) / 2;
                 game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
                 break;
-                
+
             default:
                 game.create("bullet", { type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], angle: bulletAngle, velocity: obj.body.velocity, ownerID: obj.id });
                 break
