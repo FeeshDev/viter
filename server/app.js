@@ -120,7 +120,7 @@ require("./server/commandHandler.js")
 //! WEBSOCKET EVENTS
 game.wsopen = function (ws) {
     console.log(`Client (${ws.ipAdress}) connected.`);
-    ws.self = game.create("spectator");
+    //ws.self = game.create("spectator");
     /*
     if (ws.self === undefined || ws.self.type == "spectator") {
         ws.self = game.create("player");
@@ -155,7 +155,6 @@ game.addPacketType(
     "playPacket",
     function (packet, ws) {
         if (ws.self === undefined || ws.self.type == "spectator") {
-            if (ws.self.type == "spectator") game.remove(ws.self);
             let playerName = packet.name != "" ? packet.name : "viter.io";
             ws.self = game.create("player", { name: playerName, devID: packet.devID });
             if (ws.currentPackets !== []) ws.currentPackets.push({ type: "i", list: game.globalCoordPackets });

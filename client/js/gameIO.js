@@ -933,6 +933,7 @@ function gameIO() {
       rotation: 0
     }
     element.UI = new game.object();
+    element.UI.buttons = [];
     element.UI.render = function (ctx, ratio, opacity) {
 
     }
@@ -1412,7 +1413,8 @@ function gameIO() {
       }
       if (obj.healthBar) {
         if (obj.healthBar.type !== "roundRectangle") {
-          obj.healthBar = new game.roundRectangle(0, 0, (obj.health / obj.maxHealth) * 100, 10, 3, "#FF0000"); this.scenes[0].add(obj.healthBar);
+          obj.healthBar = new game.roundRectangle(0, 0, (obj.health / obj.maxHealth) * 100, 10, 3, "#FF0000");
+          this.scenes[0].add(obj.healthBar);
         }
 
         obj.healthBar.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
