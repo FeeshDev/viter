@@ -30,8 +30,8 @@ window.onload = function () {
                     nameColor = "#fff";
                     break;
             }
-            obj.playerName = new game.text(packet.playerName, 0, 0, nameColor, "Arial", 26);
-            scene.add(obj.playerName, 2);
+            obj.playerName = new game.text(packet.playerName, 0, 0, nameColor, null, "Arial", 26);
+            scene.add(obj.playerName, 7);
 
             let tank = new Image();
             tank.src = `./client/images/tanks/${packet.tank}/${packet.tier}/tank.png`;
@@ -81,7 +81,7 @@ window.onload = function () {
                     packet.subObjType === 0 ? treeType = 'tree' : treeType = 'pine';
                     object.src = `./client/images/objects/obstacles/${treeType}${renderer.theme}.png`;
                     obj.visual = new game.image(object, 0, 0, 80 * packet.scale, 80 * packet.scale);
-                    scene.add(obj.visual, 20, packet.scale);
+                    scene.add(obj.visual, 6, packet.scale);
                     break;
                 case TYPE_ROCK:
                     object.src = `./client/images/objects/obstacles/rock${renderer.theme}.png`;

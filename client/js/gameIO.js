@@ -416,7 +416,8 @@ function gameIO() {
     }
     return element;
   }
-  game.text = function (text, x, y, fillStyle, font, fontSize, otherParams, opacity, align) {
+  /* //* Old Text Methods
+  game.fillText = function (text, x, y, fillStyle, font, fontSize, otherParams, opacity, align) {
     var element = new game.object();
     element.text = text || "";
     element.position = new game.Vector2(x || 0, y || 0);
@@ -478,6 +479,52 @@ function gameIO() {
           break;
         default:
           ctx.strokeText(this.text, Math.floor(-width / 2), this.fontSize / 3 / ratio);
+          break;
+      }
+    }
+    return element;
+  }
+  */
+  game.text = function (text, x, y, fillStyle, strokeStyle, font, fontSize, otherParams, opacity, align) {
+    var element = new game.object();
+    element.text = text || "";
+    element.position = new game.Vector2(x || 0, y || 0);
+    let stroke = false, fill = false;
+    if (fillStyle) fill = true;
+    if (strokeStyle) stroke = true;
+    element.strokeStyle = strokeStyle || "#000";
+    element.fillStyle = fillStyle || "#000";
+    element.font = font || "Arial";
+    element.fontSize = fontSize || 30;
+    element.otherParams = otherParams || "";
+    element.opacity = opacity || 1;
+    element.type = "text";
+    element.width = 0;
+    element.align = align || "center";
+    element.lineWidth = 2;
+    element.renderSpecific = function (ctx, ratio) {
+      ctx.font = this.otherParams + " " + this.fontSize / ratio + "px " + this.font;
+      var width = ctx.measureText(this.text).width;
+      let biggest = ctx.measureText("WWWWWWWWWWWWWWWWWWWWWWWWWWp");
+      element.width = width * ratio;
+      ctx.fillStyle = this.fillStyle;
+      ctx.strokeStyle = this.strokeStyle;
+      if (width > biggest.width) this.text = "spammy name";
+      ctx.miterLimit = 0.1;
+      element.width = width * ratio;
+      ctx.lineWidth = this.lineWidth * this.size / ratio;
+      switch (element.align) {
+        case "right":
+          if (fill) ctx.fillText(this.text, Math.floor(-width), this.fontSize / 3 / ratio);
+          if (stroke) ctx.strokeText(this.text, Math.floor(-width), this.fontSize / 3 / ratio);
+          break;
+        case "left":
+          if (fill) ctx.fillText(this.text, 0, this.fontSize / 3 / ratio);
+          if (stroke) ctx.strokeText(this.text, 0, this.fontSize / 3 / ratio);
+          break;
+        default:
+          if (fill) ctx.fillText(this.text, Math.floor(-width / 2), this.fontSize / 3 / ratio);
+          if (stroke) ctx.strokeText(this.text, Math.floor(-width / 2), this.fontSize / 3 / ratio);
           break;
       }
     }
@@ -885,18 +932,21 @@ function gameIO() {
       ratio: 1,
       rotation: 0
     }
+    element.UI = new game.object();
+    element.UI.render = function (ctx, ratio, opacity) {
+
+    }
     element.render = function (ctx, ratio, opacity) {
       ratio /= this.size;
       this.opacity = Math.min(Math.max(0, this.opacity), 1);
       ctx.globalAlpha = this.opacity * opacity;
       ctx.translate(-this.camera.position.x / ratio, -this.camera.position.y / ratio);
       ctx.rotate(-this.camera.rotation);
-      this.belowObjects.forEach(function (object) {
-        object.render(ctx, ratio, opacity);
-      });
 
-      //! SCENE RENDER
+      //! UI RENDER
+      this.UI.render(ctx, ratio, opacity);
 
+      //* Object Sorting
       this.objects.sort((a, b) => {
         if (a.scale < b.scale) {
           return -1;
@@ -917,9 +967,15 @@ function gameIO() {
         return 0;
       });
 
+      //* Object Render
+      this.belowObjects.forEach(function (object) {
+        object.render(ctx, ratio, opacity);
+      });
+
       this.objects.forEach(function (object) {
         object.render(ctx, ratio, opacity);
       });
+
       ctx.rotate(this.camera.rotation);
       ctx.translate(this.camera.position.x / ratio, this.camera.position.y / ratio);
     }
@@ -1067,10 +1123,11 @@ function gameIO() {
       if (obj.type === "player") obj.cannon = new game.object();
       if (obj.type === "player") obj.turrets = [];
       if (obj.type === "player") obj.playerName = new game.object();
-      if (packet.maxHealth !== undefined && packet.health !== undefined) obj.healthBar = new game.object();
 
       if (packet.maxHealth !== undefined) obj.maxHealth = packet.maxHealth;
       if (packet.health !== undefined) obj.health = packet.health;
+
+      if (obj.health) obj.healthBar = new game.object();
 
       if (packet.objType !== undefined) obj.objType = packet.objType;
       if (packet.subObjType !== undefined) obj.subObjType = packet.subObjType;
@@ -1354,11 +1411,19 @@ function gameIO() {
         obj.playerName.position.y = game.lerp(obj.old.position.y, obj.new.position.y) + 60;
       }
       if (obj.healthBar) {
+        if (obj.healthBar.type !== "roundRectangle") {
+          obj.healthBar = new game.roundRectangle(0, 0, (obj.health / obj.maxHealth) * 100, 10, 3, "#FF0000"); this.scenes[0].add(obj.healthBar);
+        }
+
         obj.healthBar.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
         obj.healthBar.position.y = game.lerp(obj.old.position.y, obj.new.position.y) - 60;
 
-        if (obj.healthBar.type !== "roundRectangle") { if (obj.health < obj.maxHealth) { obj.healthBar = new game.roundRectangle(0, 0, (obj.health / obj.maxHealth) * 100, 10, 5, "#FF0000"); this.scenes[0].add(obj.healthBar); } }
-        else { obj.healthBar.width = (obj.health / obj.maxHealth) * 100; }
+        if (obj.health !== obj.maxHealth) {
+          obj.healthBar.opacity = 1;
+          obj.healthBar.width = (obj.health / obj.maxHealth) * 100;
+        } else {
+          obj.healthBar.opacity = 0;
+        }
       }
       if (obj.turrets !== undefined) {
         obj.turrets.forEach(turret => {
