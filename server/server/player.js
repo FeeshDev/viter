@@ -172,6 +172,7 @@ game.addType(
             game.remove(obj); obj.type = 'spectator';
             obj.death(obj.startingTime);
             obj = undefined;
+            return;
         }
 
         if (Date.now() > obj.regen) obj.health = Math.min(obj.health + 0.3, obj.maxHealth);

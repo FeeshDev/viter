@@ -87,3 +87,13 @@ p {
 #time, #return, #ded {
     font-family: 'Montserrat', sans-serif;
 }
+
+#discord {
+    position: absolute;
+    height: 60px;
+    right: 1%;
+    top: 2%;
+}
+#discord:hover {
+    cursor: pointer;
+}
