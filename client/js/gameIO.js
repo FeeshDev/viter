@@ -539,6 +539,23 @@ function gameIO() {
       }
     };
   }
+
+  game.button = function (x, y, width, height, radius, color, inside) {
+    var element = new game.object();
+    element.position = new game.Vector2(x || 0, y || 0);
+    element.inside = inside || game.text("No Value", x, y, "#000", null, "Arial", 32); //@ {game.text}, {game.image}
+    element.shape = new game.roundRectangle(x, y, width, height, radius, color, true);
+
+    element.onclick = function () { }
+    element.onhover = function () { }
+
+    element.renderSpecific = function (ctx, ratio, opacity) {
+      element.inside.renderSpecific(ctx, ratio);
+      element.shape.renderSpecific(ctx, ratio);
+    }
+    return element;
+  }
+
   game.controls = function () {
     return {
       up: false,
@@ -778,7 +795,7 @@ function gameIO() {
     }
     return element;
   }
-  game.roundRectangle = function (x, y, width, height, radius, color) {
+  game.roundRectangle = function (x, y, width, height, radius, color, relative) {
     var element = new game.object();
     element.position = new game.Vector2(x || 0, y || 0);
     element.width = width || 100;
@@ -788,19 +805,34 @@ function gameIO() {
     element.type = "roundRectangle";
     element.strokeStyle = -1;
     element.lineWidth = 4;
+    element.relative = relative || false;
     element.renderSpecific = function (ctx, ratio) {
+      let roundrect = new Path2D();
       ctx.fillStyle = this.color;
       ctx.beginPath();
-      ctx.moveTo((-this.width / 2 + this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
-      ctx.lineTo((this.width / 2 - this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
-      ctx.quadraticCurveTo(this.width * this.size / 2 / ratio, -this.height * this.size / 2 / ratio, this.width * this.size / 2 / ratio, (-this.height / 2 + this.radius) * this.size / ratio);
-      ctx.lineTo(this.width * this.size / 2 / ratio, (this.height / 2 - this.radius) * this.size / ratio);
-      ctx.quadraticCurveTo(this.width * this.size / 2 / ratio, this.height * this.size / 2 / ratio, (this.width / 2 - this.radius) * this.size / ratio, this.height * this.size / 2 / ratio);
-      ctx.lineTo((-this.width / 2 + this.radius) * this.size / ratio, this.height * this.size / 2 / ratio);
-      ctx.quadraticCurveTo(-this.width * this.size / 2 / ratio, this.height * this.size / 2 / ratio, -this.width * this.size / 2 / ratio, (this.height / 2 - this.radius) * this.size / ratio);
-      ctx.lineTo(-this.width * this.size / 2 / ratio, (-this.height / 2 + this.radius) * this.size / ratio);
-      ctx.quadraticCurveTo(-this.width * this.size / 2 / ratio, -this.height * this.size / 2 / ratio, (-this.width / 2 + this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
-      ctx.fill();
+      if (relative) ctx.translate(this.position.x / ratio - (game.renderers[0].c.width / 2) / ratio, this.position.y / ratio - (game.renderers[0].c.height / 2) / ratio);
+      roundrect.moveTo((-this.width / 2 + this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
+      roundrect.lineTo((this.width / 2 - this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
+      roundrect.quadraticCurveTo(this.width * this.size / 2 / ratio, -this.height * this.size / 2 / ratio, this.width * this.size / 2 / ratio, (-this.height / 2 + this.radius) * this.size / ratio);
+      roundrect.lineTo(this.width * this.size / 2 / ratio, (this.height / 2 - this.radius) * this.size / ratio);
+      roundrect.quadraticCurveTo(this.width * this.size / 2 / ratio, this.height * this.size / 2 / ratio, (this.width / 2 - this.radius) * this.size / ratio, this.height * this.size / 2 / ratio);
+      roundrect.lineTo((-this.width / 2 + this.radius) * this.size / ratio, this.height * this.size / 2 / ratio);
+      roundrect.quadraticCurveTo(-this.width * this.size / 2 / ratio, this.height * this.size / 2 / ratio, -this.width * this.size / 2 / ratio, (this.height / 2 - this.radius) * this.size / ratio);
+      roundrect.lineTo(-this.width * this.size / 2 / ratio, (-this.height / 2 + this.radius) * this.size / ratio);
+      roundrect.quadraticCurveTo(-this.width * this.size / 2 / ratio, -this.height * this.size / 2 / ratio, (-this.width / 2 + this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
+      /*
+      roundrect.moveTo((-this.width / 2 + this.radius) * this.size / ratio + this.position.x / ratio, -this.height * this.size / 2 / ratio + this.position.y / ratio);
+      roundrect.lineTo((this.width / 2 - this.radius) * this.size / ratio + this.position.x / ratio, -this.height * this.size / 2 / ratio + this.position.y / ratio);
+      roundrect.quadraticCurveTo(this.width * this.size / 2 / ratio + this.position.x / ratio, -this.height * this.size / 2 / ratio + this.position.y / ratio, this.width * this.size / 2 / ratio + this.position.x / ratio, (-this.height / 2 + this.radius) * this.size / ratio + this.position.y / ratio);
+      roundrect.lineTo(this.width * this.size / 2 / ratio + this.position.x / ratio, (this.height / 2 - this.radius) * this.size / ratio + this.position.y / ratio);
+      roundrect.quadraticCurveTo(this.width * this.size / 2 / ratio + this.position.x / ratio, this.height * this.size / 2 / ratio + this.position.y / ratio, (this.width / 2 - this.radius) * this.size / ratio + this.position.x / ratio, this.height * this.size / 2 / ratio + this.position.y / ratio);
+      roundrect.lineTo((-this.width / 2 + this.radius + this.position.x / ratio) * this.size / ratio, this.height * this.size / 2 / ratio + this.position.y / ratio);
+      roundrect.quadraticCurveTo(-this.width * this.size / 2 / ratio + this.position.x / ratio, this.height * this.size / 2 / ratio + this.position.y / ratio, -this.width * this.size / 2 / ratio + this.position.x / ratio, (this.height / 2 - this.radius) * this.size / ratio + this.position.y / ratio);
+      roundrect.lineTo(-this.width * this.size / 2 / ratio + this.position.x / ratio, (-this.height / 2 + this.radius) * this.size / ratio + this.position.y / ratio);
+      roundrect.quadraticCurveTo(-this.width * this.size / 2 / ratio + this.position.x / ratio, -this.height * this.size / 2 / ratio + this.position.y / ratio, (-this.width / 2 + this.radius) * this.size / ratio + this.position.x / ratio, -this.height * this.size / 2 / ratio + this.position.y / ratio);
+      */
+      ctx.fill(roundrect);
+      if (relative) ctx.translate(-(this.position.x / ratio - (game.renderers[0].c.width / 2) / ratio), -(this.position.y / ratio - (game.renderers[0].c.height / 2) / ratio));
     }
     return element;
   }
@@ -935,7 +967,9 @@ function gameIO() {
     element.UI = new game.object();
     element.UI.buttons = [];
     element.UI.render = function (ctx, ratio, opacity) {
-
+      element.UI.buttons.forEach(button => {
+        button.renderSpecific(ctx, ratio, opacity)
+      });
     }
     element.render = function (ctx, ratio, opacity) {
       ratio /= this.size;

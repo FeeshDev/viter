@@ -128,7 +128,9 @@ window.onload = function () {
     const playGame = () => {
         if (game.ws.readyState == 1)
             game.currentPackets.push({ type: "playPacket", name: document.getElementById("nameInput").value, devID: localStorage["devID"] });
-        document.getElementById("menu").style.display = "none";
+        setTimeout(() => {
+            document.getElementById("menu").style.display = "none";
+        }, 500);
         main();
     }
 
@@ -149,6 +151,9 @@ window.onload = function () {
     };
 
     game.createSocket(`${window.location.protocol === "https:" ? "wss" : "ws"}:${window.location.hostname}:${window.location.port || window.location.protocol === "https:" ? "443" : "80"}/ws`);
+
+    scene.UI.buttons.push(new game.button(1000, 1000, 50, 50, 5, "#000"))
+    console.log(scene.UI.buttons);
 
     //! Main Loop
     const main = () => {

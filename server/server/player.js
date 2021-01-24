@@ -169,7 +169,6 @@ game.addType(
         obj.body.angularForce = 0;
 
         if (obj.health <= 0) {
-            game.remove(obj); obj.type = 'spectator';
             obj.death(obj.startingTime);
             obj = undefined;
         }
