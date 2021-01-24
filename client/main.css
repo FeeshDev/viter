@@ -37,6 +37,15 @@ p {
     height: 100px;
 }
 
+#nameInput {
+    text-indent: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+    margin-top: 60px;
+    width: 200px;
+    height: 60px;
+}
+
 #playButton {
     font-family: 'Montserrat', sans-serif;
     margin-top: 10px;
@@ -46,15 +55,6 @@ p {
 }
 #playButton:hover {
     cursor: pointer;
-}
-
-#nameInput {
-    text-indent: 10px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 30px;
-    margin-top: 10px;
-    width: 200px;
-    height: 60px;
 }
 
 #death-screen {
@@ -96,4 +96,12 @@ p {
 }
 #discord:hover {
     cursor: pointer;
+}
+
+#title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    top: 3px;
 }

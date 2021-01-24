@@ -4,6 +4,14 @@ let hitboxes = [{ w: 180, h: 210 }, { w: 150, h: 150 }, { w: 214, h: 200 }];
 
 const bullets = [1, 0.6, 1, 0.65]; // bullet scales
 
+const directions = ["up", "left", "down", "right"];
+const dirIndex = {
+    "up": 0,
+    "left": 1,
+    "down": 2,
+    "right": 3
+};
+
 /**
  * Generates a tank body
  * @param {number} hitboxIndex the index of the hitbox
@@ -148,6 +156,8 @@ game.addType(
         obj.playerMouse = { angle: 0 };
         obj.startingTime = Date.now();
         obj.regen = Date.now();
+        obj.dirArray = [];
+        obj.dirString = "falsefalsefalsefalse";
 
         obj.handleHitbox = () => {
             obj.props = tankBodies[obj.tank][obj.tier];
@@ -216,28 +226,89 @@ const handleHitbox = (obj) => {
     obj.body.shapes[0] = new game.rectangle(obj.props.hitbox.h * DEFAULT_SCALE * obj.scale, obj.props.hitbox.w * DEFAULT_SCALE * obj.scale);
 }
 
-const handleMovement = (obj) => {
-    if (obj.playerInput.up) {
-        obj.body.velocity[1] = -400 * obj.props.speedMod;
-        obj.body.velocity[0] = 0;
-        if (obj.direction !== 90) obj.direction = 270;
-    } else if (obj.playerInput.down) {
-        obj.body.velocity[1] = 400 * obj.props.speedMod;
-        obj.body.velocity[0] = 0;
-        if (obj.direction !== 270) obj.direction = 90;
-    } else if (obj.playerInput.left) {
-        obj.body.velocity[1] = 0;
-        obj.body.velocity[0] = -400 * obj.props.speedMod;
-        if (obj.direction !== 0) obj.direction = 180;
-    } else if (obj.playerInput.right) {
-        obj.body.velocity[1] = 0;
-        obj.body.velocity[0] = 400 * obj.props.speedMod;
-        if (obj.direction !== 180) obj.direction = 0;
+const handleMovement = obj => {
+    let nextDir = `${obj.playerInput.up}${obj.playerInput.down}${obj.playerInput.left}${obj.playerInput.right}`;
+    if (obj.dirString !== nextDir) {
+        let keysToSubtract = [];
+        let keysToAdd = [];
+        let keysDown = {
+            up: obj.playerInput.up,
+            down: obj.playerInput.down,
+            left: obj.playerInput.left,
+            right: obj.playerInput.right,
+        };
+        let oldKeysDown = {
+            up: false,
+            down: false,
+            left: false,
+            right: false
+        };
+        obj.dirArray.forEach(d => oldKeysDown[d] = true);
+        for (const key in keysDown) {
+            if (keysDown[key]) {
+                if (!oldKeysDown[key]) keysToAdd.push(key);
+            } else {
+                if (oldKeysDown[key]) keysToSubtract.push(key);
+            }
+        }
+        if (keysToSubtract.length) {
+            let indexesToSplice = [];
+            obj.dirArray.forEach((d, i) => {
+                keysToSubtract.forEach(k => {
+                    if (k === d) indexesToSplice.push(i);
+                });
+            });
+            indexesToSplice.forEach((i, n) => {
+                obj.dirArray.splice(i - n, 1);
+            });
+        }
+        if (keysToAdd.length) keysToAdd.forEach(k => obj.dirArray.push(k));
+        obj.dirString = nextDir;
+    }
+    if (!obj.dirArray.length || obj.dirArray.length === 4) {
+        obj.body.velocity[1] = 0.2;
+        obj.body.velocity[0] = 0.2;
+    } else if (obj.playerInput[
+        directions[
+            (dirIndex[
+                obj.dirArray[obj.dirArray.length - 1]
+            ] + 2) % 4
+        ]
+    ]) {
+        if (obj.dirArray.length === 2) {
+            obj.body.velocity[1] = 0.2;
+            obj.body.velocity[0] = 0.2;
+        } else {
+            let way = 0, sign = 1; 
+            if (
+                obj.dirArray[obj.dirArray.length - 2] === "up" 
+                ||
+                obj.dirArray[obj.dirArray.length - 2] === "down" 
+            ) way = 1;
+            if (
+                obj.dirArray[obj.dirArray.length - 2] === "up" 
+                ||
+                obj.dirArray[obj.dirArray.length - 2] === "left" 
+            ) sign = -1;
+            obj.body.velocity[way] = sign * 400 * obj.props.speedMod;
+            obj.body.velocity[(way + 1) % 2] = 0;
+            if (obj.direction !== 90 * way) obj.direction = 90 * way + 180;
+        }
     } else {
-        if (!obj.playerInput.up) { obj.body.velocity[1] = 0.2; }
-        if (!obj.playerInput.down) { obj.body.velocity[1] = 0.2; }
-        if (!obj.playerInput.left) { obj.body.velocity[0] = 0.2; }
-        if (!obj.playerInput.right) { obj.body.velocity[0] = 0.2; }
+        let way = 0, sign = 1; 
+        if (
+            obj.dirArray[obj.dirArray.length - 1] === "up" 
+            ||
+            obj.dirArray[obj.dirArray.length - 1] === "down" 
+        ) way = 1;
+        if (
+            obj.dirArray[obj.dirArray.length - 1] === "up" 
+            ||
+            obj.dirArray[obj.dirArray.length - 1] === "left" 
+        ) sign = -1;
+        obj.body.velocity[way] = sign * 400 * obj.props.speedMod;
+        obj.body.velocity[(way + 1) % 2] = 0;
+        if (obj.direction !== 90 * way) obj.direction = 90 * way + 180;
     }
 }
 
