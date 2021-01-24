@@ -152,7 +152,7 @@ window.onload = function () {
 
     game.createSocket(`${window.location.protocol === "https:" ? "wss" : "ws"}:${window.location.hostname}:${window.location.port || window.location.protocol === "https:" ? "443" : "80"}/ws`);
 
-    scene.UI.buttons.push(new game.button(1000, 1000, 50, 50, 5, "#000"))
+    scene.UI.buttons.push(new game.button("test", 0, 0, 50, 50, 5, "#000"))
     console.log(scene.UI.buttons);
 
     //! Main Loop

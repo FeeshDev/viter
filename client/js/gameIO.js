@@ -376,6 +376,7 @@ function gameIO() {
         opacity = Math.min(this.opacity * opacity, 1);
         if (opacity <= 0)
           return;
+        //if (this.type != "image") console.log(`X:${this.position.x} cum:${this.type}`)
         ctx.translate(this.position.x / ratio, this.position.y / ratio);
         ctx.rotate(this.rotation);
         this.belowObjects.forEach(function (object) {
@@ -540,18 +541,23 @@ function gameIO() {
     };
   }
 
-  game.button = function (x, y, width, height, radius, color, inside) {
-    var element = new game.object();
-    element.position = new game.Vector2(x || 0, y || 0);
+  game.button = function (id, x, y, width, height, radius, color, inside) {
+    var element = game.object();
+    element.buttonId = id || null;
+    element.position = new game.Vector2(game.me.visual.position.x + x || 0, game.me.visual.position.y + y || 0);
     element.inside = inside || game.text("No Value", x, y, "#000", null, "Arial", 32); //@ {game.text}, {game.image}
-    element.shape = new game.roundRectangle(x, y, width, height, radius, color, true);
+    element.shape = new game.roundRectangle(x, y, width, height, radius, color);
 
     element.onclick = function () { }
     element.onhover = function () { }
 
-    element.renderSpecific = function (ctx, ratio, opacity) {
+    element.renderSpecific = function (ctx, ratio) {
+      let a = this.position.x + game.me.visual.position.x;
+      let b = this.position.y + game.me.visual.position.y;
+      ctx.translate(a / ratio, b / ratio);
       element.inside.renderSpecific(ctx, ratio);
       element.shape.renderSpecific(ctx, ratio);
+      ctx.translate(-a / ratio, -b / ratio);
     }
     return element;
   }
@@ -810,7 +816,7 @@ function gameIO() {
       let roundrect = new Path2D();
       ctx.fillStyle = this.color;
       ctx.beginPath();
-      if (relative) ctx.translate(this.position.x / ratio - (game.renderers[0].c.width / 2) / ratio, this.position.y / ratio - (game.renderers[0].c.height / 2) / ratio);
+      //if (relative) ctx.translate(this.position.x / ratio - (game.renderers[0].c.width / 2) / ratio, this.position.y / ratio - (game.renderers[0].c.height / 2) / ratio);
       roundrect.moveTo((-this.width / 2 + this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
       roundrect.lineTo((this.width / 2 - this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
       roundrect.quadraticCurveTo(this.width * this.size / 2 / ratio, -this.height * this.size / 2 / ratio, this.width * this.size / 2 / ratio, (-this.height / 2 + this.radius) * this.size / ratio);
@@ -832,7 +838,7 @@ function gameIO() {
       roundrect.quadraticCurveTo(-this.width * this.size / 2 / ratio + this.position.x / ratio, -this.height * this.size / 2 / ratio + this.position.y / ratio, (-this.width / 2 + this.radius) * this.size / ratio + this.position.x / ratio, -this.height * this.size / 2 / ratio + this.position.y / ratio);
       */
       ctx.fill(roundrect);
-      if (relative) ctx.translate(-(this.position.x / ratio - (game.renderers[0].c.width / 2) / ratio), -(this.position.y / ratio - (game.renderers[0].c.height / 2) / ratio));
+      //if (relative) ctx.translate(-(this.position.x / ratio - (game.renderers[0].c.width / 2) / ratio), -(this.position.y / ratio - (game.renderers[0].c.height / 2) / ratio));
     }
     return element;
   }
@@ -965,11 +971,22 @@ function gameIO() {
       rotation: 0
     }
     element.UI = new game.object();
+    element.UI.roundRect = function () {
+
+    }
     element.UI.buttons = [];
     element.UI.render = function (ctx, ratio, opacity) {
       element.UI.buttons.forEach(button => {
-        button.renderSpecific(ctx, ratio, opacity)
+        button.render(ctx, ratio, opacity)
       });
+    }
+    element.UI.getButtonById = function (id) {
+      for (var i = 0; i < element.UI.buttons.length; i++) {
+        if (element.UI.buttons[i].buttonId == id) {
+          return element.UI.buttons[i];
+        }
+      }
+      return null;
     }
     element.render = function (ctx, ratio, opacity) {
       ratio /= this.size;
@@ -977,9 +994,6 @@ function gameIO() {
       ctx.globalAlpha = this.opacity * opacity;
       ctx.translate(-this.camera.position.x / ratio, -this.camera.position.y / ratio);
       ctx.rotate(-this.camera.rotation);
-
-      //! UI RENDER
-      this.UI.render(ctx, ratio, opacity);
 
       //* Object Sorting
       this.objects.sort((a, b) => {
@@ -1010,6 +1024,9 @@ function gameIO() {
       this.objects.forEach(function (object) {
         object.render(ctx, ratio, opacity);
       });
+
+      //! UI RENDER
+      this.UI.render(ctx, ratio, opacity);
 
       ctx.rotate(this.camera.rotation);
       ctx.translate(this.camera.position.x / ratio, this.camera.position.y / ratio);
