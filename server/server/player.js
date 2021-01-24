@@ -286,7 +286,12 @@ const handleMovement = obj => {
         ) sign = -1;
         obj.body.velocity[way] = sign * 400 * obj.props.speedMod;
         obj.body.velocity[~~!way] = 0;
-        if (obj.direction !== (90 * way + ((sign === 1) ? 0 : 180)) % 360) obj.direction = (90 * way + ((sign === 1) ? 0 : 180)) % 360;
+
+        // if you want no dancing
+        if (obj.direction !== (90 * way + ((sign === 1) ? 180 : 0)) % 360) obj.direction = (90 * way + ((sign === 1) ? 0 : 180)) % 360;
+
+        // if you want dancing
+        // obj.direction = (90 * way + ((sign === 1) ? 0 : 180)) % 360;
     }
 }
 
