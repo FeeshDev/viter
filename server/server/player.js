@@ -145,17 +145,25 @@ game.addType(
         });
         // obj.turrets = [{ type: 2, offsetX: -10, offsetY: -5, offsetAngle: Math.PI / 12, turretCD: 0, turretMaxCD: 10 }, { type: 2, offsetX: 10, offsetY: -5, offsetAngle: -Math.PI / 12, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: -6, offsetY: 0, offsetAngle: Math.PI / 16, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: 6, offsetY: 0, offsetAngle: -Math.PI / 16, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: 0, offsetY: 10, offsetAngle: 0, turretCD: 0, turretMaxCD: 10 }];
 
+        //!MOVEMENT
+        obj.direction = 0;
+        obj.playerInput = new game.playerInput();
+        obj.dirArray = [];
+        obj.dirString = "falsefalsefalsefalse";
+        obj.dance = false;
+        
+        //!LEVELS
+        obj.xp = 0;
+        obj.level = 0;
+        obj.levelThreshold = Math.ceil(Math.pow((0 + 1), 1.9));
+
         //? Others
         obj.body.addShape(new game.rectangle(obj.props.hitbox.h * DEFAULT_SCALE * obj.props.tankSize, obj.props.hitbox.w * DEFAULT_SCALE * obj.props.tankSize));
         obj.body.damping = 0.9;
-        obj.direction = 0;
-        obj.playerInput = new game.playerInput();
         obj.needsUpdate = true;
         obj.playerMouse = { angle: 0 };
         obj.startingTime = Date.now();
         obj.regen = Date.now();
-        obj.dirArray = [];
-        obj.dirString = "falsefalsefalsefalse";
 
         obj.handleHitbox = () => {
             obj.props = tankBodies[obj.tank][obj.tier];
@@ -177,9 +185,20 @@ game.addType(
         obj.body.angularForce = 0;
 
         if (obj.health <= 0) {
-            obj.death(obj.startingTime);
+            obj.death(obj.startingTime, obj.xp, obj.level);
+            game.remove(obj);
             obj = undefined;
             return;
+        }
+
+        if (obj.xp >= obj.levelThreshold) {
+            if (obj.level !== 60) {
+                while (obj.xp >= obj.levelThreshold) {
+                    obj.level++;
+                    obj.levelThreshold = Math.ceil(Math.pow((obj.level + 1), 2.635));
+                }
+                if (obj.level > 60) obj.level = 60;
+            }
         }
 
         if (Date.now() > obj.regen) obj.health = Math.min(obj.health + 0.3, obj.maxHealth);
@@ -287,11 +306,11 @@ const handleMovement = obj => {
         obj.body.velocity[way] = sign * 400 * obj.props.speedMod;
         obj.body.velocity[~~!way] = 0;
 
-        // if you want no dancing
-        if (obj.direction !== (90 * way + ((sign === 1) ? 180 : 0)) % 360) obj.direction = (90 * way + ((sign === 1) ? 0 : 180)) % 360;
-
-        // if you want dancing
-        // obj.direction = (90 * way + ((sign === 1) ? 0 : 180)) % 360;
+        if (obj.dance) {
+            obj.direction = (90 * way + ((sign === 1) ? 0 : 180)) % 360;
+        } else {
+            if (obj.direction !== (90 * way + ((sign === 1) ? 180 : 0)) % 360) obj.direction = (90 * way + ((sign === 1) ? 0 : 180)) % 360;
+        }
     }
 }
 

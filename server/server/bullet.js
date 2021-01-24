@@ -86,6 +86,19 @@ const handleMovement = (obj) => {
 game.addCollision('bullet', 'object', (bullet, object) => {
     game.remove(bullet);
     object.health -= bullet.damage;
+    if (object.health <= 0) {
+        switch (object.objType) {
+            // Tree
+            case 0: 
+                game.findObjectById(bullet.ownerID).xp += 10 + Math.round((object.scale - 1) / 1 * 10);
+                break;
+
+            // Rock
+            case 1:
+                game.findObjectById(bullet.ownerID).xp += 20 + Math.round((object.scale - 1) / 0.5 * 10);
+                break;
+        }
+    }
 });
 
 game.addCollision('bullet', 'wall', (bullet, wall) => {
@@ -96,6 +109,16 @@ game.addCollision('bullet', 'player', (bullet, player) => {
     if (bullet.ownerID !== player.id) {
         game.remove(bullet);
         player.health -= bullet.damage;
-        player.regen = Date.now() + 20000; // next regen in 20 s
+        if (player.health <= 0) {
+            const you = game.findObjectById(bullet.ownerID);
+            const them = game.findObjectById(player.id);
+            game.findObjectById(bullet.ownerID).xp += Math.min(
+                Math.max(
+                    Math.round(them.xp * (0.5 * (them.level / (you.level || 1)))),
+                    them.xp * 0.1
+                ),
+                them.xp * 0.9
+            );
+        } else player.regen = Date.now() + 20000; // next regen in 20 s
     }
 });

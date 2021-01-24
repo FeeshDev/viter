@@ -506,11 +506,11 @@ function gameIO() {
     element.renderSpecific = function (ctx, ratio) {
       ctx.font = this.otherParams + " " + this.fontSize / ratio + "px " + this.font;
       var width = ctx.measureText(this.text).width;
-      let biggest = ctx.measureText("WWWWWWWWWWWWWWWWWWWWWWWWWWp");
+      let biggest = ctx.measureText("@").width * 20;
       element.width = width * ratio;
       ctx.fillStyle = this.fillStyle;
       ctx.strokeStyle = this.strokeStyle;
-      if (width > biggest.width) this.text = "spammy name";
+      if (width > biggest) this.text = "spammy name";
       ctx.miterLimit = 0.1;
       element.width = width * ratio;
       ctx.lineWidth = this.lineWidth * this.size / ratio;
@@ -1366,9 +1366,10 @@ function gameIO() {
       let totalTime = "Time alive: ";
       if (hours) totalTime += `${hours}h `;
       if (minutes) totalTime += `${minutes}m `;
-      if (seconds) totalTime += `${seconds}s `;
-      totalTime += `${ms}ms`;
+      if (seconds) totalTime += `${seconds + ms / 1000}s `;
       document.getElementById('time').innerHTML = totalTime;
+      document.getElementById("score").innerHTML = `Score: ${packet.xp}`;
+      document.getElementById("level").innerHTML = `Level: ${packet.level}`;
       document.getElementById("return").addEventListener("click", () => {
         document.getElementById('death-screen').style.display = "none";
         document.getElementById('menu').style.display = "flex";

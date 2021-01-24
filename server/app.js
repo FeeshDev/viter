@@ -155,12 +155,12 @@ game.addPacketType(
     "playPacket",
     function (packet, ws) {
         if (ws.self === undefined || ws.self.type == "spectator") {
-            let playerName = packet.name != "" ? packet.name : "viter.io";
+            let playerName = packet.name === "" ? "viter.io" : packet.name;
             ws.self = game.create("player", { name: playerName, devID: packet.devID });
             if (ws.currentPackets !== []) ws.currentPackets.push({ type: "i", list: game.globalCoordPackets });
             ws.currentPackets.push({ type: "s", scale: MAP_SCALE });
-            ws.self.death = (t) => {
-                ws.currentPackets.push({ type: "d", time: Date.now() - t });
+            ws.self.death = (t, xp, lvl) => {
+                ws.currentPackets.push({ type: "d", time: Date.now() - t, xp: xp, level: lvl });
             }
             console.log(`"${playerName}" started playing.`);
         }
