@@ -19,8 +19,7 @@ const dirIndex = {
  * @param {number=} healthMod health multiplier
  * @param {number=} scale size multiplier
  */
-
-function b(hitboxIndex, speedMod, healthMod, scale = 1) {
+function b(hitboxIndex, speedMod, healthMod = 1, scale = 1) {
     return {
         hitbox: hitboxes[hitboxIndex],
         speedMod: speedMod,
@@ -28,7 +27,6 @@ function b(hitboxIndex, speedMod, healthMod, scale = 1) {
         tankSize: scale,
     };
 }
-
 let tankBodies = [
     [ //* Tank 0
         //* Tier 0
@@ -246,9 +244,7 @@ const handleMovement = obj => {
         for (const key in keysDown) {
             if (keysDown[key]) {
                 if (!oldKeysDown[key]) keysToAdd.push(key);
-            } else {
-                if (oldKeysDown[key]) keysToSubtract.push(key);
-            }
+            } else if (oldKeysDown[key]) keysToSubtract.push(key);
         }
         if (keysToSubtract.length) {
             let indexesToSplice = [];
@@ -257,57 +253,45 @@ const handleMovement = obj => {
                     if (k === d) indexesToSplice.push(i);
                 });
             });
-            indexesToSplice.forEach((i, n) => {
-                obj.dirArray.splice(i - n, 1);
+
+            indexesToSplice.forEach((d, i) => {
+                obj.dirArray.splice(d - i, 1);
             });
         }
         if (keysToAdd.length) keysToAdd.forEach(k => obj.dirArray.push(k));
         obj.dirString = nextDir;
     }
-    if (!obj.dirArray.length || obj.dirArray.length === 4) {
+    if (!obj.dirArray.length || obj.dirArray.length === 4 || (obj.dirArray.length === 2 && dirIndex[obj.dirArray[0]] === (dirIndex[obj.dirArray[1]] + 2) % 4)) {
         obj.body.velocity[1] = 0.2;
         obj.body.velocity[0] = 0.2;
-    } else if (obj.playerInput[
-        directions[
-            (dirIndex[
-                obj.dirArray[obj.dirArray.length - 1]
-            ] + 2) % 4
-        ]
-    ]) {
-        if (obj.dirArray.length === 2) {
-            obj.body.velocity[1] = 0.2;
-            obj.body.velocity[0] = 0.2;
-        } else {
-            let way = 0, sign = 1; 
-            if (
-                obj.dirArray[obj.dirArray.length - 2] === "up" 
-                ||
-                obj.dirArray[obj.dirArray.length - 2] === "down" 
-            ) way = 1;
-            if (
-                obj.dirArray[obj.dirArray.length - 2] === "up" 
-                ||
-                obj.dirArray[obj.dirArray.length - 2] === "left" 
-            ) sign = -1;
-            obj.body.velocity[way] = sign * 400 * obj.props.speedMod;
-            obj.body.velocity[(way + 1) % 2] = 0;
-            if (obj.direction !== 90 * way) obj.direction = 90 * way + 180;
-        }
     } else {
+        minus = 1;
+        if (obj.playerInput[
+            directions[
+                (dirIndex[
+                    obj.dirArray[obj.dirArray.length - 1]
+                ] + 2) % 4
+            ]
+        ]) minus++;
         let way = 0, sign = 1; 
         if (
-            obj.dirArray[obj.dirArray.length - 1] === "up" 
+            obj.dirArray[obj.dirArray.length - minus] === "up" 
             ||
-            obj.dirArray[obj.dirArray.length - 1] === "down" 
+            obj.dirArray[obj.dirArray.length - minus] === "down" 
         ) way = 1;
         if (
-            obj.dirArray[obj.dirArray.length - 1] === "up" 
+            obj.dirArray[obj.dirArray.length - minus] === "up" 
             ||
-            obj.dirArray[obj.dirArray.length - 1] === "left" 
+            obj.dirArray[obj.dirArray.length - minus] === "left" 
         ) sign = -1;
         obj.body.velocity[way] = sign * 400 * obj.props.speedMod;
-        obj.body.velocity[(way + 1) % 2] = 0;
-        if (obj.direction !== 90 * way) obj.direction = 90 * way + 180;
+        obj.body.velocity[~~!way] = 0;
+
+        // if you want no dancing
+        if (obj.direction !== (90 * way + ((sign === 1) ? 180 : 0)) % 360) obj.direction = (90 * way + ((sign === 1) ? 0 : 180)) % 360;
+
+        // if you want dancing
+        // obj.direction = (90 * way + ((sign === 1) ? 0 : 180)) % 360;
     }
 }
 
