@@ -141,7 +141,7 @@ game.addType(
         obj.props = tankBodies[obj.tank][obj.tier];
 
         //!SHOOTING
-        obj.turretIndex = 0;
+        obj.turretIndex = 6;
         obj.turrets = [];
         turrets[obj.turretIndex].forEach((t, i) => {
             obj.turrets.push({});

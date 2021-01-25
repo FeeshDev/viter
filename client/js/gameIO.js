@@ -1373,8 +1373,8 @@ function gameIO() {
         });
       obj.turrets = [];
       if (packet.xp !== undefined && obj.id === game.me.id) {
-        game.renderers[0].UI.getTextholderById("score").text.text = `Score: ${packet.xp}`;
-        game.renderers[0].UI.getTextholderById("level").text.text = `Level: ${packet.level}`;
+        game.renderers[0].UI.getTextholderById("score").text.text = `Score: ${packet.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+        game.renderers[0].UI.getTextholderById("level").text.text = `Level ${packet.level}`;
         game.renderers[0].UI.getTextholderById("level").width = 420 * packet.lvlPercent;
         // console.log(packet.xp, packet.level, packet.lvlPercent);
       }
