@@ -156,7 +156,7 @@ game.addType(
         //!LEVELS
         obj.xp = 0;
         obj.level = 0;
-        obj.levelThreshold = Math.ceil(Math.pow((0 + 1), 1.9));
+        obj.levelThreshold = Math.ceil(Math.pow((0 + 1), 2.635));
 
         //? Others
         obj.body.addShape(new game.rectangle(obj.props.hitbox.h * DEFAULT_SCALE * obj.props.tankSize, obj.props.hitbox.w * DEFAULT_SCALE * obj.props.tankSize));
