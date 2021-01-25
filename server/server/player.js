@@ -12,6 +12,9 @@ const dirIndex = {
     "right": 3
 };
 
+let l = []; // level thresholds
+for (let i = 0; i < 61; i++) l.push(Math.ceil(Math.pow((i + 1), 2.635)));
+
 class Body {
     /**
      * Generates a tank body
@@ -157,7 +160,7 @@ game.addType(
         //!LEVELS
         obj.xp = 0;
         obj.level = 0;
-        obj.levelThreshold = Math.ceil(Math.pow((0 + 1), 2.635));
+        obj.levelThreshold = l[0];
 
         //? Others
         obj.body.addShape(new game.rectangle(obj.props.hitbox.h * DEFAULT_SCALE * obj.props.tankSize, obj.props.hitbox.w * DEFAULT_SCALE * obj.props.tankSize));
@@ -197,7 +200,7 @@ game.addType(
             if (obj.level !== 60) {
                 while (obj.xp >= obj.levelThreshold) {
                     obj.level++;
-                    obj.levelThreshold = Math.ceil(Math.pow((obj.level + 1), 2.635));
+                    obj.levelThreshold = l[obj.level];
                 }
                 if (obj.level > 60) obj.level = 60;
             }
@@ -220,6 +223,10 @@ game.addType(
         packet.tank = obj.tank;
         packet.tier = obj.tier;
         packet.angle = obj.playerMouse.angle;
+
+        packet.xp = obj.xp;
+        packet.level = obj.level;
+        packet.lvlPercent = obj.level === 60 ? 1 : ((obj.xp - l[obj.level - 1]) / (l[obj.level] - l[obj.level - 1]) || 0);
 
         packet.turrets = obj.turrets;
     },
