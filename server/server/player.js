@@ -156,7 +156,7 @@ game.addType(
         obj.dirString = "falsefalsefalsefalse";
         // obj.dance = extra.dance;
         obj.dance = false;
-        
+
         //!LEVELS
         obj.xp = 0;
         obj.level = 0;
@@ -296,21 +296,21 @@ const handleMovement = obj => {
         minus = 1;
         if (obj.playerInput[
             directions[
-                (dirIndex[
-                    obj.dirArray[obj.dirArray.length - 1]
-                ] + 2) % 4
+            (dirIndex[
+                obj.dirArray[obj.dirArray.length - 1]
+            ] + 2) % 4
             ]
         ]) minus++;
-        let way = 0, sign = 1; 
+        let way = 0, sign = 1;
         if (
-            obj.dirArray[obj.dirArray.length - minus] === "up" 
+            obj.dirArray[obj.dirArray.length - minus] === "up"
             ||
-            obj.dirArray[obj.dirArray.length - minus] === "down" 
+            obj.dirArray[obj.dirArray.length - minus] === "down"
         ) way = 1;
         if (
-            obj.dirArray[obj.dirArray.length - minus] === "up" 
+            obj.dirArray[obj.dirArray.length - minus] === "up"
             ||
-            obj.dirArray[obj.dirArray.length - minus] === "left" 
+            obj.dirArray[obj.dirArray.length - minus] === "left"
         ) sign = -1;
         obj.body.velocity[way] = sign * 400 * obj.props.speedMod;
         obj.body.velocity[~~!way] = 0;

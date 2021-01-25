@@ -1375,6 +1375,7 @@ function gameIO() {
       if (packet.xp !== undefined && obj.id === game.me.id) {
         game.renderers[0].UI.getTextholderById("score").text.text = `Score: ${packet.xp}`;
         game.renderers[0].UI.getTextholderById("level").text.text = `Level: ${packet.level}`;
+        game.renderers[0].UI.getTextholderById("level").width = 420 * packet.lvlPercent;
         // console.log(packet.xp, packet.level, packet.lvlPercent);
       }
       if (packet.turrets !== undefined)
