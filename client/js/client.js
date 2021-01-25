@@ -177,11 +177,11 @@ window.onload = function () {
 
     //!UI
 
-    let scoreText = game.text("Score: 69", 0, 0, "#ddd", null, "Arial", 20);
+    let scoreText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
     renderer.UI.textHolders.push(new game.textHolder("score_behind", { x: 2, y: 1 }, 0, -120, 386, 28, 14, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
     renderer.UI.textHolders.push(new game.textHolder("score", { x: 2, y: 1 }, 0, -120, 380, 22, 11, { color: "rgba(41, 171, 58, 0.9)" }, scoreText));
 
-    let levelText = game.text("Level 420 Hacker", 0, 0, "#ddd", null, "Arial", 20);
+    let levelText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
     renderer.UI.textHolders.push(new game.textHolder("level_behind", { x: 2, y: 1 }, 0, -80, 426, 36, 18, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
     renderer.UI.textHolders.push(new game.textHolder("level", { x: 2, y: 1 }, 0, -80, 420, 30, 15, { color: "rgba(35, 145, 50, 0.9)" }, levelText));
 

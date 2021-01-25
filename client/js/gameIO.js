@@ -218,6 +218,14 @@ function gameIO() {
             }
           }
           return null;
+        },
+        getTextholderById: function (id) {
+          for (var i = 0; i < this.textHolders.length; i++) {
+            if (this.textHolders[i].textId == id) {
+              return this.textHolders[i];
+            }
+          }
+          return null;
         }
       },
       render: function (scene) {
@@ -1364,7 +1372,11 @@ function gameIO() {
           turret.parent.remove(turret);
         });
       obj.turrets = [];
-      if (packet.xp !== undefined && obj.id === game.me.id) console.log(packet.xp, packet.level, packet.lvlPercent);
+      if (packet.xp !== undefined && obj.id === game.me.id) {
+        game.renderers[0].UI.getTextholderById("score").text.text = `Score: ${packet.xp}`;
+        game.renderers[0].UI.getTextholderById("level").text.text = `Level: ${packet.level}`;
+        // console.log(packet.xp, packet.level, packet.lvlPercent);
+      }
       if (packet.turrets !== undefined)
         packet.turrets.forEach(turret => {
           let turretImg = new Image();
