@@ -7,13 +7,13 @@ window.onload = function () {
     var controls = new game.keyboard();
     var mouse = new game.mouse();
 
-    let d = false;
-    const dance = document.getElementById("dance");
+    // let d = false;
+    // const dance = document.getElementById("dance");
 
-    dance.addEventListener("click", () => {
-        d = !d;
-        dance.style.backgroundColor = d ? "#c2c2c2" : "#ffffff";
-    });
+    // dance.addEventListener("click", () => {
+    //     d = !d;
+    //     dance.style.backgroundColor = d ? "#c2c2c2" : "#ffffff";
+    // });
 
     const TYPE_TREE = 0, TYPE_ROCK = 1;
     const BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, BULLET_MACHINEGUN = 3;
@@ -138,8 +138,8 @@ window.onload = function () {
             game.currentPackets.push({
                 type: "playPacket",
                 name: document.getElementById("nameInput").value,
-                branch: localStorage["branch"],
-                dance: d
+                branch: localStorage["branch"]
+                // dance: d
             });
         setTimeout(() => {
             document.getElementById("menu").style.display = "none";

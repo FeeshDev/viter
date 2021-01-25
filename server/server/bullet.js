@@ -112,13 +112,16 @@ game.addCollision('bullet', 'player', (bullet, player) => {
         if (player.health <= 0) {
             const you = game.findObjectById(bullet.ownerID);
             const them = game.findObjectById(player.id);
-            game.findObjectById(bullet.ownerID).xp += Math.min(
+            let scoreToGive = Math.min(
                 Math.max(
                     Math.round(them.xp * (0.5 * (them.level / (you.level || 1)))),
                     them.xp * 0.1
                 ),
                 them.xp * 0.9
             );
+            if (them.level === 60 && you.xp + scoreToGive < 50623) scoreToGive = 50623 - you.xp;
+            game.findObjectById(bullet.ownerID) += scoreToGive;
+            
         } else player.regen = Date.now() + 20000; // next regen in 20 s
     }
 });
