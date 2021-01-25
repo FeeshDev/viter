@@ -12,94 +12,95 @@ const dirIndex = {
     "right": 3
 };
 
-/**
- * Generates a tank body
- * @param {number} hitboxIndex the index of the hitbox
- * @param {number} speedMod speed multiplier
- * @param {number=} healthMod health multiplier
- * @param {number=} scale size multiplier
- */
-function b(hitboxIndex, speedMod, healthMod = 1, scale = 1) {
-    return {
-        hitbox: hitboxes[hitboxIndex],
-        speedMod: speedMod,
-        healthMod: healthMod,
-        tankSize: scale,
-    };
+class Body {
+    /**
+     * Generates a tank body
+     * @param {number} hitboxIndex the index of the hitbox
+     * @param {number} speedMod speed multiplier
+     * @param {number=} healthMod health multiplier
+     * @param {number=} scale size multiplier
+     */
+    constructor(hitboxIndex, speedMod, healthMod = 1, scale = 1) {
+        this.hitbox = hitboxes[hitboxIndex];
+        this.speedMod = speedMod;
+        this.healthMod = healthMod;
+        this.tankSize = scale;
+    }
 }
+
 let tankBodies = [
     [ //* Tank 0
         //* Tier 0
-        b(0, 1, 1, 1) //* Default - 0.0
+        new Body(0, 1, 1, 1) //* Default - 0.0
     ],
     [ //* Tank 1
         //* Tier 0
-        b(1, 1.2, 1, 1), //* Serpent MK I - 1.0
+        new Body(1, 1.2, 1, 1), //* Serpent MK I - 1.0
         //* Tier 1
-        b(1, 1.4, 0.8, 1), //* Serpent MK II - 1.1
+        new Body(1, 1.4, 0.8, 1), //* Serpent MK II - 1.1
         //* Tier 2
-        b(1, 2, 0.5, 1), //* Basilisk - 1.2
+        new Body(1, 2, 0.5, 1), //* Basilisk - 1.2
         //* Tier 3
-        b(1, 4, 999, 10), //* idk hacker thing - 1.3
+        new Body(1, 4, 999, 10), //* idk hacker thing - 1.3
     ],
     [ //* Tank 2
         //* Tier 0
-        b(0, 1, 1.2, 1), //* Squire MK I - 2.0
+        new Body(0, 1, 1.2, 1), //* Squire MK I - 2.0
         //* Tier 1
-        b(2, 0.8, 1.4, 1), //* Squire MK II - 2.1
+        new Body(2, 0.8, 1.4, 1), //* Squire MK II - 2.1
         //* Tier 2
-        b(1, 0.6, 2, 1), //* Knight - 2.2
+        new Body(1, 0.6, 2, 1), //* Knight - 2.2
     ],
 ];
 
-/**
- * Generates a turret object.
- * @param {number} type The turret type.
- * @param {number} maxCD Millliseconds between shots.
- * @param {number=} offsetX X offset. In pixels.
- * @param {number=} offsetY Y offset. In pixels.
- * @param {number=} offsetAngle Angle offset. Clockwise in radians.
- */
-function t(type, maxCD, offsetX = 0, offsetY = 0, offsetAngle = 0) {
-    let l;
-    switch (type) {
-        case 0:
-            l = 41.8;
-            break;
-        case 2:
-            l = 51.04;
-            break;
+class Turret {
+    /**
+     * Generates a turret object.
+     * @param {number} type The turret type.
+     * @param {number} maxCD Millliseconds between shots.
+     * @param {number=} offsetX X offset. In pixels.
+     * @param {number=} offsetY Y offset. In pixels.
+     * @param {number=} offsetAngle Angle offset. Clockwise in radians.
+     */
+    constructor(type, maxCD, offsetX = 0, offsetY = 0, offsetAngle = 0) {
+        let l;
+        switch (type) {
+            case 0:
+                l = 41.8;
+                break;
+            case 2:
+                l = 51.04;
+                break;
 
-        // Shotgun and machine gun have the same length
-        default:
-            l = 32.56
-            break;
+            // Shotgun and machine gun have the same length
+            default:
+                l = 32.56
+                break;
+        }
+        let bs = bullets[type];
+        this.type = type;
+        this.turretCD = 0;
+        this.turretMaxCD = maxCD;
+        this.length = l;
+        this.bulletSize = bs;
+        this.distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY + l - bs) * 2);
+        this.turretAngle = Math.atan2(-offsetY - l + bs, offsetX);
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        this.offsetAngle = offsetAngle;
     }
-    let bs = bullets[type];
-    return {
-        type: type,
-        turretCD: 0,
-        turretMaxCD: maxCD,
-        length: l,
-        bulletSize: bs,
-        distance: Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY + l - bs) * 2),
-        turretAngle: Math.atan2(-offsetY - l + bs, offsetX),
-        offsetX: offsetX,
-        offsetY: offsetY,
-        offsetAngle: offsetAngle
-    };
 }
 
 let turrets = [
-    [t(0, 10)], //* Default
-    [t(1, 15)], //* Shotgun
-    [t(2, 20)], //* Sniper
-    [t(3, 3)], //* Machine Gun
-    [t(0, 10, -10), t(0, 10, 10)], //* Twin
-    [t(0, 10, -20), t(0, 10, 20), t(0, 10, 0, 10)], //* Triplet
-    [t(1, 10, -4, 0, Math.PI / 10), t(1, 10, 4, 0, -Math.PI / 10), t(1, 10, 0, 10)], //* Shotgun Triplet
-    [t(2, 10, -10, 0, -0.03), t(2, 10, 10, 0, 0.03), t(2, 10, 0, 0)], //* Focused Sniper
-    [t(3, 2, 0, 20), t(3, 2)] //* Sprayer
+    [new Turret(0, 10)], //* Default
+    [new Turret(1, 15)], //* Shotgun
+    [new Turret(2, 20)], //* Sniper
+    [new Turret(3, 3)], //* Machine Gun
+    [new Turret(0, 10, -10), new Turret(0, 10, 10)], //* Twin
+    [new Turret(0, 10, -20), new Turret(0, 10, 20), new Turret(0, 10, 0, 10)], //* Triplet
+    [new Turret(1, 10, -4, 0, Math.PI / 10), new Turret(1, 10, 4, 0, -Math.PI / 10), new Turret(1, 10, 0, 10)], //* Shotgun Triplet
+    [new Turret(2, 10, -10, 0, -0.03), new Turret(2, 10, 10, 0, 0.03), new Turret(2, 10, 0, 0)], //* Focused Sniper
+    [new Turret(3, 2, 0, 20), new Turret(3, 2)] //* Sprayer
 ]
 
 game.addType(
@@ -114,6 +115,8 @@ game.addType(
 
         obj.name = extra.name.slice(0, 20);
         obj.devID = extra.devID;
+
+        console.log(extra)
 
         switch (obj.devID) {
             case "3CkhWrJQeR3svJHs8VXz": //! Alez
