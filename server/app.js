@@ -153,7 +153,7 @@ game.addPacketType(
 
 game.addPacketType(
     "playPacket",
-    function (packet, ws) {
+    function (packet, ws) { 
         if (ws.self === undefined || ws.self.type == "spectator") {
             let playerName = packet.name === "" ? "viter.io" : packet.name;
             ws.self = game.create("player", { name: playerName, devID: packet.devID, dance: packet.dance });
@@ -161,6 +161,7 @@ game.addPacketType(
             ws.currentPackets.push({ type: "s", scale: MAP_SCALE });
             ws.self.death = (t, xp, lvl) => {
                 ws.currentPackets.push({ type: "d", time: Date.now() - t, xp: xp, level: lvl });
+                ws.self = undefined;
             }
             console.log(`"${playerName}" started playing.`);
         }
