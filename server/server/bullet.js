@@ -89,7 +89,7 @@ game.addCollision('bullet', 'object', (bullet, object) => {
     if (object.health <= 0) {
         switch (object.objType) {
             // Tree
-            case 0: 
+            case 0:
                 game.findObjectById(bullet.ownerID).xp += 10 + Math.round((object.scale - 1) / 1 * 10);
                 break;
 

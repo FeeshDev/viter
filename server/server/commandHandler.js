@@ -1,4 +1,5 @@
 global.executeCommand = (userSelf, command, accessCode) => {
+    if (!userSelf) return;
     if (!userSelf.devMode) return;
     let commandArray = command.split(':');
     console.log(`"${userSelf.name}" requested command: "${command}".`);
