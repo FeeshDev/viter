@@ -138,7 +138,7 @@ window.onload = function () {
             game.currentPackets.push({
                 type: "playPacket",
                 name: document.getElementById("nameInput").value,
-                devID: localStorage["devID"],
+                branch: localStorage["branch"],
                 dance: d
             });
         setTimeout(() => {
@@ -147,9 +147,13 @@ window.onload = function () {
         main();
     }
 
-    window.runCommand = (string) => {
+    window.runCommand = string => {
         if (game.ws.readyState == 1)
-            game.currentPackets.push({ type: "requestCommand", command: string, accessCode: localStorage["accessCode"] });
+            game.currentPackets.push({
+                type: "requestCommand",
+                command: string,
+                accessCode: localStorage["accessCode"]
+            });
     }
 
     document.getElementById("playButton").onclick = () => playGame();
