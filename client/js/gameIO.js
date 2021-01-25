@@ -86,6 +86,9 @@ function gameIO() {
         mouse.y = event.clientY;
         mouse.client.x = mouse.x;
         mouse.client.y = mouse.y;
+        game.renderers[0].UI.buttons.forEach(button => {
+          button.hovered = button.isPointInside({ x: mouse.x, y: mouse.y });
+        });
       }
       mouse.angle = Math.atan2(mouse.client.y - window.innerHeight / 2, mouse.client.x - window.innerWidth / 2);
       mouse.angle += Math.PI;
@@ -93,6 +96,9 @@ function gameIO() {
     });
     window.addEventListener("mousedown", function (event) {
       if (event.button === 0) {
+        game.renderers[0].UI.buttons.forEach(button => {
+          if (button.isPointInside({ x: mouse.x, y: mouse.y })) button.onclick();
+        });
         mouse.clicking = true;
         mouse.changed = true;
       }
@@ -194,6 +200,22 @@ function gameIO() {
       ratio: 1,
       qualitySize: 1,
       smoothingEnabled: true,
+      UI: {
+        buttons: [],
+        render: function (ctx, ratio) {
+          this.buttons.forEach(button => {
+            button.render(ctx, ratio);
+          });
+        },
+        getButtonById: function (id) {
+          for (var i = 0; i < this.buttons.length; i++) {
+            if (this.buttons[i].buttonId == id) {
+              return this.buttons[i];
+            }
+          }
+          return null;
+        }
+      },
       render: function (scene) {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
         if (this.clearScreen)
@@ -377,6 +399,7 @@ function gameIO() {
         if (opacity <= 0)
           return;
         //if (this.type != "image") console.log(`X:${this.position.x} cum:${this.type}`)
+
         ctx.translate(this.position.x / ratio, this.position.y / ratio);
         ctx.rotate(this.rotation);
         this.belowObjects.forEach(function (object) {
@@ -486,7 +509,7 @@ function gameIO() {
     return element;
   }
   */
-  game.text = function (text, x, y, fillStyle, strokeStyle, font, fontSize, otherParams, opacity, align) {
+  game.text = function (text, x, y, fillStyle, strokeStyle, font, fontSize, align, otherParams, opacity) {
     var element = new game.object();
     element.text = text || "";
     element.position = new game.Vector2(x || 0, y || 0);
@@ -541,23 +564,63 @@ function gameIO() {
     };
   }
 
-  game.button = function (id, x, y, width, height, radius, color, inside) {
-    var element = game.object();
+  game.button = function (id, x, y, width, height, radius, style, inside, onclick) {
+    var element = {};
     element.buttonId = id || null;
-    element.position = new game.Vector2(game.me.visual.position.x + x || 0, game.me.visual.position.y + y || 0);
-    element.inside = inside || game.text("No Value", x, y, "#000", null, "Arial", 32); //@ {game.text}, {game.image}
-    element.shape = new game.roundRectangle(x, y, width, height, radius, color);
+    element.hovered = false;
+    element.pressed = false;
+    element.width = width || 100;
+    element.height = height || 100;
+    element.radius = radius || 5;
+    element.style = style || { color: "#000", hoverColor: "#fff", clickColor: "#929", stroke: null, lineWidth: 0 };
+    element.position = new game.Vector2(0, 0);
+    element.offset = new game.Vector2(x || 0, y || 0);
+    element.inside = inside || game.text("No Value", 0, 0, "#ddd", null, "Arial", 32); //@ {game.text}, {game.image}
+    //element.shape = new game.roundRectangle(x, y, width, height, radius, color, true);
 
-    element.onclick = function () { }
-    element.onhover = function () { }
+    element.onclick = onclick || function () {
+      this.pressed = true;
+      console.log(`Button with ID: "${this.buttonId}" was pressed.`)
+      this.pressed = false;
+    }
 
-    element.renderSpecific = function (ctx, ratio) {
-      let a = this.position.x + game.me.visual.position.x;
-      let b = this.position.y + game.me.visual.position.y;
-      ctx.translate(a / ratio, b / ratio);
+    element.render = function (ctx, ratio, opacity) {
+      this.ratio = ratio;
+      opacity = Math.min(Math.max(0, opacity), 1);
+      opacity = Math.min(this.opacity * opacity, 1);
+      if (opacity <= 0)
+        return;
+
+      this.position.x = game.renderers[0].c.width / 2 - this.width / 2 / ratio + this.offset.x / ratio;
+      this.position.y = game.renderers[0].c.height / 2 - this.height / 2 / ratio + this.offset.y / ratio;
+      ctx.translate(this.position.x, this.position.y);
+      ctx.rotate(this.rotation);
+      ctx.globalAlpha = opacity;
+      if (this.pressed) {
+        if (this.style.clickColor) ctx.fillStyle = this.style.clickColor;
+      } else {
+        if (this.hovered) {
+          if (this.style.hoverColor) ctx.fillStyle = this.style.hoverColor;
+        } else {
+          if (this.style.color) ctx.fillStyle = this.style.color;
+        }
+      }
+      ctx.roundRect(0, 0, this.width / ratio, this.height / ratio, this.radius / ratio);
+      ctx.fill();
+      ctx.rotate(-this.rotation);
+      ctx.translate(-this.position.x, -this.position.y);
+
+      element.inside.position.x = game.renderers[0].c.width / 2 + this.offset.x / ratio;
+      element.inside.position.y = game.renderers[0].c.height / 2 + this.offset.y / ratio;
+      ctx.translate(element.inside.position.x, element.inside.position.y);
       element.inside.renderSpecific(ctx, ratio);
-      element.shape.renderSpecific(ctx, ratio);
-      ctx.translate(-a / ratio, -b / ratio);
+      ctx.translate(-element.inside.position.x, -element.inside.position.y);
+    }
+
+    element.isPointInside = function (point) {
+      let relativeX = game.renderers[0].rightOfScreen / this.ratio + this.offset.x / game.renderers[0].ratio - this.width / 2 / this.ratio;
+      let relativeY = game.renderers[0].bottomOfScreen / this.ratio + this.offset.y / game.renderers[0].ratio - this.height / 2 / this.ratio;
+      return (point.x > relativeX && point.x < relativeX + this.width / this.ratio) && (point.y > relativeY && point.y < relativeY + this.height / this.ratio);
     }
     return element;
   }
@@ -813,19 +876,19 @@ function gameIO() {
     element.lineWidth = 4;
     element.relative = relative || false;
     element.renderSpecific = function (ctx, ratio) {
-      let roundrect = new Path2D();
       ctx.fillStyle = this.color;
       ctx.beginPath();
-      //if (relative) ctx.translate(this.position.x / ratio - (game.renderers[0].c.width / 2) / ratio, this.position.y / ratio - (game.renderers[0].c.height / 2) / ratio);
-      roundrect.moveTo((-this.width / 2 + this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
-      roundrect.lineTo((this.width / 2 - this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
-      roundrect.quadraticCurveTo(this.width * this.size / 2 / ratio, -this.height * this.size / 2 / ratio, this.width * this.size / 2 / ratio, (-this.height / 2 + this.radius) * this.size / ratio);
-      roundrect.lineTo(this.width * this.size / 2 / ratio, (this.height / 2 - this.radius) * this.size / ratio);
-      roundrect.quadraticCurveTo(this.width * this.size / 2 / ratio, this.height * this.size / 2 / ratio, (this.width / 2 - this.radius) * this.size / ratio, this.height * this.size / 2 / ratio);
-      roundrect.lineTo((-this.width / 2 + this.radius) * this.size / ratio, this.height * this.size / 2 / ratio);
-      roundrect.quadraticCurveTo(-this.width * this.size / 2 / ratio, this.height * this.size / 2 / ratio, -this.width * this.size / 2 / ratio, (this.height / 2 - this.radius) * this.size / ratio);
-      roundrect.lineTo(-this.width * this.size / 2 / ratio, (-this.height / 2 + this.radius) * this.size / ratio);
-      roundrect.quadraticCurveTo(-this.width * this.size / 2 / ratio, -this.height * this.size / 2 / ratio, (-this.width / 2 + this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
+      let path = new Path2D();
+      path.moveTo((-this.width / 2 + this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
+      path.lineTo((this.width / 2 - this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
+      path.quadraticCurveTo(this.width * this.size / 2 / ratio, -this.height * this.size / 2 / ratio, this.width * this.size / 2 / ratio, (-this.height / 2 + this.radius) * this.size / ratio);
+      path.lineTo(this.width * this.size / 2 / ratio, (this.height / 2 - this.radius) * this.size / ratio);
+      path.quadraticCurveTo(this.width * this.size / 2 / ratio, this.height * this.size / 2 / ratio, (this.width / 2 - this.radius) * this.size / ratio, this.height * this.size / 2 / ratio);
+      path.lineTo((-this.width / 2 + this.radius) * this.size / ratio, this.height * this.size / 2 / ratio);
+      path.quadraticCurveTo(-this.width * this.size / 2 / ratio, this.height * this.size / 2 / ratio, -this.width * this.size / 2 / ratio, (this.height / 2 - this.radius) * this.size / ratio);
+      path.lineTo(-this.width * this.size / 2 / ratio, (-this.height / 2 + this.radius) * this.size / ratio);
+      path.quadraticCurveTo(-this.width * this.size / 2 / ratio, -this.height * this.size / 2 / ratio, (-this.width / 2 + this.radius) * this.size / ratio, -this.height * this.size / 2 / ratio);
+      this.path = path;
       /*
       roundrect.moveTo((-this.width / 2 + this.radius) * this.size / ratio + this.position.x / ratio, -this.height * this.size / 2 / ratio + this.position.y / ratio);
       roundrect.lineTo((this.width / 2 - this.radius) * this.size / ratio + this.position.x / ratio, -this.height * this.size / 2 / ratio + this.position.y / ratio);
@@ -837,7 +900,8 @@ function gameIO() {
       roundrect.lineTo(-this.width * this.size / 2 / ratio + this.position.x / ratio, (-this.height / 2 + this.radius) * this.size / ratio + this.position.y / ratio);
       roundrect.quadraticCurveTo(-this.width * this.size / 2 / ratio + this.position.x / ratio, -this.height * this.size / 2 / ratio + this.position.y / ratio, (-this.width / 2 + this.radius) * this.size / ratio + this.position.x / ratio, -this.height * this.size / 2 / ratio + this.position.y / ratio);
       */
-      ctx.fill(roundrect);
+      //if (relative) game.renderers[0].ctx.translate(this.position.x, this.position.y);
+      ctx.fill(this.path);
       //if (relative) ctx.translate(-(this.position.x / ratio - (game.renderers[0].c.width / 2) / ratio), -(this.position.y / ratio - (game.renderers[0].c.height / 2) / ratio));
     }
     return element;
@@ -970,6 +1034,7 @@ function gameIO() {
       ratio: 1,
       rotation: 0
     }
+    /*
     element.UI = new game.object();
     element.UI.roundRect = function () {
 
@@ -988,6 +1053,7 @@ function gameIO() {
       }
       return null;
     }
+    */
     element.render = function (ctx, ratio, opacity) {
       ratio /= this.size;
       this.opacity = Math.min(Math.max(0, this.opacity), 1);
@@ -1026,7 +1092,7 @@ function gameIO() {
       });
 
       //! UI RENDER
-      this.UI.render(ctx, ratio, opacity);
+      //this.UI.render(ctx, ratio, opacity);
 
       ctx.rotate(this.camera.rotation);
       ctx.translate(this.camera.position.x / ratio, this.camera.position.y / ratio);

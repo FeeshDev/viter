@@ -135,11 +135,11 @@ window.onload = function () {
     //@ Others
     const playGame = () => {
         if (game.ws.readyState == 1)
-            game.currentPackets.push({ 
-                type: "playPacket", 
-                name: document.getElementById("nameInput").value, 
-                devID: localStorage["devID"], 
-                dance: d 
+            game.currentPackets.push({
+                type: "playPacket",
+                name: document.getElementById("nameInput").value,
+                devID: localStorage["devID"],
+                dance: d
             });
         setTimeout(() => {
             document.getElementById("menu").style.display = "none";
@@ -165,8 +165,12 @@ window.onload = function () {
 
     game.createSocket(`${window.location.protocol === "https:" ? "wss" : "ws"}:${window.location.hostname}:${window.location.port || window.location.protocol === "https:" ? "443" : "80"}/ws`);
 
-    scene.UI.buttons.push(new game.button("test", 0, 0, 50, 50, 5, "#000"))
-    console.log(scene.UI.buttons);
+    let img = new Image();
+    img.src = "./client/images/objects/obstacles/pine0.png"
+    let funiimage = new game.image(img, 0, 0, 30, 30);
+    let funitext = game.text("Test Button", 0, 0, "#ddd", null, "Arial", 32);
+    renderer.UI.buttons.push(new game.button("test", -100, 200, 50, 200, 5, null, funiimage));
+    renderer.UI.buttons.push(new game.button("test2", 100, -200, 200, 50, 5, null, funitext))
 
     //! Main Loop
     const main = () => {
@@ -189,6 +193,7 @@ window.onload = function () {
         renderer.render(scene);
         renderer.drawMinimap();
         renderer.drawObjects();
+        renderer.UI.render(renderer.ctx, renderer.ratio);
         requestFrame(main);
     }
 }
