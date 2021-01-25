@@ -116,8 +116,6 @@ game.addType(
         obj.name = extra.name.slice(0, 20);
         obj.devID = extra.devID;
 
-        console.log(extra)
-
         switch (obj.devID) {
             case "3CkhWrJQeR3svJHs8VXz": //! Alez
                 obj.name = "> Alez - Developer <";
