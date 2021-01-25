@@ -57,6 +57,39 @@ p {
     cursor: pointer;
 }
 
+#settings {
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    background-color: #dbdbdb;
+    bottom: 10px;
+    left: 10px;
+    border-radius: 10px;
+    color: #404040;
+}
+
+#settings-text {
+    font-size: 20px;
+    margin-top: 13px;
+}
+
+#dance {
+    width: 25px;
+    height: 25px;
+    background-color: #ffffff;
+    margin-top: -5px;
+    margin-left: 15px;
+}
+#dance:hover {
+    cursor: pointer;
+}
+
+#dance-text {
+    font-size: 18px;
+    margin-top: -23px;
+    margin-left: 40px;
+}
+
 #death-screen {
     display: none;
     font-size: 4rem;

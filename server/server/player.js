@@ -150,7 +150,7 @@ game.addType(
         obj.playerInput = new game.playerInput();
         obj.dirArray = [];
         obj.dirString = "falsefalsefalsefalse";
-        obj.dance = false;
+        obj.dance = extra.dance;
         
         //!LEVELS
         obj.xp = 0;

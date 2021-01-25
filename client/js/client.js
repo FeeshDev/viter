@@ -7,6 +7,14 @@ window.onload = function () {
     var controls = new game.keyboard();
     var mouse = new game.mouse();
 
+    let d = false;
+    const dance = document.getElementById("dance");
+
+    dance.addEventListener("click", () => {
+        d = !d;
+        dance.style.backgroundColor = d ? "#c2c2c2" : "#ffffff";
+    });
+
     const TYPE_TREE = 0, TYPE_ROCK = 1;
     const BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, BULLET_MACHINEGUN = 3;
     const TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, TURRET_MACHINEGUN = 3;
@@ -127,7 +135,12 @@ window.onload = function () {
     //@ Others
     const playGame = () => {
         if (game.ws.readyState == 1)
-            game.currentPackets.push({ type: "playPacket", name: document.getElementById("nameInput").value, devID: localStorage["devID"] });
+            game.currentPackets.push({ 
+                type: "playPacket", 
+                name: document.getElementById("nameInput").value, 
+                devID: localStorage["devID"], 
+                dance: d 
+            });
         setTimeout(() => {
             document.getElementById("menu").style.display = "none";
         }, 500);

@@ -156,7 +156,7 @@ game.addPacketType(
     function (packet, ws) {
         if (ws.self === undefined || ws.self.type == "spectator") {
             let playerName = packet.name === "" ? "viter.io" : packet.name;
-            ws.self = game.create("player", { name: playerName, devID: packet.devID });
+            ws.self = game.create("player", { name: playerName, devID: packet.devID, dance: packet.dance });
             if (ws.currentPackets !== []) ws.currentPackets.push({ type: "i", list: game.globalCoordPackets });
             ws.currentPackets.push({ type: "s", scale: MAP_SCALE });
             ws.self.death = (t, xp, lvl) => {
