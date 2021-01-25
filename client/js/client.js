@@ -169,12 +169,21 @@ window.onload = function () {
 
     game.createSocket(`${window.location.protocol === "https:" ? "wss" : "ws"}:${window.location.hostname}:${window.location.port || window.location.protocol === "https:" ? "443" : "80"}/ws`);
 
-    let img = new Image();
-    img.src = "./client/images/objects/obstacles/pine0.png"
-    let funiimage = new game.image(img, 0, 0, 30, 30);
-    let funitext = game.text("Test Button", 0, 0, "#ddd", null, "Arial", 32);
-    renderer.UI.buttons.push(new game.button("test", -100, 200, 50, 200, 5, null, funiimage));
-    renderer.UI.buttons.push(new game.button("test2", 100, -200, 200, 50, 5, null, funitext))
+    //let img = new Image();
+    //img.src = "./client/images/objects/obstacles/pine0.png"
+    //let funiimage = new game.image(img, 0, 0, 30, 30);
+    //renderer.UI.buttons.push(new game.button("test", 0, -100, 200, 50, 5, null, funiimage));
+    //renderer.UI.buttons.push(new game.button("test2", 100, -200, 200, 50, 5, null, funitext))
+
+    //!UI
+
+    let scoreText = game.text("Score: 69", 0, 0, "#ddd", null, "Arial", 20);
+    renderer.UI.textHolders.push(new game.textHolder("score_behind", { x: 2, y: 1 }, 0, -120, 386, 28, 14, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
+    renderer.UI.textHolders.push(new game.textHolder("score", { x: 2, y: 1 }, 0, -120, 380, 22, 11, { color: "rgba(41, 171, 58, 0.9)" }, scoreText));
+
+    let levelText = game.text("Level 420 Hacker", 0, 0, "#ddd", null, "Arial", 20);
+    renderer.UI.textHolders.push(new game.textHolder("level_behind", { x: 2, y: 1 }, 0, -80, 426, 36, 18, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
+    renderer.UI.textHolders.push(new game.textHolder("level", { x: 2, y: 1 }, 0, -80, 420, 30, 15, { color: "rgba(35, 145, 50, 0.9)" }, levelText));
 
     //! Main Loop
     const main = () => {

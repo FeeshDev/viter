@@ -202,9 +202,13 @@ function gameIO() {
       smoothingEnabled: true,
       UI: {
         buttons: [],
+        textHolders: [],
         render: function (ctx, ratio) {
           this.buttons.forEach(button => {
             button.render(ctx, ratio);
+          });
+          this.textHolders.forEach(textHolder => {
+            textHolder.render(ctx, ratio);
           });
         },
         getButtonById: function (id) {
@@ -567,6 +571,7 @@ function gameIO() {
   game.button = function (id, x, y, width, height, radius, style, inside, onclick) {
     var element = {};
     element.buttonId = id || null;
+    element.anchors = anchors || { x: 2, y: 2 };
     element.hovered = false;
     element.pressed = false;
     element.width = width || 100;
@@ -576,7 +581,6 @@ function gameIO() {
     element.position = new game.Vector2(0, 0);
     element.offset = new game.Vector2(x || 0, y || 0);
     element.inside = inside || game.text("No Value", 0, 0, "#ddd", null, "Arial", 32); //@ {game.text}, {game.image}
-    //element.shape = new game.roundRectangle(x, y, width, height, radius, color, true);
 
     element.onclick = onclick || function () {
       this.pressed = true;
@@ -596,6 +600,9 @@ function gameIO() {
       ctx.translate(this.position.x, this.position.y);
       ctx.rotate(this.rotation);
       ctx.globalAlpha = opacity;
+
+      ctx.roundRect(0, 0, this.width / ratio, this.height / ratio, this.radius / ratio);
+
       if (this.pressed) {
         if (this.style.clickColor) ctx.fillStyle = this.style.clickColor;
       } else {
@@ -605,8 +612,11 @@ function gameIO() {
           if (this.style.color) ctx.fillStyle = this.style.color;
         }
       }
-      ctx.roundRect(0, 0, this.width / ratio, this.height / ratio, this.radius / ratio);
-      ctx.fill();
+      if (this.style.color) ctx.fill();
+
+      if (this.style.stroke) ctx.strokeStyle = this.style.stroke;
+      if (this.style.stroke) ctx.stroke();
+
       ctx.rotate(-this.rotation);
       ctx.translate(-this.position.x, -this.position.y);
 
@@ -618,9 +628,57 @@ function gameIO() {
     }
 
     element.isPointInside = function (point) {
-      let relativeX = game.renderers[0].rightOfScreen / this.ratio + this.offset.x / game.renderers[0].ratio - this.width / 2 / this.ratio;
-      let relativeY = game.renderers[0].bottomOfScreen / this.ratio + this.offset.y / game.renderers[0].ratio - this.height / 2 / this.ratio;
+      let relativeX = game.renderers[0].rightOfScreen / this.ratio + this.offset.x / this.ratio - this.width / 2 / this.ratio;
+      let relativeY = game.renderers[0].bottomOfScreen / this.ratio + this.offset.y / this.ratio - this.height / 2 / this.ratio;
       return (point.x > relativeX && point.x < relativeX + this.width / this.ratio) && (point.y > relativeY && point.y < relativeY + this.height / this.ratio);
+    }
+    return element;
+  }
+
+  game.textHolder = function (id, anchors, x, y, width, height, radius, style, text) {
+    var element = {};
+    element.textId = id || null;
+    element.anchors = anchors || { x: 2, y: 2 };
+    element.width = width || 100;
+    element.height = height || 100;
+    element.radius = radius || 5;
+    element.style = style || { color: "#ae1919", stroke: null, lineWidth: 0 };
+    element.position = new game.Vector2(0, 0);
+    element.offset = new game.Vector2(x || 0, y || 0);
+    element.text = text || game.text("No Value", 0, 0, "#ddd", null, "Arial", 32); //@ {game.text}, {game.image}
+
+    element.render = function (ctx, ratio, opacity) {
+      this.ratio = ratio;
+      opacity = Math.min(Math.max(0, opacity), 1);
+      opacity = Math.min(this.opacity * opacity, 1);
+      if (opacity <= 0)
+        return;
+
+      this.position.x = game.renderers[0].c.width / this.anchors.x - this.width / 2 / ratio + this.offset.x / ratio;
+      this.position.y = game.renderers[0].c.height / this.anchors.y - this.height / 2 / ratio + this.offset.y / ratio;
+      ctx.translate(this.position.x, this.position.y);
+      ctx.rotate(this.rotation);
+      ctx.globalAlpha = opacity;
+      if (this.pressed) {
+        if (this.style.clickColor) ctx.fillStyle = this.style.clickColor;
+      } else {
+        if (this.hovered) {
+          if (this.style.hoverColor) ctx.fillStyle = this.style.hoverColor;
+        } else {
+          if (this.style.color) ctx.fillStyle = this.style.color;
+        }
+      }
+      ctx.roundRect(0, 0, this.width / ratio, this.height / ratio, this.radius / ratio);
+      if (this.style.color) ctx.fill();
+      if (this.style.stroke) ctx.stroke();
+      ctx.rotate(-this.rotation);
+      ctx.translate(-this.position.x, -this.position.y);
+
+      element.text.position.x = game.renderers[0].c.width / this.anchors.x + this.offset.x / ratio;
+      element.text.position.y = game.renderers[0].c.height / this.anchors.y + this.offset.y / ratio;
+      ctx.translate(element.text.position.x, element.text.position.y);
+      element.text.renderSpecific(ctx, ratio);
+      ctx.translate(-element.text.position.x, -element.text.position.y);
     }
     return element;
   }
@@ -1533,7 +1591,7 @@ function gameIO() {
       if (obj.healthBar) {
         if (obj.healthBar.type !== "roundRectangle") {
           obj.healthBar = new game.roundRectangle(0, 0, (obj.health / obj.maxHealth) * 100, 10, 3, "#FF0000");
-          this.scenes[0].add(obj.healthBar);
+          this.scenes[0].add(obj.healthBar, 10);
         }
 
         obj.healthBar.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
