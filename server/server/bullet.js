@@ -120,7 +120,7 @@ game.addCollision('bullet', 'player', (bullet, player) => {
                 them.xp * 0.9
             );
             if (them.level === 60 && you.xp + scoreToGive < 50623) scoreToGive = 50623 - you.xp;
-            game.findObjectById(bullet.ownerID) += scoreToGive;
+            game.findObjectById(bullet.ownerID).xp += scoreToGive;
             
         } else player.regen = Date.now() + 20000; // next regen in 20 s
     }
