@@ -67,7 +67,7 @@ class Turret {
      * @param {number=} offsetAngle Angle offset. Clockwise in radians.
      * @param {number=} dmgMult Damage multiplier of all bullets.
      */
-    constructor(type, maxCD, dmg, offsetX = 0, offsetY = 0, offsetAngle = 0, dmgMult = 1) {
+    constructor(type, maxCD, dmg, offsetX = 0, offsetY = 0, offsetAngle = 0) {
         let l;
         switch (type) {
             case 0:
@@ -83,13 +83,14 @@ class Turret {
                 break;
         }
         let bs = bullets[type];
+        let bulletYOffset = l - bs;
         this.type = type;
         this.turretCD = 0;
         this.turretMaxCD = maxCD;
         this.length = l;
         this.bulletSize = bs;
-        // this.distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY + l - bs) * 2);
-        // this.turretAngle = Math.atan2(-offsetY - l + bs, offsetX);
+        this.distance = Math.sqrt(Math.pow(Math.abs(offsetX), 2) + Math.pow(Math.abs(offsetY + bulletYOffset), 2));
+        this.turretAngle = Math.atan2(-offsetY  - bulletYOffset, offsetX);
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.offsetAngle = offsetAngle;
@@ -350,7 +351,6 @@ const handleMovement = obj => {
 const shoot = (obj) => {
     obj.turrets.forEach(turret => {
         if (turret.turretCD !== 0) return;
-        let angleScale = Math.PI;
         let bulletAngle = obj.playerMouse.angle + turret.offsetAngle;
         let finalPosition = {
             x: Math.sin(2 * Math.PI - obj.playerMouse.angle + turret.turretAngle) * turret.distance,
@@ -366,7 +366,7 @@ const shoot = (obj) => {
                     bulletAngle = bulletAngle - (spread * sign) / 2;
                     game.create("bullet", { 
                         type: turret.type, 
-                        pos: [obj.body.position[0] + finalPosition.x * angleScale, obj.body.position[1] + finalPosition.y * angleScale], 
+                        pos: [obj.body.position[0] + finalPosition.x, obj.body.position[1] + finalPosition.y], 
                         angle: bulletAngle, 
                         velocity: obj.body.velocity, 
                         ownerID: obj.id,
@@ -381,8 +381,8 @@ const shoot = (obj) => {
                 let sign = (Math.random() > 0.5) ? 1 : -1;
                 bulletAngle = bulletAngle - (spread * sign) / 2;
                 game.create("bullet", { 
-                    type: turret.type, pos: [obj.body.position[0] + finalPosition.x * angleScale, 
-                    obj.body.position[1] + finalPosition.y * angleScale], 
+                    type: turret.type, pos: [obj.body.position[0] + finalPosition.x, 
+                    obj.body.position[1] + finalPosition.y], 
                     angle: bulletAngle, 
                     velocity: obj.body.velocity, 
                     ownerID: obj.id,
@@ -393,8 +393,8 @@ const shoot = (obj) => {
             default:
                 game.create("bullet", { 
                     type: turret.type, 
-                    pos: [obj.body.position[0] + finalPosition.x * angleScale, 
-                    obj.body.position[1] + finalPosition.y * angleScale], 
+                    pos: [obj.body.position[0] + finalPosition.x, 
+                    obj.body.position[1] + finalPosition.y], 
                     angle: bulletAngle, 
                     velocity: obj.body.velocity, 
                     ownerID: obj.id, 
