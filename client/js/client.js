@@ -144,6 +144,10 @@ window.onload = function () {
         setTimeout(() => {
             document.getElementById("menu").style.display = "none";
         }, 500);
+        game.clientLvl = 0;
+        game.clientXp = 0;
+        game.actualLvl = 0;
+        game.actualXp = 0;
         main();
     }
 

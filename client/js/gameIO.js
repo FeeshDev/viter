@@ -11,6 +11,8 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
   return this;
 }
 
+const smoothing = 0.05;
+
 let themes = [
   {
     edgeColor: '#069950',
@@ -1374,9 +1376,8 @@ function gameIO() {
       obj.turrets = [];
       if (packet.xp !== undefined && obj.id === game.me.id) {
         game.renderers[0].UI.getTextholderById("score").text.text = `Score: ${packet.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-        game.renderers[0].UI.getTextholderById("level").text.text = `Level ${packet.level}`;
-        game.renderers[0].UI.getTextholderById("level").width = 420 * packet.lvlPercent;
-        // console.log(packet.xp, packet.level, packet.lvlPercent);
+        game.actualLvl = packet.level;
+        game.actualXp = packet.lvlPercent;
       }
       if (packet.turrets !== undefined)
         packet.turrets.forEach(turret => {
@@ -1636,6 +1637,21 @@ function gameIO() {
       game.ws.send(msgpack.encode(game.currentPackets));
       game.currentPackets = [];
     }
+
+    // Score smoothing
+    if (game.clientLvl < game.actualLvl) {
+      game.clientXp += smoothing * (game.actualLvl + game.actualXp - game.clientLvl - game.clientXp);
+      while (game.clientXp >= 1) {
+        game.clientLvl++;
+        game.clientXp -= 1;
+      }
+    }
+    if (game.clientLvl === game.actualLvl) {
+      game.clientXp += smoothing * (game.actualLvl + game.actualXp - game.clientLvl - game.clientXp);
+      if (game.clientXp > game.actualXp) game.clientXp = game.actualXp;
+    }
+    game.renderers[0].UI.getTextholderById("level").width = 420 * game.clientXp;
+    game.renderers[0].UI.getTextholderById("level").text.text = `Level ${game.clientLvl}`;
   }
   game.addType = function (type, create, tickUpdate, updatePacket, remove) {
     game.types[type] = {
@@ -1645,6 +1661,8 @@ function gameIO() {
       remove: remove || function (obj) { }
     };
   }
+
+
   game.addType(
     "spectator",
     function (obj, packet) {
