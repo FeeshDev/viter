@@ -1,24 +1,28 @@
 let bullets = [
     {   //* DEFAULT
         type: 0,
+        damage: 5,
         extraSpeed: 1,
         extraLifespan: 1,
         scale: 1,
     },
     {   //* SHOTGUN PELLET
         type: 1,
+        damage: 1.5,
         extraSpeed: 0.9,
         extraLifespan: 0.6,
         scale: 0.6,
     },
     {   //* SNIPER BULLET
         type: 2,
+        damage: 10,
         extraSpeed: 2,
         extraLifespan: 2,
         scale: 1,
     },
     {   //* MACHINE GUN PELLET
         type: 3,
+        damage: 2.5,
         extraSpeed: 1,
         extraLifespan: 1,
         scale: 0.65,
@@ -43,7 +47,7 @@ game.addType(
         obj.lifespan = 0;
         obj.lifespanCap = 40 * bulletProps.extraLifespan;
 
-        obj.damage = extra.damage;
+        obj.damage = bulletProps.damage;
 
         obj.extraSpeed = bulletProps.extraSpeed;
         if (obj.bulletType === 1) obj.extraSpeed = obj.extraSpeed * 0.7 + obj.extraSpeed * Math.random();
@@ -82,7 +86,7 @@ const handleMovement = (obj) => {
 game.addCollision('bullet', 'object', (bullet, object) => {
     game.remove(bullet);
     object.health -= bullet.damage;
-    if (object.health <= 0 && game.findObjectById(bullet.ownerID).lastDestroyed !== object.id) {
+    if (object.health <= 0) {
         switch (object.objType) {
             // Tree
             case 0:
@@ -94,7 +98,6 @@ game.addCollision('bullet', 'object', (bullet, object) => {
                 game.findObjectById(bullet.ownerID).xp += 20 + Math.round((object.scale - 1) / 0.5 * 10);
                 break;
         }
-        game.findObjectById(bullet.ownerID).lastDestroyed = object.id;
     }
 });
 
