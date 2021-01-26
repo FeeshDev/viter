@@ -333,10 +333,10 @@ function gameIO() {
   game.resize = function () {
     let a = game.renderers[0].UI.getTextholderById("score");
     if (a) {
-      game.renderers[0].UI.getTextholderById("score").anchors.y = Math.max(1 + 0.5 - (((window.innerHeight - 100) / (722 - 100)) * 0.5), 0.93);
-      game.renderers[0].UI.getTextholderById("score_behind").anchors.y = Math.max(1 + 0.5 - (((window.innerHeight - 100) / (722 - 100)) * 0.5), 0.93);
-      game.renderers[0].UI.getTextholderById("level").anchors.y = Math.max(1 + 0.5 - (((window.innerHeight - 100) / (722 - 100)) * 0.5), 0.93);
-      game.renderers[0].UI.getTextholderById("level_behind").anchors.y = Math.max(1 + 0.5 - (((window.innerHeight - 100) / (722 - 100)) * 0.5), 0.93);
+      game.renderers[0].UI.getTextholderById("score").anchors.y = Math.max(1 + 0.5 - (((window.innerHeight - 75) / (722 - 75)) * 0.5), 0.93);
+      game.renderers[0].UI.getTextholderById("score_behind").anchors.y = Math.max(1 + 0.5 - (((window.innerHeight - 75) / (722 - 75)) * 0.5), 0.93);
+      game.renderers[0].UI.getTextholderById("level").anchors.y = Math.max(1 + 0.5 - (((window.innerHeight - 75) / (722 - 75)) * 0.5), 0.93);
+      game.renderers[0].UI.getTextholderById("level_behind").anchors.y = Math.max(1 + 0.5 - (((window.innerHeight - 75) / (722 - 75)) * 0.5), 0.93);
     }
     var renderSize = 1;
     game.renderers.forEach(function (renderer) {
