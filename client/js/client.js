@@ -182,12 +182,12 @@ window.onload = function () {
     //!UI
 
     let scoreText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
-    renderer.UI.textHolders.push(new game.textHolder("score_behind", { x: 2, y: 1 }, 0, -160, 386, 28, 14, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
-    renderer.UI.textHolders.push(new game.textHolder("score", { x: 2, y: 1 }, 0, -160, 380, 22, 11, { color: "rgba(41, 171, 58, 0.9)" }, scoreText));
+    renderer.UI.textHolders.push(new game.textHolder("score_behind", { x: 2, y: Math.max(1 + 0.5 - (((window.innerHeight - 100) / (722 - 100)) * 0.5), 0.93) }, 0, -160, 386, 28, 14, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
+    renderer.UI.textHolders.push(new game.textHolder("score", { x: 2, y: Math.max(1 + 0.5 - (((window.innerHeight - 100) / (722 - 100)) * 0.5), 0.93) }, 0, -160, 380, 22, 11, { color: "rgba(41, 171, 58, 0.9)" }, scoreText));
 
     let levelText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
-    renderer.UI.textHolders.push(new game.textHolder("level_behind", { x: 2, y: 1 }, 0, -120, 426, 36, 18, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
-    renderer.UI.textHolders.push(new game.textHolder("level", { x: 2, y: 1 }, 0, -120, 420, 30, 15, { color: "rgba(35, 145, 50, 0.9)" }, levelText));
+    renderer.UI.textHolders.push(new game.textHolder("level_behind", { x: 2, y: Math.max(1 + 0.5 - (((window.innerHeight - 100) / (722 - 100)) * 0.5), 0.93) }, 0, -120, 426, 36, 18, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
+    renderer.UI.textHolders.push(new game.textHolder("level", { x: 2, y: Math.max(1 + 0.5 - (((window.innerHeight - 100) / (722 - 100)) * 0.5), 0.93) }, 0, -120, 420, 30, 15, { color: "rgba(35, 145, 50, 0.9)" }, levelText));
 
     //! Main Loop
     const main = () => {

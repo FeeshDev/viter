@@ -88,8 +88,8 @@ class Turret {
         this.turretMaxCD = maxCD;
         this.length = l;
         this.bulletSize = bs;
-        this.distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY + l - bs) * 2);
-        this.turretAngle = Math.atan2(-offsetY - l + bs, offsetX);
+        // this.distance = Math.sqrt(Math.abs(offsetX) * 2 + Math.abs(offsetY + l - bs) * 2);
+        // this.turretAngle = Math.atan2(-offsetY - l + bs, offsetX);
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.offsetAngle = offsetAngle;
@@ -125,6 +125,8 @@ const turrets = [
         [] // gatling gun (better gunner) (copy paste gunner but more dmg)
     ]
 ]
+
+// console.log(new Turret(0, 10, 5, -20), new Turret(0, 10, 5, 20), new Turret(0, 10, 5, 0, 10))
 
 game.addType(
     // Type
@@ -318,9 +320,9 @@ const handleMovement = obj => {
         minus = 1;
         if (obj.playerInput[
             directions[
-            (dirIndex[
-                obj.dirArray[obj.dirArray.length - 1]
-            ] + 2) % 4
+                (dirIndex[
+                    obj.dirArray[obj.dirArray.length - 1]
+                ] + 2) % 4
             ]
         ]) minus++;
         let way = 0, sign = 1;
@@ -348,7 +350,7 @@ const handleMovement = obj => {
 const shoot = (obj) => {
     obj.turrets.forEach(turret => {
         if (turret.turretCD !== 0) return;
-        let angleScale = 3.1;
+        let angleScale = Math.PI;
         let bulletAngle = obj.playerMouse.angle + turret.offsetAngle;
         let finalPosition = {
             x: Math.sin(2 * Math.PI - obj.playerMouse.angle + turret.turretAngle) * turret.distance,
