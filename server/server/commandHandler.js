@@ -33,10 +33,20 @@ global.executeCommand = (userSelf, command, accessCode) => {
                 console.log(e);
             }
             break;
+        case "turretTier":
+            try {
+                let turretTier = Math.round(parseInt(commandArray[1], 10));
+                if (turretTier === NaN || turretTier < 0) return;
+                userSelf.turretTier = parseInt(commandArray[1]) || 0;
+                userSelf.updateTurrets();
+            } catch (e) {
+                console.log(e);
+            }
+            break;
         case "turreti":
             try {
                 let turretIndex = Math.round(parseInt(commandArray[1], 10));
-                if (turretIndex === NaN || turretIndex < 0 || turretIndex > 8) return;
+                if (turretIndex === NaN || turretIndex < 0) return;
                 userSelf.turretIndex = parseInt(commandArray[1]) || 0;
                 userSelf.updateTurrets();
             } catch (e) {
