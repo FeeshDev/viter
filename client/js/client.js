@@ -181,17 +181,17 @@ window.onload = function () {
 
     //!UI
 
-    //let scoreText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
+    let scoreText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
     renderer.addLabel(new game.label("score_behind", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -160, 386, 28, 14, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
-    renderer.addLabel(new game.label("score", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -160, 380, 22, 11, { color: "rgba(41, 171, 58, 0.9)" }, game.text()));
+    renderer.addLabel(new game.label("score", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -160, 380, 22, 11, { color: "rgba(41, 171, 58, 0.9)" }, scoreText));
 
-    //let levelText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
+    let levelText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
     renderer.addLabel(new game.label("level_behind", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -120, 426, 36, 18, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
-    renderer.addLabel(new game.label("level", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -120, 420, 30, 15, { color: "rgba(35, 145, 50, 0.9)" }, game.text()));
+    renderer.addLabel(new game.label("level", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -120, 420, 30, 15, { color: "rgba(35, 145, 50, 0.9)" }, levelText));
 
     let buttonText = game.text("funi", 0, 0, "#ddd", null, "Arial", 20);
-    renderer.addButton(new game.button("button1", 0, 0, 200, 200, 10, null, buttonText, function () {
-        game.addPacket("upgradePacket", ["h", { test: 1 }]);
+    renderer.addButton(new game.button("button1", 0, -200, 100, 100, 10, null, buttonText, function () {
+        game.addPacket("upgradePacket", ["body", { tier: 1, tank: 1 }]);
     }))
 
     //! Main Loop

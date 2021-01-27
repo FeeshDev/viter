@@ -186,13 +186,14 @@ game.addPacketType(
         let data = packet.object[1];
         switch (type) {
             case "body":
+                ws.self.upgradeBody(data);
                 break;
             case "turret":
                 break;
             case "stat":
                 break;
             default:
-                console.log(`Upgrade packet with "${type}" and "${data}" received.`)
+                console.log(`Upgrade packet with "${type}" and "${JSON.stringify(data)}" received.`)
                 break;
         }
     }
