@@ -591,10 +591,10 @@ function gameIO() {
     };
   }
 
-  game.button = function (id, x, y, width, height, radius, style, inside, onclick) {
+  game.button = function (id, anchors, x, y, width, height, radius, style, inside, onclick) {
     var element = {};
     element.buttonId = id || null;
-    //element.anchors = anchors || { x: 2, y: 2 };
+    element.anchors = anchors || { x: 0, y: 2 };
     element.hovered = false;
     element.pressed = false;
     element.width = width || 100;
@@ -618,8 +618,8 @@ function gameIO() {
       if (opacity <= 0)
         return;
 
-      this.position.x = game.renderers[0].c.width / 2 - this.width / 2 / ratio + this.offset.x / ratio;
-      this.position.y = game.renderers[0].c.height / 2 - this.height / 2 / ratio + this.offset.y / ratio;
+      this.position.x = game.renderers[0].c.width / this.anchors.x - this.width / 2 / ratio + this.offset.x / ratio;
+      this.position.y = game.renderers[0].c.height / this.anchors.y - this.height / 2 / ratio + this.offset.y / ratio;
       ctx.translate(this.position.x, this.position.y);
       ctx.rotate(this.rotation);
       ctx.globalAlpha = opacity;
@@ -643,16 +643,19 @@ function gameIO() {
       ctx.rotate(-this.rotation);
       ctx.translate(-this.position.x, -this.position.y);
 
-      element.inside.position.x = game.renderers[0].c.width / 2 + this.offset.x / ratio;
-      element.inside.position.y = game.renderers[0].c.height / 2 + this.offset.y / ratio;
+      element.inside.position.x = game.renderers[0].c.width / this.anchors.x + this.offset.x / ratio;
+      element.inside.position.y = game.renderers[0].c.height / this.anchors.y + this.offset.y / ratio;
       ctx.translate(element.inside.position.x, element.inside.position.y);
       element.inside.renderSpecific(ctx, ratio);
       ctx.translate(-element.inside.position.x, -element.inside.position.y);
     }
 
     element.isPointInside = function (point) {
-      let relativeX = game.renderers[0].rightOfScreen / this.ratio + this.offset.x / this.ratio - this.width / 2 / this.ratio;
-      let relativeY = game.renderers[0].bottomOfScreen / this.ratio + this.offset.y / this.ratio - this.height / 2 / this.ratio;
+      // let relativeX = game.renderers[0].c.width / this.anchors.x - this.width / 2 / this.ratio + this.offset.x / this.ratio;
+      // let relativeY = game.renderers[0].c.height / this.anchors.y - this.height / 2 / this.ratio + this.offset.y / this.ratio;
+      let relativeX = this.position.x;
+      let relativeY = this.position.y - this.width / this.ratio;
+      console.log(relativeX, relativeY)
       return (point.x > relativeX && point.x < relativeX + this.width / this.ratio) && (point.y > relativeY && point.y < relativeY + this.height / this.ratio);
     }
     return element;

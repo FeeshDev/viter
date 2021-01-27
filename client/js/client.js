@@ -190,7 +190,7 @@ window.onload = function () {
     renderer.addLabel(new game.label("level", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -120, 420, 30, 15, { color: "rgba(35, 145, 50, 0.9)" }, levelText));
 
     let buttonText = game.text("funi", 0, 0, "#ddd", null, "Arial", 20);
-    renderer.addButton(new game.button("button1", 0, -200, 100, 100, 10, null, buttonText, function () {
+    renderer.addButton(new game.button("button1", { x: 2, y: 2 }, 0, 0, 100, 100, 10, null, buttonText, function () {
         game.addPacket("upgradePacket", ["body", { tier: 1, tank: 1 }]);
     }))
 
