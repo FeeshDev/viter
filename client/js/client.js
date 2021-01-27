@@ -42,7 +42,7 @@ window.onload = function () {
             scene.add(obj.playerName, 7);
 
             let tank = new Image();
-            tank.src = `./client/images/tanks/${packet.tank}/${packet.tier}/tank.png`;
+            tank.src = `./client/images/tanks/${packet.tier}/${packet.tank}/tank.png`;
             obj.visual = new game.image(tank, 0, 0, 160 * packet.scale, 160 * packet.scale);
             scene.add(obj.visual, 1);
 
@@ -189,15 +189,29 @@ window.onload = function () {
     renderer.addLabel(new game.label("level_behind", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -120, 426, 36, 18, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
     renderer.addLabel(new game.label("level", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -120, 420, 30, 15, { color: "rgba(35, 145, 50, 0.9)" }, levelText));
 
-    let buttonText = game.text("Body", 0, 0, "#ddd", null, "Arial", 20);
-    renderer.addButton(new game.button("button1", 50, -200, 100, 100, 10, null, buttonText, function () {
-        game.addPacket("upgradePacket", ["body", { tier: 1, tank: 1 }]);
-    }));
+    let bodies = [1, 2, 2, 2];
+    //let tank = 0;
 
-    let buttonText2 = game.text("Turret", 0, 0, "#ddd", null, "Arial", 20);
-    renderer.addButton(new game.button("button1", -50, -200, 100, 100, 10, null, buttonText2, function () {
-        game.addPacket("upgradePacket", ["turret", { tier: 4, turreti: 1 }]);
+    for (let i = 0; i < bodies.length; i++) {
+        const tier = i;
+        const length = bodies[tier];
+        //console.log(tank)
+        for (let j = 0; j < length; j++) {
+            const tank = j;
+            let buttonText = game.text(`Body ${tier}:${tank}`, 0, 0, "#ddd", null, "Arial", 20);
+            renderer.addButton(new game.button(`tankButton:${tier}:${tank}`, -300 + tank * 120, 160 - tier * 120, 100, 100, 10, { fill: { default: "#29ab3a", hover: "#269e36", click: "#239132" }, stroke: { default: "#088529", hover: "#077825", click: "#066b21", lineWidth: 4 } }, buttonText, function () {
+                game.addPacket("upgradePacket", ["body", { tier: tier, tank: tank }]);
+            }));
+        }
+        //tank++;
+    }
+
+    /*
+    let buttonText2 = game.text("Turret", 0, 0, "#ddd", null, "Arial", 20); // { fill: { default: "#707271", hover: "#696b6a" }, stroke: { default: "#575958", hover: "#4b4d4c", lineWidth: 4 } }
+    renderer.addButton(new game.button("button1", -60, -200, 100, 100, 10, { fill: { default: "#707271", hover: "#646665", click: "#575958" }, stroke: { default: "#646665", hover: "#575958", click: "#4b4d4c", lineWidth: 4 } }, buttonText2, function () {
+        game.addPacket("upgradePacket", ["turret", { tier: 1, turreti: 0 }]);
     }));
+    */
 
     //! Main Loop
     const main = () => {

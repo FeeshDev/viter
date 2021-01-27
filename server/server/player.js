@@ -32,28 +32,28 @@ class Body {
 }
 
 let tankBodies = [
-    [ //* Tank 0
-        //* Tier 0
+    [ //* Tier 0
+        //* Tank 0
         new Body(0, 1, 1, 1) //* Default - 0.0
     ],
-    [ //* Tank 1
-        //* Tier 0
+    [ //* Tier 1
+        //* Tank 0
         new Body(1, 1.2, 1, 1), //* Serpent MK I - 1.0
-        //* Tier 1
-        new Body(1, 1.4, 0.8, 1), //* Serpent MK II - 1.1
-        //* Tier 2
-        new Body(1, 2, 0.5, 1), //* Basilisk - 1.2
-        //* Tier 3
-        new Body(1, 4, 999, 10), //* idk hacker thing - 1.3
-    ],
-    [ //* Tank 2
-        //* Tier 0
+        //* Tank 1
         new Body(0, 1, 1.2, 1), //* Squire MK I - 2.0
-        //* Tier 1
-        new Body(2, 0.8, 1.4, 1), //* Squire MK II - 2.1
-        //* Tier 2
-        new Body(1, 0.6, 2, 1), //* Knight - 2.2
     ],
+    [ //* Tier 2
+        //* Tank 0
+        new Body(1, 1.4, 0.8, 1), //* Serpent MK II - 1.1
+        //* Tank 1
+        new Body(2, 0.8, 1.4, 1), //* Squire MK II - 2.1
+    ],
+    [ //* Tier 3
+        //* Tank 0
+        new Body(1, 2, 0.5, 1), //* Basilisk - 1.2
+        //* Tank 1
+        new Body(1, 0.6, 2, 1), //* Knight - 2.2
+    ]
 ];
 
 
@@ -184,7 +184,7 @@ game.addType(
         obj.tier = 0;
 
         obj.tank === 0 ? obj.tier = 0 : null;
-        obj.props = tankBodies[obj.tank][obj.tier];
+        obj.props = tankBodies[obj.tier][obj.tank];
 
         //!SHOOTING
         obj.turretTier = 0;
@@ -205,7 +205,7 @@ game.addType(
         obj.dance = false;
 
         //!LEVELS
-        obj.xp = 0;
+        obj.xp = 60000;
         obj.level = 0;
         obj.levelThreshold = l[0];
 
@@ -219,7 +219,7 @@ game.addType(
         obj.lastDestroyed = undefined;
 
         obj.handleHitbox = () => {
-            obj.props = tankBodies[obj.tank][obj.tier];
+            obj.props = tankBodies[obj.tier][obj.tank];
             obj.body.shapes[0] = new game.rectangle(obj.props.hitbox.h * DEFAULT_SCALE * obj.props.tankSize, obj.props.hitbox.w * DEFAULT_SCALE * obj.props.tankSize);
         }
 
@@ -234,7 +234,8 @@ game.addType(
         obj.upgradeBody = (data) => {
             let tier = data.tier;
             let tank = data.tank;
-            if (tier === 0 || tank === 0) return;
+            if (tier === 0) return;
+            if (tier - obj.tier > 1) return;
             if (obj.tank !== 0) if (obj.tank !== tank) return;
             if (obj.level < (tier * 10 + (tier - 1) * 10)) return;
             if (tier <= obj.tier) return;
@@ -247,6 +248,7 @@ game.addType(
             let tier = data.tier;
             let turreti = data.turreti;
             if (tier === 0) return;
+            if (tier - obj.tier > 1) return;
             //if (obj.tank !== 0) if (obj.tank !== tank) return;
             if (obj.level < tier * 10) return;
             if (tier <= obj.turretTier) return;
