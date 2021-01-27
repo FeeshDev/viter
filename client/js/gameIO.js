@@ -204,13 +204,13 @@ function gameIO() {
       smoothingEnabled: true,
       UI: {
         buttons: [],
-        textHolders: [],
+        labels: [],
         render: function (ctx, ratio) {
           this.buttons.forEach(button => {
             button.render(ctx, ratio);
           });
-          this.textHolders.forEach(textHolder => {
-            textHolder.render(ctx, ratio);
+          this.labels.forEach(label => {
+            label.render(ctx, ratio);
           });
         },
         getButtonById: function (id) {
@@ -221,10 +221,10 @@ function gameIO() {
           }
           return null;
         },
-        getTextholderById: function (id) {
-          for (var i = 0; i < this.textHolders.length; i++) {
-            if (this.textHolders[i].textId == id) {
-              return this.textHolders[i];
+        getLabelById: function (id) {
+          for (var i = 0; i < this.labels.length; i++) {
+            if (this.labels[i].textId == id) {
+              return this.labels[i];
             }
           }
           return null;
@@ -331,12 +331,12 @@ function gameIO() {
     return socket;
   };
   game.resize = function () {
-    let a = game.renderers[0].UI.getTextholderById("score");
+    let a = game.renderers[0].UI.getLabelById("score");
     if (a) {
-      game.renderers[0].UI.getTextholderById("score").anchors.y = Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1);
-      game.renderers[0].UI.getTextholderById("score_behind").anchors.y = Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1);
-      game.renderers[0].UI.getTextholderById("level").anchors.y = Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1);
-      game.renderers[0].UI.getTextholderById("level_behind").anchors.y = Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1);
+      game.renderers[0].UI.getLabelById("score").anchors.y = Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1);
+      game.renderers[0].UI.getLabelById("score_behind").anchors.y = Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1);
+      game.renderers[0].UI.getLabelById("level").anchors.y = Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1);
+      game.renderers[0].UI.getLabelById("level_behind").anchors.y = Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1);
     }
     var renderSize = 1;
     game.renderers.forEach(function (renderer) {
@@ -652,7 +652,7 @@ function gameIO() {
     return element;
   }
 
-  game.textHolder = function (id, anchors, x, y, width, height, radius, style, text) {
+  game.label = function (id, anchors, x, y, width, height, radius, style, text) {
     var element = {};
     element.textId = id || null;
     element.anchors = anchors || { x: 2, y: 2 };
@@ -1382,7 +1382,7 @@ function gameIO() {
         });
       obj.turrets = [];
       if (packet.xp !== undefined && obj.id === game.me.id) {
-        game.renderers[0].UI.getTextholderById("score").text.text = `Score: ${packet.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+        game.renderers[0].UI.getLabelById("score").text.text = `Score: ${packet.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
         game.actualLvl = packet.level;
         game.actualXp = packet.lvlPercent;
       }
@@ -1657,8 +1657,8 @@ function gameIO() {
       game.clientXp += smoothing * (game.actualLvl + game.actualXp - game.clientLvl - game.clientXp);
       if (game.clientXp > game.actualXp) game.clientXp = game.actualXp;
     }
-    game.renderers[0].UI.getTextholderById("level").width = 420 * game.clientXp;
-    game.renderers[0].UI.getTextholderById("level").text.text = `Level ${game.clientLvl}`;
+    game.renderers[0].UI.getLabelById("level").width = 420 * game.clientXp;
+    game.renderers[0].UI.getLabelById("level").text.text = `Level ${game.clientLvl}`;
   }
   game.addType = function (type, create, tickUpdate, updatePacket, remove) {
     game.types[type] = {
