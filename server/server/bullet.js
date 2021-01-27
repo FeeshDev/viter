@@ -1,52 +1,22 @@
-let bullets = [
-    {   //* DEFAULT
-        type: 0,
-        extraSpeed: 1,
-        extraLifespan: 1,
-        scale: 1,
-    },
-    {   //* SHOTGUN PELLET
-        type: 1,
-        extraSpeed: 0.9,
-        extraLifespan: 0.6,
-        scale: 0.6,
-    },
-    {   //* SNIPER BULLET
-        type: 2,
-        extraSpeed: 2,
-        extraLifespan: 2,
-        scale: 1,
-    },
-    {   //* MACHINE GUN PELLET
-        type: 3,
-        extraSpeed: 1,
-        extraLifespan: 1,
-        scale: 0.65,
-    },
-]
-
 game.addType(
     // Type
     "bullet",
     // Create
     function (obj, extra) {
-        //extra = { pos[], angle }
-        let bulletProps = bullets[extra.type];
-        obj.bulletType = bulletProps.type;
-        obj.scale = bulletProps.scale;
+        obj.bulletType = extra.type;
+
+        obj.damage = extra.damage;
+        obj.scale = extra.scale;
+        obj.bulletSpeedMult = extra.bulletSpeedMult;
+        if (obj.bulletType === 1) obj.bulletSpeedMult = obj.bulletSpeedMult * 0.7 + obj.bulletSpeedMult * Math.random();
+
+        obj.lifespan = 0;
+        obj.lifespanCap = 40 * extra.lifespanMult;
 
         obj.body = new game.body(0);
         obj.body.type = 5;
         obj.body.angle = extra.angle;
         obj.body.addShape(new game.circle(10 * obj.scale));
-
-        obj.lifespan = 0;
-        obj.lifespanCap = 40 * bulletProps.extraLifespan;
-
-        obj.damage = extra.damage;
-
-        obj.extraSpeed = bulletProps.extraSpeed;
-        if (obj.bulletType === 1) obj.extraSpeed = obj.extraSpeed * 0.7 + obj.extraSpeed * Math.random();
 
         obj.ownerID = extra.ownerID;
         obj.body.position = extra.pos//[extra.pos[0] - Math.cos(obj.body.angle) * 20, extra.pos[1] - Math.sin(obj.body.angle) * 20];
@@ -75,8 +45,8 @@ game.addType(
 );
 
 const handleMovement = (obj) => {
-    obj.body.velocity[0] = -Math.cos(obj.body.angle) * 600 * obj.extraSpeed;
-    obj.body.velocity[1] = -Math.sin(obj.body.angle) * 600 * obj.extraSpeed;
+    obj.body.velocity[0] = -Math.cos(obj.body.angle) * 600 * obj.bulletSpeedMult;
+    obj.body.velocity[1] = -Math.sin(obj.body.angle) * 600 * obj.bulletSpeedMult;
 }
 
 game.addCollision('bullet', 'object', (bullet, object) => {
