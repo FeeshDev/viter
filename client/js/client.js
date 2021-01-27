@@ -181,26 +181,29 @@ window.onload = function () {
 
     //!UI
 
-    let scoreText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
-    renderer.UI.labels.push(new game.label("score_behind", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -160, 386, 28, 14, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
-    renderer.UI.labels.push(new game.label("score", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -160, 380, 22, 11, { color: "rgba(41, 171, 58, 0.9)" }, scoreText));
+    //let scoreText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
+    renderer.addLabel(new game.label("score_behind", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -160, 386, 28, 14, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
+    renderer.addLabel(new game.label("score", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -160, 380, 22, 11, { color: "rgba(41, 171, 58, 0.9)" }, game.text()));
 
-    let levelText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
-    renderer.UI.labels.push(new game.label("level_behind", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -120, 426, 36, 18, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
-    renderer.UI.labels.push(new game.label("level", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -120, 420, 30, 15, { color: "rgba(35, 145, 50, 0.9)" }, levelText));
+    //let levelText = game.text("", 0, 0, "#ddd", null, "Arial", 20);
+    renderer.addLabel(new game.label("level_behind", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -120, 426, 36, 18, { color: "rgba(49, 48, 53, 0.6)" }, game.text()));
+    renderer.addLabel(new game.label("level", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -120, 420, 30, 15, { color: "rgba(35, 145, 50, 0.9)" }, game.text()));
+
+    let buttonText = game.text("funi", 0, 0, "#ddd", null, "Arial", 20);
+    renderer.addButton(new game.button("button1", 0, 0, 200, 200, 10, null, buttonText, function () {
+        game.addPacket("upgradePacket", ["h", { test: 1 }]);
+    }))
 
     //! Main Loop
     const main = () => {
         if (controls.changed) {
             controls.changed = false;
-            if (game.ws.readyState == 1)
-                game.currentPackets.push({ type: "updateControls", object: controls });
+            game.addPacket("updateControls", controls);
         }
         if (mouse.changed || mouse.moved || mouse.rightChanged) {
             mouse.moved = false;
             mouse.changed = false;
-            if (game.ws.readyState == 1)
-                game.currentPackets.push({ type: "updateMouse", object: mouse });
+            game.addPacket("updateMouse", mouse);
         }
         game.update();
         renderer.clear();

@@ -230,6 +230,12 @@ function gameIO() {
           return null;
         }
       },
+      addButton: function (button) {
+        this.UI.buttons.push(button);
+      },
+      addLabel: function (label) {
+        this.UI.labels.push(label);
+      },
       render: function (scene) {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
         if (this.clearScreen)
@@ -588,7 +594,7 @@ function gameIO() {
   game.button = function (id, x, y, width, height, radius, style, inside, onclick) {
     var element = {};
     element.buttonId = id || null;
-    element.anchors = anchors || { x: 2, y: 2 };
+    //element.anchors = anchors || { x: 2, y: 2 };
     element.hovered = false;
     element.pressed = false;
     element.width = width || 100;
@@ -1524,6 +1530,10 @@ function gameIO() {
   };
   game.addPacketType = function (type, func) {
     game.packetFunctions[type] = func;
+  }
+  game.addPacket = function (type, data) {
+    if (game.ws.readyState == 1)
+      game.currentPackets.push({ type: type, object: data });
   }
   game.types = [];
   game.objects = [];

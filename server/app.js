@@ -153,11 +153,11 @@ game.addPacketType(
 
 game.addPacketType(
     "playPacket",
-    function (packet, ws) { 
+    function (packet, ws) {
         if (ws.self === undefined || ws.self.type == "spectator") {
             let playerName = packet.name === "" ? "viter.io" : packet.name;
-            ws.self = game.create("player", { 
-                name: playerName, 
+            ws.self = game.create("player", {
+                name: playerName,
                 devID: packet.branch
                 // dance: packet.dance 
             });
@@ -176,6 +176,25 @@ game.addPacketType(
     "requestCommand",
     function (packet, ws) {
         executeCommand(ws.self, packet.command, packet.accessCode);
+    }
+);
+
+game.addPacketType(
+    "upgradePacket",
+    function (packet, ws) {
+        let type = packet.object[0];
+        let data = packet.object[1];
+        switch (type) {
+            case "body":
+                break;
+            case "turret":
+                break;
+            case "stat":
+                break;
+            default:
+                console.log(`Upgrade packet with "${type}" and "${data}" received.`)
+                break;
+        }
     }
 );
 /*game.addPacketType(
