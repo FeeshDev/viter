@@ -56,12 +56,12 @@ game.addCollision('bullet', 'object', (bullet, object) => {
         switch (object.objType) {
             // Tree
             case 0:
-                game.findObjectById(bullet.ownerID).xp += 10 + Math.round((object.scale - 1) / 1 * 10);
+                game.findObjectById(bullet.ownerID).xp += 1200 + Math.round((object.scale - 1) / 1 * 10);
                 break;
 
             // Rock
             case 1:
-                game.findObjectById(bullet.ownerID).xp += 20 + Math.round((object.scale - 1) / 0.5 * 10);
+                game.findObjectById(bullet.ownerID).xp += 600 + Math.round((object.scale - 1) / 0.5 * 10);
                 break;
         }
         game.findObjectById(bullet.ownerID).lastDestroyed = object.id;
@@ -90,7 +90,7 @@ game.addCollision('bullet', 'player', (bullet, player) => {
             );
             if (them.level === 60 && you.xp + scoreToGive < 50623) scoreToGive = 50623 - you.xp;
             game.findObjectById(bullet.ownerID).xp += scoreToGive;
-            
+
         } else player.regen = Date.now() + 20000; // next regen in 20 s
     }
 });

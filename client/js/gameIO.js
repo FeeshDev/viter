@@ -99,6 +99,7 @@ function gameIO() {
     window.addEventListener("mousedown", function (event) {
       if (event.button === 0) {
         game.renderers[0].UI.buttons.forEach(button => {
+          if (!button.enabled) return;
           if (button.isPointInside({ x: mouse.x, y: mouse.y })) { button.onclick(); button.pressed = true }
         });
         mouse.clicking = true;
@@ -125,6 +126,7 @@ function gameIO() {
     window.addEventListener("mouseup", function (event) {
       if (event.button === 0) {
         game.renderers[0].UI.buttons.forEach(button => {
+          if (!button.enabled) return;
           if (button.pressed === true) { button.pressed = false }
         });
         mouse.clicking = false;
@@ -598,6 +600,7 @@ function gameIO() {
     var element = {};
     element.buttonId = id || null;
     //element.anchors = anchors || { x: 2, y: 2 };
+    element.enabled = true;
     element.hovered = false;
     element.pressed = false;
     element.width = width || 100;
@@ -610,9 +613,7 @@ function gameIO() {
     element.inside = inside || game.text("No Value", 0, 0, "#ddd", null, "Arial", 32); //@ {game.text}, {game.image}
 
     element.onclick = onclick || function () {
-      this.pressed = true;
       console.log(`Button with ID: "${this.buttonId}" was pressed.`)
-      this.pressed = false;
     }
 
     element.render = function (ctx, ratio, opacity) {
@@ -1413,7 +1414,17 @@ function gameIO() {
           let details = button.buttonId.split(":");
           switch (details[0]) {
             case "tankButton":
-              if (details[1] > packet.tier) button.opacity = 0.5;
+              if (parseInt(details[1]) === 0 && parseInt(details[2]) === 0) return;
+
+              //if (button.opacity === 1) button.opacity = parseInt(details[2]) !== packet.tank ? 0.5 : 1;
+
+              button.opacity = (packet.level < parseInt(details[1]) * 10 + (parseInt(details[1]) - 1) * 10) ? 0.5 : 1;
+
+              //button.opacity = packet.tier < parseInt(details[1]) ? 0.5 : 1;
+              if (button.opacity !== 1) return;
+              if (parseInt(details[1]) < 2 && packet.tier < parseInt(details[1])) { return; } else {
+                button.opacity = parseInt(details[2]) !== packet.tank ? 0.5 : 1
+              }
               break;
           }
         });
