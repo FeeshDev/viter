@@ -234,12 +234,25 @@ game.addType(
         obj.upgradeBody = (data) => {
             let tier = data.tier;
             let tank = data.tank;
+            if (tier === 0 || tank === 0) return;
+            if (obj.tank !== 0) if (obj.tank !== tank) return;
+            if (obj.level < (tier * 10 + (tier - 1) * 10)) return;
+            if (tier <= obj.tier) return;
+            obj.tier = tier;
+            obj.tank = tank;
+            obj.handleHitbox();
+        }
 
-            if (tier > obj.tier) {
-                obj.tier = tier;
-                obj.tank = tank;
-                obj.handleHitbox();
-            }
+        obj.upgradeTurret = (data) => {
+            let tier = data.tier;
+            let turreti = data.turreti;
+            if (tier === 0) return;
+            //if (obj.tank !== 0) if (obj.tank !== tank) return;
+            if (obj.level < tier * 10) return;
+            if (tier <= obj.turretTier) return;
+            obj.turretTier = tier;
+            obj.turretIndex = turreti;
+            obj.updateTurrets();
         }
     },
     // Tick Update

@@ -189,6 +189,7 @@ game.addPacketType(
                 ws.self.upgradeBody(data);
                 break;
             case "turret":
+                ws.self.upgradeTurret(data);
                 break;
             case "stat":
                 break;

@@ -11,7 +11,7 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
   return this;
 }
 
-const smoothing = 0.05;
+const smoothing = 0.04;
 
 let themes = [
   {
