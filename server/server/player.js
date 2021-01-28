@@ -137,8 +137,12 @@ const turrets = [
             new Turret({ type: 0, maxCD: 10, dmg: 5, offsetY: 10 })
         ],
         [
-            new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: -10 }), // gunner (not done)
-            new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: 10, shootingOffset: 3 })
+            new Turret({ type: 0, maxCD: 10, dmg: 3, offsetX: -20, bulletSpeedMult: 0.7, bulletScale: 0.8 }), // gunner
+            new Turret({ type: 0, maxCD: 10, dmg: 3, offsetX: -12, shootingOffset: 3, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
+            new Turret({ type: 0, maxCD: 10, dmg: 3, offsetX: -4, shootingOffset: 7, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
+            new Turret({ type: 0, maxCD: 10, dmg: 3, offsetX: 20, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
+            new Turret({ type: 0, maxCD: 10, dmg: 3, offsetX: 12, shootingOffset: 3, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
+            new Turret({ type: 0, maxCD: 10, dmg: 3, offsetX: 4, shootingOffset: 7, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
         ]
     ],
     [ // tier 4
@@ -157,7 +161,14 @@ const turrets = [
             new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: 20 }),
             new Turret({ type: 0, maxCD: 7, dmg: 7, offsetY: 10 })
         ],
-        [] // gatling gun (better gunner) (copy paste gunner but more dmg)
+        [
+            new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: -20, bulletSpeedMult: 0.7, bulletScale: 0.8 }), // gatling gun (better gunner)
+            new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: -12, shootingOffset: 3, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
+            new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: -4, shootingOffset: 6, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
+            new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: 20, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
+            new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: 12, shootingOffset: 3, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
+            new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: 4, shootingOffset: 6, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
+        ]
     ]
 ]
 
