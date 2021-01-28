@@ -625,8 +625,7 @@ function gameIO() {
     element.height = height || 100;
     element.radius = radius || 5;
     element.opacity = opacity || 1;
-    element.style = style || { fill: { default: "#000", hover: "#fff", click: "#929" }, stroke: { default: 0, hover: 0, click: 0, lineWidth: 0 } };
-
+    element.style = style || { fill: { default: "#000" }, stroke: { default: 0, hover: 0, click: 0, lineWidth: 0 } };
     element.position = new game.Vector2(0, 0);
     element.offset = new game.Vector2(x || 0, y || 0);
     element.inside = inside || game.text("No Value", 0, 0, "#ddd", null, "Arial", 32); //@ {game.text}, {game.image}
@@ -686,10 +685,24 @@ function gameIO() {
     }
 
     element.isPointInside = function (point) {
-      let relativeX = this.position.x;
-      let relativeY = this.position.y - this.width / this.ratio;
+      // let relativeX = game.renderers[0].c.width / this.anchors.x - this.width / 2 / this.ratio + this.offset.x / this.ratio;
+      // let relativeY = game.renderers[0].c.height / this.anchors.y - this.height / 2 / this.ratio + this.offset.y / this.ratio;
+      let relativeX = game.renderers[0].rightOfScreen / this.ratio + this.offset.x / this.ratio - this.width / 2 / this.ratio;
+      let relativeY = game.renderers[0].bottomOfScreen / this.ratio + this.offset.y / this.ratio - this.height / 2 / this.ratio;
       return (point.x > relativeX && point.x < relativeX + this.width / this.ratio) && (point.y > relativeY && point.y < relativeY + this.height / this.ratio);
     }
+
+    element.setOtherColors = function (setStroke) {
+      element.style.fill.hover = element.style.fill.hover || colorLuminance(element.style.fill.default, -(6 * 0.01));
+      element.style.fill.click = element.style.fill.click || colorLuminance(element.style.fill.default, -(12 * 0.01));
+
+      if (setStroke) element.style.stroke.default = colorLuminance(element.style.fill.default, -(10 * 0.01));
+
+      element.style.stroke.hover = element.style.stroke.hover || colorLuminance(element.style.stroke.default, -(6 * 0.01));
+      element.style.stroke.click = element.style.stroke.click || colorLuminance(element.style.stroke.default, -(12 * 0.01));
+    }
+
+    element.setOtherColors(true);
     return element;
   }
 
@@ -1441,7 +1454,6 @@ function gameIO() {
 
               //button.opacity = packet.tier < parseInt(details[1]) ? 0.5 : 1;
               if (button.opacity !== 1) return;
-              console.log(packet.tier)
               if (packet.tier === 0) { return; } else {
                 button.opacity = parseInt(details[2]) !== packet.tank ? 0.5 : 1
               }
