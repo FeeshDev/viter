@@ -13,7 +13,7 @@ const dirIndex = {
 };
 
 let l = []; // level thresholds
-for (let i = 0; i < 61; i++) l.push(Math.ceil(Math.pow((i + 1), 2.635)));
+for (let i = 0; i < 60; i++) l.push(Math.ceil(Math.pow((i + 2), 2.635)));
 
 class Body {
     /**
@@ -289,6 +289,7 @@ game.addType(
             }
         }
 
+
         if (Date.now() > obj.regen) obj.health = Math.min(obj.health + 0.3, obj.maxHealth);
 
         obj.body.angle = obj.direction * (Math.PI / 180);
@@ -385,10 +386,10 @@ const handleMovement = obj => {
     } else {
         minus = 1;
         if (obj.playerInput[
-            directions[
-            (dirIndex[
-                obj.dirArray[obj.dirArray.length - 1]
-            ] + 2) % 4
+                directions[
+                (dirIndex[
+                    obj.dirArray[obj.dirArray.length - 1]
+                ] + 2) % 4
             ]
         ]) minus++;
         let way = 0, sign = 1;
