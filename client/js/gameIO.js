@@ -11,7 +11,7 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
   return this;
 }
 
-const smoothing = 0.05;
+const smoothing = 0.04;
 
 let themes = [
   {
@@ -99,7 +99,8 @@ function gameIO() {
     window.addEventListener("mousedown", function (event) {
       if (event.button === 0) {
         game.renderers[0].UI.buttons.forEach(button => {
-          if (button.isPointInside({ x: mouse.x, y: mouse.y })) button.onclick();
+          if (!button.enabled) return;
+          if (button.isPointInside({ x: mouse.x, y: mouse.y })) { button.onclick(); button.pressed = true }
         });
         mouse.clicking = true;
         mouse.changed = true;
@@ -124,6 +125,10 @@ function gameIO() {
     });
     window.addEventListener("mouseup", function (event) {
       if (event.button === 0) {
+        game.renderers[0].UI.buttons.forEach(button => {
+          if (!button.enabled) return;
+          if (button.pressed === true) { button.pressed = false }
+        });
         mouse.clicking = false;
         mouse.changed = true;
       }
@@ -207,10 +212,10 @@ function gameIO() {
         labels: [],
         render: function (ctx, ratio) {
           this.buttons.forEach(button => {
-            button.render(ctx, ratio);
+            button.render(ctx, ratio, 1);
           });
           this.labels.forEach(label => {
-            label.render(ctx, ratio);
+            label.render(ctx, ratio, 1);
           });
         },
         getButtonById: function (id) {
@@ -591,35 +596,37 @@ function gameIO() {
     };
   }
 
-  game.button = function (id, anchors, x, y, width, height, radius, style, inside, onclick) {
+  game.button = function (id, anchors, x, y, width, height, radius, style, inside, onclick, opacity) {
     var element = {};
     element.buttonId = id || null;
-    element.anchors = anchors || { x: 0, y: 2 };
+    element.anchors = anchors || { x: 2, y: 2 };
+    element.enabled = true;
     element.hovered = false;
     element.pressed = false;
     element.width = width || 100;
     element.height = height || 100;
     element.radius = radius || 5;
-    element.style = style || { color: "#000", hoverColor: "#fff", clickColor: "#929", stroke: null, lineWidth: 0 };
+    element.opacity = opacity || 1;
+    element.style = style || { fill: { default: "#000", hover: "#fff", click: "#929" }, stroke: { default: 0, hover: 0, click: 0, lineWidth: 0 } };
     element.position = new game.Vector2(0, 0);
     element.offset = new game.Vector2(x || 0, y || 0);
     element.inside = inside || game.text("No Value", 0, 0, "#ddd", null, "Arial", 32); //@ {game.text}, {game.image}
 
     element.onclick = onclick || function () {
-      this.pressed = true;
       console.log(`Button with ID: "${this.buttonId}" was pressed.`)
-      this.pressed = false;
     }
 
     element.render = function (ctx, ratio, opacity) {
       this.ratio = ratio;
       opacity = Math.min(Math.max(0, opacity), 1);
       opacity = Math.min(this.opacity * opacity, 1);
-      if (opacity <= 0)
-        return;
+      if (opacity <= 0) return;
 
       this.position.x = game.renderers[0].c.width / this.anchors.x - this.width / 2 / ratio + this.offset.x / ratio;
       this.position.y = game.renderers[0].c.height / this.anchors.y - this.height / 2 / ratio + this.offset.y / ratio;
+
+      console.log(game.renderers[0].c.width, this.position.y);
+
       ctx.translate(this.position.x, this.position.y);
       ctx.rotate(this.rotation);
       ctx.globalAlpha = opacity;
@@ -627,18 +634,29 @@ function gameIO() {
       ctx.roundRect(0, 0, this.width / ratio, this.height / ratio, this.radius / ratio);
 
       if (this.pressed) {
-        if (this.style.clickColor) ctx.fillStyle = this.style.clickColor;
+        if (this.style.fill.click) ctx.fillStyle = this.style.fill.click;
       } else {
         if (this.hovered) {
-          if (this.style.hoverColor) ctx.fillStyle = this.style.hoverColor;
+          if (this.style.fill.hover) ctx.fillStyle = this.style.fill.hover;
         } else {
-          if (this.style.color) ctx.fillStyle = this.style.color;
+          if (this.style.fill.default) ctx.fillStyle = this.style.fill.default;
         }
       }
-      if (this.style.color) ctx.fill();
+      if (this.style.fill) ctx.fill();
 
-      if (this.style.stroke) ctx.strokeStyle = this.style.stroke;
-      if (this.style.stroke) ctx.stroke();
+      if (this.style.stroke) {
+        if (this.pressed) {
+          if (this.style.stroke.click) ctx.strokeStyle = this.style.stroke.click;
+        } else {
+          if (this.hovered) {
+            if (this.style.stroke.hover) ctx.strokeStyle = this.style.stroke.hover;
+          } else {
+            if (this.style.stroke.default) ctx.strokeStyle = this.style.stroke.default;
+          }
+        }
+        ctx.lineWidth = this.style.stroke.lineWidth / ratio;
+        if (this.style.stroke) ctx.stroke();
+      }
 
       ctx.rotate(-this.rotation);
       ctx.translate(-this.position.x, -this.position.y);
@@ -655,7 +673,6 @@ function gameIO() {
       // let relativeY = game.renderers[0].c.height / this.anchors.y - this.height / 2 / this.ratio + this.offset.y / this.ratio;
       let relativeX = this.position.x;
       let relativeY = this.position.y - this.width / this.ratio;
-      console.log(relativeX, relativeY)
       return (point.x > relativeX && point.x < relativeX + this.width / this.ratio) && (point.y > relativeY && point.y < relativeY + this.height / this.ratio);
     }
     return element;
@@ -668,6 +685,7 @@ function gameIO() {
     element.width = width || 100;
     element.height = height || 100;
     element.radius = radius || 5;
+    element.opacity = 1;
     element.style = style || { color: "#ae1919", stroke: null, lineWidth: 0 };
     element.position = new game.Vector2(0, 0);
     element.offset = new game.Vector2(x || 0, y || 0);
@@ -1384,7 +1402,7 @@ function gameIO() {
 
       obj.tank = packet.tank;
       obj.tier = packet.tier;
-      if (obj.tank !== undefined) obj.visual.image.src = `./client/images/tanks/${obj.tank}/${obj.tier}/tank.png`;
+      if (obj.tank !== undefined) obj.visual.image.src = `./client/images/tanks/${obj.tier}/${obj.tank}/tank.png`;
       if (packet.turrets !== undefined)
         obj.turrets.forEach(turret => {
           turret.parent.remove(turret);
@@ -1395,6 +1413,27 @@ function gameIO() {
         game.actualLvl = packet.level;
         game.actualXp = packet.lvlPercent;
       }
+      if (packet.tank !== undefined && packet.tier !== undefined && obj.id === game.me.id) {
+        game.renderers[0].UI.buttons.forEach(button => {
+          let details = button.buttonId.split(":");
+          switch (details[0]) {
+            case "tankButton":
+              if (parseInt(details[1]) === 0 && parseInt(details[2]) === 0) return;
+
+              //if (button.opacity === 1) button.opacity = parseInt(details[2]) !== packet.tank ? 0.5 : 1;
+
+              button.opacity = (packet.level < parseInt(details[1]) * 10 + (parseInt(details[1]) - 1) * 10) ? 0.5 : 1;
+
+              //button.opacity = packet.tier < parseInt(details[1]) ? 0.5 : 1;
+              if (button.opacity !== 1) return;
+              if (parseInt(details[1]) < 2 && packet.tier < parseInt(details[1])) { return; } else {
+                button.opacity = parseInt(details[2]) !== packet.tank ? 0.5 : 1
+              }
+              break;
+          }
+        });
+      }
+
       if (packet.turrets !== undefined)
         packet.turrets.forEach(turret => {
           let turretImg = new Image();
