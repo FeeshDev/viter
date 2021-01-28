@@ -686,9 +686,17 @@ function gameIO() {
     }
 
     element.isPointInside = function (point) {
-      let relativeX = this.position.x;
-      let relativeY = this.position.y - this.width / this.ratio;
-      return (point.x > relativeX && point.x < relativeX + this.width / this.ratio) && (point.y > relativeY && point.y < relativeY + this.height / this.ratio);
+      let relativeX = (this.position.x - (-game.renderers[0].position.x / this.ratio + game.renderers[0].c.width / 2)) * this.ratio;
+      let relativeY = (this.position.y - (-game.renderers[0].position.y / this.ratio + game.renderers[0].c.height / 2)) * this.ratio;
+
+      point.x -= window.innerWidth / 2;
+      point.y -= window.innerHeight / 2;
+
+      point.x *= this.ratio;
+      point.y *= this.ratio;
+
+
+      return (point.x > relativeX && point.x < relativeX + this.width) && (point.y > relativeY && point.y < relativeY + this.height);
     }
     return element;
   }
@@ -1441,7 +1449,6 @@ function gameIO() {
 
               //button.opacity = packet.tier < parseInt(details[1]) ? 0.5 : 1;
               if (button.opacity !== 1) return;
-              console.log(packet.tier)
               if (packet.tier === 0) { return; } else {
                 button.opacity = parseInt(details[2]) !== packet.tank ? 0.5 : 1
               }
