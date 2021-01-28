@@ -56,12 +56,12 @@ game.addCollision('bullet', 'object', (bullet, object) => {
         switch (object.objType) {
             // Tree
             case 0:
-                game.findObjectById(bullet.ownerID).xp += 1200 + Math.round((object.scale - 1) / 1 * 10);
+                game.findObjectById(bullet.ownerID).xp += 10 + Math.round((object.scale - 1) / 1 * 10);
                 break;
 
             // Rock
             case 1:
-                game.findObjectById(bullet.ownerID).xp += 600 + Math.round((object.scale - 1) / 0.5 * 10);
+                game.findObjectById(bullet.ownerID).xp += 40 + Math.round((object.scale - 1) / 0.5 * 10);
                 break;
         }
         game.findObjectById(bullet.ownerID).lastDestroyed = object.id;
