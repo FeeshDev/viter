@@ -1465,22 +1465,23 @@ function gameIO() {
               const disabledColor = "#c61010";
               const ownedColor = "#29ab61";
               const minOpacity = 0.7;
-              if (parseInt(details[1]) === 0 && parseInt(details[2]) === 0) return button.setOtherColors(true, ownedColor);
+              if (button.style.fill.default === ownedColor || button.style.fill.default === disabledColor) { button.enabled = false; } else { button.enabled = true; }
+              if (parseInt(details[1]) === 0 && parseInt(details[2]) === 0) { button.setOtherColors(true, ownedColor); button.enabled = false; } else {
 
-              //if (button.opacity === 1) button.opacity = parseInt(details[2]) !== packet.tank ? 0.5 : 1;
+                button.opacity = (packet.level < parseInt(details[1]) * 10 + (parseInt(details[1]) - 1) * 10) ? minOpacity : 1;
 
-              button.opacity = (packet.level < parseInt(details[1]) * 10 + (parseInt(details[1]) - 1) * 10) ? minOpacity : 1;
-
-              //button.opacity = packet.tier < parseInt(details[1]) ? 0.5 : 1;
-              if (button.opacity === minOpacity) button.setOtherColors(true, disabledColor);
-              if (button.opacity !== 1) return;
-              if (button.opacity === 1) button.setOtherColors(true, "#29ab3a");
-              if (packet.tier === 0) { return; } else {
-                button.opacity = parseInt(details[2]) !== packet.tank ? minOpacity : 1
+                if (button.opacity === minOpacity) button.setOtherColors(true, disabledColor);
+                if (button.opacity === 1) {
+                  button.opacity = (parseInt(details[1]) > packet.tier + 1) ? minOpacity : 1;
+                  if (button.opacity === 1) button.setOtherColors(true, "#29ab3a");
+                  if (packet.tier === 0) { return; } else {
+                    button.opacity = parseInt(details[2]) !== packet.tank ? minOpacity : 1
+                  }
+                  if (button.opacity === minOpacity) button.setOtherColors(true, disabledColor);
+                  if (button.opacity === 1 && packet.tier >= parseInt(details[1])) button.setOtherColors(true, ownedColor);
+                  //if (button.style.fill.default === ownedColor || button.style.fill.default === disabledColor) { button.enabled = false; } else { button.enabled = true; }
+                }
               }
-              if (button.opacity === minOpacity) button.setOtherColors(true, disabledColor);
-              button.enabled = button.opacity === minOpacity ? false : true;
-              if (button.opacity === 1 && packet.tier >= parseInt(details[1])) button.setOtherColors(true, ownedColor);
               break;
           }
         });
