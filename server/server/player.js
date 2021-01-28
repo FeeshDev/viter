@@ -61,7 +61,11 @@ class Turret {
     /**
      * Generates a turret object.
      */
-    constructor({ type, maxCD, dmg, offsetX = 0, offsetY = 0, offsetAngle = 0, bulletScale = 1, bulletSpeedMult = 1, lifespanMult = 1 }) {
+    constructor({ 
+        type, maxCD, dmg, offsetX = 0, offsetY = 0, 
+        offsetAngle = 0, bulletScale = 1, bulletSpeedMult = 1, 
+        lifespanMult = 1, shootingOffset = 0 
+    }) {
         let l;
         switch (type) {
             case 0:
@@ -76,10 +80,11 @@ class Turret {
                 l = 32.56
                 break;
         }
+        let sa = shootingOffset % maxCD
         let bs = bullets[type];
         let bulletYOffset = l - bs;
         this.type = type;
-        this.turretCD = 0;
+        this.turretCD = sa;
         this.turretMaxCD = maxCD;
         this.length = l;
         this.bulletSize = bs;
@@ -92,6 +97,7 @@ class Turret {
         this.bulletScale = bulletScale;
         this.bulletSpeedMult = bulletSpeedMult;
         this.lifespanMult = lifespanMult;
+        this.shootingOffset = sa;
     }
 }
 
@@ -130,7 +136,10 @@ const turrets = [
             new Turret({ type: 0, maxCD: 10, dmg: 5, offsetX: 20 }),
             new Turret({ type: 0, maxCD: 10, dmg: 5, offsetY: 10 })
         ],
-        [] // gunner (not made yet)
+        [
+            new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: -10 }), // gunner (not done)
+            new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: 10, shootingOffset: 3})
+        ]
     ],
     [ // tier 4
         [
@@ -231,7 +240,7 @@ game.addType(
             });
         }
 
-        obj.upgradeBody = (data) => {
+        obj.upgradeBody = data => {
             let tier = data.tier;
             let tank = data.tank;
             if (tier === 0) return;
@@ -244,7 +253,7 @@ game.addType(
             obj.handleHitbox();
         }
 
-        obj.upgradeTurret = (data) => {
+        obj.upgradeTurret = data => {
             let tier = data.tier;
             let turreti = data.turreti;
             if (tier === 0) return;
@@ -285,10 +294,17 @@ game.addType(
         obj.body.angle = obj.direction * (Math.PI / 180);
         handleMovement(obj);
 
+        let s = false;
+
         obj.turrets.forEach(turret => {
-            if (turret.turretCD > 0) turret.turretCD--;
+            if (turret.turretCD !== turret.shootingOffset) {
+                if ((turret.turretCD / 0.5) % 2) turret.turretCD += 0.5;
+                turret.turretCD--;
+            }
+            if (turret.shootingOffset && !turret.turretCD) s = true;
         });
-        if (obj.playerMouse.clicking) shoot(obj);
+        if (obj.playerMouse.clicking) s = true;
+        if (s) shoot(obj);
 
     },
     // Packet Update
@@ -397,8 +413,11 @@ const handleMovement = obj => {
     }
 }
 
-const shoot = (obj) => {
+const shoot = obj => {
     obj.turrets.forEach(turret => {
+        if (turret.shootingOffset && (turret.turretCD === turret.shootingOffset)) {
+            turret.turretCD -= 0.5;
+        }
         if (turret.turretCD !== 0) return;
         let bulletAngle = obj.playerMouse.angle + turret.offsetAngle;
         let finalPosition = {

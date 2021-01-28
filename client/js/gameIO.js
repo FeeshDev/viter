@@ -625,8 +625,6 @@ function gameIO() {
       this.position.x = game.renderers[0].c.width / this.anchors.x - this.width / 2 / ratio + this.offset.x / ratio;
       this.position.y = game.renderers[0].c.height / this.anchors.y - this.height / 2 / ratio + this.offset.y / ratio;
 
-      console.log(game.renderers[0].c.width, this.position.y);
-
       ctx.translate(this.position.x, this.position.y);
       ctx.rotate(this.rotation);
       ctx.globalAlpha = opacity;
