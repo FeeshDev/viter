@@ -669,8 +669,8 @@ function gameIO() {
     element.isPointInside = function (point) {
       // let relativeX = game.renderers[0].c.width / this.anchors.x - this.width / 2 / this.ratio + this.offset.x / this.ratio;
       // let relativeY = game.renderers[0].c.height / this.anchors.y - this.height / 2 / this.ratio + this.offset.y / this.ratio;
-      let relativeX = this.position.x;
-      let relativeY = this.position.y - this.width / this.ratio;
+      let relativeX = game.renderers[0].rightOfScreen / this.ratio + this.offset.x / this.ratio - this.width / 2 / this.ratio;
+      let relativeY = game.renderers[0].bottomOfScreen / this.ratio + this.offset.y / this.ratio - this.height / 2 / this.ratio;
       return (point.x > relativeX && point.x < relativeX + this.width / this.ratio) && (point.y > relativeY && point.y < relativeY + this.height / this.ratio);
     }
     return element;
