@@ -61,10 +61,10 @@ class Turret {
     /**
      * Generates a turret object.
      */
-    constructor({ 
-        type, maxCD, dmg, offsetX = 0, offsetY = 0, 
-        offsetAngle = 0, bulletScale = 1, bulletSpeedMult = 1, 
-        lifespanMult = 1, shootingOffset = 0 
+    constructor({
+        type, maxCD, dmg, offsetX = 0, offsetY = 0,
+        offsetAngle = 0, bulletScale = 1, bulletSpeedMult = 1,
+        lifespanMult = 1, shootingOffset = 0
     }) {
         let l;
         switch (type) {
@@ -138,7 +138,7 @@ const turrets = [
         ],
         [
             new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: -10 }), // gunner (not done)
-            new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: 10, shootingOffset: 3})
+            new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: 10, shootingOffset: 3 })
         ]
     ],
     [ // tier 4
@@ -214,7 +214,7 @@ game.addType(
         obj.dance = false;
 
         //!LEVELS
-        obj.xp = 420;
+        obj.xp = 50000;
         obj.level = 0;
         obj.levelThreshold = l[0];
 

@@ -126,7 +126,7 @@ function gameIO() {
     window.addEventListener("mouseup", function (event) {
       if (event.button === 0) {
         game.renderers[0].UI.buttons.forEach(button => {
-          if (!button.enabled) return;
+          //if (!button.enabled) return;
           if (button.pressed === true) { button.pressed = false }
         });
         mouse.clicking = false;
@@ -1424,9 +1424,11 @@ function gameIO() {
 
               //button.opacity = packet.tier < parseInt(details[1]) ? 0.5 : 1;
               if (button.opacity !== 1) return;
-              if (parseInt(details[1]) < 2 && packet.tier < parseInt(details[1])) { return; } else {
+              console.log(packet.tier)
+              if (packet.tier === 0) { return; } else {
                 button.opacity = parseInt(details[2]) !== packet.tank ? 0.5 : 1
               }
+              button.enabled = button.opacity === 0.5 ? false : true;
               break;
           }
         });
