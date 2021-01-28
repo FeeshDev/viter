@@ -195,7 +195,6 @@ window.onload = function () {
     for (let i = 0; i < bodies.length; i++) {
         const tier = i;
         const length = bodies[tier];
-        //console.log(tank)
         for (let j = 0; j < length; j++) {
             const tank = j;
             let style = { fill: { default: "#29ab3a" }, stroke: { lineWidth: 4 } };

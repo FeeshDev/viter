@@ -685,11 +685,17 @@ function gameIO() {
     }
 
     element.isPointInside = function (point) {
-      // let relativeX = game.renderers[0].c.width / this.anchors.x - this.width / 2 / this.ratio + this.offset.x / this.ratio;
-      // let relativeY = game.renderers[0].c.height / this.anchors.y - this.height / 2 / this.ratio + this.offset.y / this.ratio;
-      let relativeX = game.renderers[0].rightOfScreen / this.ratio + this.offset.x / this.ratio - this.width / 2 / this.ratio;
-      let relativeY = game.renderers[0].bottomOfScreen / this.ratio + this.offset.y / this.ratio - this.height / 2 / this.ratio;
-      return (point.x > relativeX && point.x < relativeX + this.width / this.ratio) && (point.y > relativeY && point.y < relativeY + this.height / this.ratio);
+      let relativeX = (this.position.x - (-game.renderers[0].position.x / this.ratio + game.renderers[0].c.width / 2)) * this.ratio;
+      let relativeY = (this.position.y - (-game.renderers[0].position.y / this.ratio + game.renderers[0].c.height / 2)) * this.ratio;
+
+      point.x -= window.innerWidth / 2;
+      point.y -= window.innerHeight / 2;
+
+      point.x *= this.ratio;
+      point.y *= this.ratio;
+
+
+      return (point.x > relativeX && point.x < relativeX + this.width) && (point.y > relativeY && point.y < relativeY + this.height);
     }
 
     element.setOtherColors = function (setStroke) {
