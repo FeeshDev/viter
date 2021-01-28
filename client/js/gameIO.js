@@ -694,18 +694,28 @@ function gameIO() {
       point.x *= this.ratio;
       point.y *= this.ratio;
 
-
       return (point.x > relativeX && point.x < relativeX + this.width) && (point.y > relativeY && point.y < relativeY + this.height);
     }
 
-    element.setOtherColors = function (setStroke) {
-      element.style.fill.hover = element.style.fill.hover || colorLuminance(element.style.fill.default, -(6 * 0.01));
-      element.style.fill.click = element.style.fill.click || colorLuminance(element.style.fill.default, -(12 * 0.01));
+    element.setOtherColors = function (setStroke, defaultColor) {
+      if (defaultColor) {
+        this.style.fill.default = defaultColor;
+        this.style.fill.hover = colorLuminance(this.style.fill.default, -(6 * 0.01));
+        this.style.fill.click = colorLuminance(this.style.fill.default, -(12 * 0.01));
 
-      if (setStroke) element.style.stroke.default = colorLuminance(element.style.fill.default, -(10 * 0.01));
+        if (setStroke) this.style.stroke.default = colorLuminance(this.style.fill.default, -(10 * 0.01));
 
-      element.style.stroke.hover = element.style.stroke.hover || colorLuminance(element.style.stroke.default, -(6 * 0.01));
-      element.style.stroke.click = element.style.stroke.click || colorLuminance(element.style.stroke.default, -(12 * 0.01));
+        this.style.stroke.hover = colorLuminance(this.style.stroke.default, -(6 * 0.01));
+        this.style.stroke.click = colorLuminance(this.style.stroke.default, -(12 * 0.01));
+      } else {
+        this.style.fill.hover = this.style.fill.hover || colorLuminance(this.style.fill.default, -(6 * 0.01));
+        this.style.fill.click = this.style.fill.click || colorLuminance(this.style.fill.default, -(12 * 0.01));
+
+        if (setStroke) this.style.stroke.default = colorLuminance(this.style.fill.default, -(10 * 0.01));
+
+        this.style.stroke.hover = this.style.stroke.hover || colorLuminance(this.style.stroke.default, -(6 * 0.01));
+        this.style.stroke.click = this.style.stroke.click || colorLuminance(this.style.stroke.default, -(12 * 0.01));
+      }
     }
 
     element.setOtherColors(true);
@@ -1452,18 +1462,25 @@ function gameIO() {
           let details = button.buttonId.split(":");
           switch (details[0]) {
             case "tankButton":
-              if (parseInt(details[1]) === 0 && parseInt(details[2]) === 0) return;
+              const disabledColor = "#c61010";
+              const ownedColor = "#29ab61";
+              const minOpacity = 0.7;
+              if (parseInt(details[1]) === 0 && parseInt(details[2]) === 0) return button.setOtherColors(true, ownedColor);
 
               //if (button.opacity === 1) button.opacity = parseInt(details[2]) !== packet.tank ? 0.5 : 1;
 
-              button.opacity = (packet.level < parseInt(details[1]) * 10 + (parseInt(details[1]) - 1) * 10) ? 0.5 : 1;
+              button.opacity = (packet.level < parseInt(details[1]) * 10 + (parseInt(details[1]) - 1) * 10) ? minOpacity : 1;
 
               //button.opacity = packet.tier < parseInt(details[1]) ? 0.5 : 1;
+              if (button.opacity === minOpacity) button.setOtherColors(true, disabledColor);
               if (button.opacity !== 1) return;
+              if (button.opacity === 1) button.setOtherColors(true, "#29ab3a");
               if (packet.tier === 0) { return; } else {
-                button.opacity = parseInt(details[2]) !== packet.tank ? 0.5 : 1
+                button.opacity = parseInt(details[2]) !== packet.tank ? minOpacity : 1
               }
-              button.enabled = button.opacity === 0.5 ? false : true;
+              if (button.opacity === minOpacity) button.setOtherColors(true, disabledColor);
+              button.enabled = button.opacity === minOpacity ? false : true;
+              if (button.opacity === 1 && packet.tier >= parseInt(details[1])) button.setOtherColors(true, ownedColor);
               break;
           }
         });

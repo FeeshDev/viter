@@ -214,7 +214,7 @@ game.addType(
         obj.dance = false;
 
         //!LEVELS
-        obj.xp = 50000;
+        obj.xp = 420;
         obj.level = 0;
         obj.levelThreshold = l[0];
 
