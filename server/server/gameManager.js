@@ -1,5 +1,5 @@
 //* MAP CONFIG
-global.MAP_SCALE = 1; // over 15 starts to lag
+global.MAP_SCALE = 1; // setting this to x means that it will be x^2 times bigger than scale 1 (over 15 starts to lag)
 
 global.MAP_SIZE = 2000 * MAP_SCALE;
 const WALL_SIZE = 50 * MAP_SCALE;
@@ -9,10 +9,26 @@ game.create("wall", { x: MAP_SIZE / 2, y: MAP_SIZE + WALL_SIZE / 2, w: MAP_SIZE 
 game.create("wall", { x: -WALL_SIZE / 2, y: MAP_SIZE / 2, w: WALL_SIZE, h: MAP_SIZE + WALL_SIZE * 2 });
 game.create("wall", { x: MAP_SIZE + WALL_SIZE / 2, y: MAP_SIZE / 2, w: WALL_SIZE, h: MAP_SIZE + WALL_SIZE * 2 });
 
-const TREE_COUNT = 35 * Math.pow(global.MAP_SCALE, 2), ROCK_COUNT = 20 * Math.pow(global.MAP_SCALE, 2);
-const TYPE_TREE = 0, TYPE_ROCK = 1;
+const 
+    TREE_COUNT = 35 * Math.pow(global.MAP_SCALE, 2), 
+    ROCK_COUNT = 20 * Math.pow(global.MAP_SCALE, 2),
+    BRONZE_COUNT = 4 * Math.pow(global.MAP_SCALE, 2),
+    SILVER_COUNT = 2 * Math.pow(global.MAP_SCALE, 2),
+    GOLD_COUNT = 1 * Math.pow(global.MAP_SCALE, 2);
 
-const spawnables = [{ type: "object", subtype: TYPE_TREE, max: TREE_COUNT }, { type: "object", subtype: TYPE_ROCK, max: ROCK_COUNT }];
+const TYPE_TREE = 0, 
+    TYPE_ROCK = 1, 
+    TYPE_BRONZE = 2, 
+    TYPE_SILVER = 3, 
+    TYPE_GOLD = 4;
+
+const spawnables = [
+    { type: "object", subtype: TYPE_TREE, max: TREE_COUNT }, 
+    { type: "object", subtype: TYPE_ROCK, max: ROCK_COUNT }, 
+    { type: "object", subtype: TYPE_BRONZE, max: BRONZE_COUNT }, 
+    { type: "object", subtype: TYPE_SILVER, max: SILVER_COUNT }, 
+    { type: "object", subtype: TYPE_GOLD, max: GOLD_COUNT }
+];
 
 //*Spawnables
 

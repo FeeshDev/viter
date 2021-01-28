@@ -8,7 +8,7 @@ let objects = [
         damping: 0,
         subTypes: [0, 1],
         bodyType: 2,
-        global: false,
+        global: false
     },
     { //* Rock
         size: 22,
@@ -18,7 +18,37 @@ let objects = [
         shape: 'circle',
         damping: 0,
         bodyType: 3,
-        global: false,
+        global: false
+    },
+    { //* Bronze Crate
+        size: 20,
+        health: 250,
+        respawn: true,
+        scale: () => { return 1.5 },
+        shape: "rectangle",
+        damping: 0,
+        bodyType: 4,
+        global: false
+    },
+    { //* Silver Crate
+        size: 20,
+        health: 300,
+        respawn: true,
+        scale: () => { return 1.5 },
+        shape: "rectangle",
+        damping: 0,
+        bodyType: 4,
+        global: true
+    },
+    { //* Gold Crate
+        size: 20,
+        health: 400,
+        respawn: true,
+        scale: () => { return 1.5 },
+        shape: "rectangle",
+        damping: 0,
+        bodyType: 4,
+        global: true
     }
 ]
 game.addType(
@@ -36,11 +66,18 @@ game.addType(
         obj.body = new game.body(0);
         obj.body.type = obj.props.bodyType;
         extras ? obj.body.position = extras.pos : obj.body.position = [getRandomInt(0, MAP_SIZE), getRandomInt(0, MAP_SIZE)];
-        obj.body.angle = Math.random() * 2 * Math.PI;
+        obj.body.angle = (obj.objType === 0 || obj.objType === 1) ? Math.random() * 2 * Math.PI : 0;
         obj.ttfloat = Math.random() * 24 + 24;
         obj.scale = obj.props.scale();
         obj.props.subTypes ? obj.subObjType = getRandomInt(obj.props.subTypes[0], obj.props.subTypes[1]) : null;
-        obj.body.addShape(new game[obj.props.shape](obj.props.size * obj.scale));
+        switch (obj.props.shape) {
+            case "circle":
+                obj.body.addShape(new game.circle(obj.props.size * obj.scale));
+                break;
+            case "rectangle":
+                obj.body.addShape(new game.rectangle(obj.props.size * obj.scale, obj.props.size * obj.scale));
+                break;
+        }
         obj.body.damping = obj.props.damping;
 
         obj.needsUpdate = true;

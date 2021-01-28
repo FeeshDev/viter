@@ -15,7 +15,7 @@ window.onload = function () {
     //     dance.style.backgroundColor = d ? "#c2c2c2" : "#ffffff";
     // });
 
-    const TYPE_TREE = 0, TYPE_ROCK = 1;
+    const TYPE_TREE = 0, TYPE_ROCK = 1, TYPE_BRONZE = 2, TYPE_SILVER = 3, TYPE_GOLD = 4;
     const BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, BULLET_MACHINEGUN = 3;
     const TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, TURRET_MACHINEGUN = 3;
 
@@ -93,6 +93,21 @@ window.onload = function () {
                     break;
                 case TYPE_ROCK:
                     object.src = `./client/images/objects/obstacles/rock${renderer.theme}.png`;
+                    obj.visual = new game.image(object, 0, 0, 80 * packet.scale, 80 * packet.scale);
+                    scene.add(obj.visual, 2, packet.scale);
+                    break;
+                case TYPE_BRONZE:
+                    object.src = `./client/images/objects/crates/crate1.png`;
+                    obj.visual = new game.image(object, 0, 0, 80 * packet.scale, 80 * packet.scale);
+                    scene.add(obj.visual, 2, packet.scale);
+                    break;
+                case TYPE_SILVER:
+                    object.src = `./client/images/objects/crates/crate2.png`;
+                    obj.visual = new game.image(object, 0, 0, 80 * packet.scale, 80 * packet.scale);
+                    scene.add(obj.visual, 2, packet.scale);
+                    break;
+                case TYPE_GOLD:
+                    object.src = `./client/images/objects/crates/crate3.png`;
                     obj.visual = new game.image(object, 0, 0, 80 * packet.scale, 80 * packet.scale);
                     scene.add(obj.visual, 2, packet.scale);
                     break;
