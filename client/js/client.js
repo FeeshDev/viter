@@ -198,8 +198,9 @@ window.onload = function () {
         //console.log(tank)
         for (let j = 0; j < length; j++) {
             const tank = j;
+            let style = { fill: { default: "#29ab3a", hover: colorLuminance("#29ab3a", -2 * 0.01), click: colorLuminance("#29ab3a", -4 * 0.01) }, stroke: { default: colorLuminance("#29ab3a", -6 * 0.01), hover: colorLuminance("#29ab3a", -8 * 0.01), click: colorLuminance("#29ab3a", -10 * 0.01), lineWidth: 4 } };
             let buttonText = game.text(`Body ${tier}:${tank}`, 0, 0, "#ddd", null, "Arial", 20);
-            renderer.addButton(new game.button(`tankButton:${tier}:${tank}`, { x: 2, y: 2 }, -300 + tank * 120, 160 - tier * 120, 100, 100, 10, { fill: { default: "#29ab3a", hover: "#269e36", click: "#239132" }, stroke: { default: "#088529", hover: "#077825", click: "#066b21", lineWidth: 4 } }, buttonText, function () {
+            renderer.addButton(new game.button(`tankButton:${tier}:${tank}`, { x: 2, y: 2 }, -300 + tank * 120, 160 - tier * 120, 100, 100, 10, style, buttonText, function () {
                 game.addPacket("upgradePacket", ["body", { tier: tier, tank: tank }]);
             }));
         }

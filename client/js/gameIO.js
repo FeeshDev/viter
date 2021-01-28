@@ -11,6 +11,24 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
   return this;
 }
 
+function colorLuminance(hex, lum) {
+  // Validate hex string
+  hex = String(hex).replace(/[^0-9a-f]/gi, "");
+  if (hex.length < 6) {
+    hex = hex.replace(/(.)/g, '$1$1');
+  }
+  lum = lum || 0;
+  // Convert to decimal and change luminosity
+  var rgb = "#",
+    c;
+  for (var i = 0; i < 3; ++i) {
+    c = parseInt(hex.substr(i * 2, 2), 16);
+    c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+    rgb += ("00" + c).substr(c.length);
+  }
+  return rgb;
+}
+
 const smoothing = 0.04;
 
 let themes = [
@@ -608,6 +626,7 @@ function gameIO() {
     element.radius = radius || 5;
     element.opacity = opacity || 1;
     element.style = style || { fill: { default: "#000", hover: "#fff", click: "#929" }, stroke: { default: 0, hover: 0, click: 0, lineWidth: 0 } };
+
     element.position = new game.Vector2(0, 0);
     element.offset = new game.Vector2(x || 0, y || 0);
     element.inside = inside || game.text("No Value", 0, 0, "#ddd", null, "Arial", 32); //@ {game.text}, {game.image}
