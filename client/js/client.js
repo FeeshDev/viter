@@ -98,17 +98,17 @@ window.onload = function () {
                     break;
                 case TYPE_BRONZE:
                     object.src = `./client/images/objects/crates/crate1.png`;
-                    obj.visual = new game.image(object, 0, 0, 80 * packet.scale, 80 * packet.scale);
+                    obj.visual = new game.image(object, 0, 0, 40 * packet.scale, 40 * packet.scale);
                     scene.add(obj.visual, 2, packet.scale);
                     break;
                 case TYPE_SILVER:
                     object.src = `./client/images/objects/crates/crate2.png`;
-                    obj.visual = new game.image(object, 0, 0, 80 * packet.scale, 80 * packet.scale);
+                    obj.visual = new game.image(object, 0, 0, 40 * packet.scale, 40 * packet.scale);
                     scene.add(obj.visual, 2, packet.scale);
                     break;
                 case TYPE_GOLD:
                     object.src = `./client/images/objects/crates/crate3.png`;
-                    obj.visual = new game.image(object, 0, 0, 80 * packet.scale, 80 * packet.scale);
+                    obj.visual = new game.image(object, 0, 0, 40 * packet.scale, 40 * packet.scale);
                     scene.add(obj.visual, 2, packet.scale);
                     break;
             }

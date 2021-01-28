@@ -21,34 +21,34 @@ let objects = [
         global: false
     },
     { //* Bronze Crate
-        size: 20,
+        size: 30,
         health: 250,
         respawn: true,
-        scale: () => { return 1.5 },
+        scale: () => { return 1 },
         shape: "rectangle",
         damping: 0,
         bodyType: 4,
         global: false
     },
     { //* Silver Crate
-        size: 20,
+        size: 30,
         health: 300,
         respawn: true,
-        scale: () => { return 1.5 },
+        scale: () => { return 1 },
         shape: "rectangle",
         damping: 0,
         bodyType: 4,
-        global: true
+        global: false
     },
     { //* Gold Crate
-        size: 20,
+        size: 30,
         health: 400,
         respawn: true,
-        scale: () => { return 1.5 },
+        scale: () => { return 1 },
         shape: "rectangle",
         damping: 0,
         bodyType: 4,
-        global: true
+        global: false
     }
 ]
 game.addType(
