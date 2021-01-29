@@ -213,8 +213,12 @@ window.onload = function () {
         for (let j = 0; j < length; j++) {
             const tank = j;
             let style = { fill: { default: "#29ab3a" }, stroke: { lineWidth: 4 } };
-            let buttonText = game.text(`Body ${tier}:${tank}`, 0, 0, "#ddd", null, "Arial", 20);
-            renderer.addButton(new game.button(`tankButton:${tier}:${tank}`, { x: 2, y: 2 }, -300 + tank * 120, 160 - tier * 120, 100, 100, 10, style, buttonText, function () {
+            let img = new Image();
+            img.src = `./client/images/tanks/${tier}/${tank}/tank.png`;
+            let funiimage = new game.image(img, 0, 0, 100, 100);
+            funiimage.rotation = Math.PI / 2;
+            //let buttonText = game.text(`Body ${tier}:${tank}`, 0, 0, "#ddd", null, "Arial", 20);
+            renderer.addButton(new game.button(`tankButton:${tier}:${tank}`, { x: 2, y: 2 }, -300 + tank * 120, 160 - tier * 120, 100, 100, 10, style, funiimage, function () {
                 game.addPacket("upgradePacket", ["body", { tier: tier, tank: tank }]);
             }));
         }

@@ -681,7 +681,9 @@ function gameIO() {
       element.inside.position.x = game.renderers[0].c.width / this.anchors.x + this.offset.x / ratio;
       element.inside.position.y = game.renderers[0].c.height / this.anchors.y + this.offset.y / ratio;
       ctx.translate(element.inside.position.x, element.inside.position.y);
+      ctx.rotate(element.inside.rotation);
       element.inside.renderSpecific(ctx, ratio);
+      ctx.rotate(-element.inside.rotation);
       ctx.translate(-element.inside.position.x, -element.inside.position.y);
     }
 
