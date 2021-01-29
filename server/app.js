@@ -13,7 +13,7 @@ app.get("/status", function (req, res) {
 // Minifying
 const minify = true;
 
-const normalScript = fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameIO.js"), "utf8");
+const normalScript = fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8");
 
 if (minify) {
     const es5Code = babel.transformSync(normalScript, {
