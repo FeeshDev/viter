@@ -2,6 +2,7 @@ let objects = [
     { //* Tree
         size: 22,
         health: 80,
+        baseScore: 10,
         respawn: true,
         scale: () => { return getRandomInt(10, 20) / 10 },
         shape: 'circle',
@@ -13,6 +14,7 @@ let objects = [
     { //* Rock
         size: 22,
         health: 200,
+        baseScore: 40,
         respawn: true,
         scale: () => { return getRandomInt(10, 15) / 10 },
         shape: 'circle',
@@ -23,6 +25,7 @@ let objects = [
     { //* Bronze Crate
         size: 30,
         health: 250,
+        baseScore: 1500,
         respawn: true,
         scale: () => { return getRandomInt(20, 35) / 10 },
         shape: "rectangle",
@@ -33,6 +36,7 @@ let objects = [
     { //* Silver Crate
         size: 30,
         health: 300,
+        baseScore: 3000,
         respawn: true,
         scale: () => { return getRandomInt(25, 30) / 10 },
         shape: "rectangle",
@@ -43,6 +47,7 @@ let objects = [
     { //* Gold Crate
         size: 30,
         health: 400,
+        baseScore: 5000,
         respawn: true,
         scale: () => { return getRandomInt(20, 25) / 10 },
         shape: "rectangle",
@@ -69,6 +74,7 @@ game.addType(
         obj.body.angle = Math.random() * 2 * Math.PI;
         obj.ttfloat = Math.random() * 24 + 24;
         obj.scale = obj.props.scale();
+        obj.baseScore = obj.props.baseScore;
         obj.props.subTypes ? obj.subObjType = getRandomInt(obj.props.subTypes[0], obj.props.subTypes[1]) : null;
         switch (obj.props.shape) {
             case "circle":

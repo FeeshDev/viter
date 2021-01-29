@@ -53,28 +53,10 @@ game.addCollision('bullet', 'object', (bullet, object) => {
     game.remove(bullet);
     object.health -= bullet.damage;
     if (object.health <= 0 && game.findObjectById(bullet.ownerID).lastDestroyed !== object.id) {
-        switch (object.objType) {
-            // Tree
-            case 0:
-                game.findObjectById(bullet.ownerID).xp += 10 + Math.round((object.scale - 1) / 1 * 10);
-                break;
-
-            // Rock
-            case 1:
-                game.findObjectById(bullet.ownerID).xp += 40 + Math.round((object.scale - 1) / 0.5 * 10);
-                break;
-
-            case 2:
-                game.findObjectById(bullet.ownerID).xp += 1500;
-                break;
-
-            case 3:
-                game.findObjectById(bullet.ownerID).xp += 3000;
-                break;
-
-            case 4:
-                game.findObjectById(bullet.ownerID).xp += 5000;
-                break;
+        if (object.objType <= 1) {
+            game.findObjectById(bullet.ownerID).xp += object.baseScore + Math.round((object.scale - 1) / 1 * 10);
+        } else {
+            game.findObjectById(bullet.ownerID).xp += object.baseScore;
         }
         game.findObjectById(bullet.ownerID).lastDestroyed = object.id;
     }
