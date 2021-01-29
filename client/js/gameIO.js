@@ -230,6 +230,7 @@ function gameIO() {
         labels: [],
         render: function (ctx, ratio) {
           this.buttons.forEach(button => {
+            if (button.buttonId.split(":")[0] === "tankButton" && game.me.hasBodyUpgrade === false) return;
             button.render(ctx, ratio, 1);
           });
           this.labels.forEach(label => {
@@ -1384,9 +1385,13 @@ function gameIO() {
         needsUpdate: packet.n,
         drawLayer: packet.drawLayer
       };
-      if (obj.type === "player") obj.cannon = new game.object();
-      if (obj.type === "player") obj.turrets = [];
-      if (obj.type === "player") obj.playerName = new game.object();
+
+      if (obj.type === "player") {
+        obj.cannon = new game.object();
+        obj.turrets = [];
+        obj.playerName = new game.object();
+        game.me.hasBodyUpgrade = packet.hasBodyUpgrade;
+      }
 
       if (packet.maxHealth !== undefined) obj.maxHealth = packet.maxHealth;
       if (packet.health !== undefined) obj.health = packet.health;
@@ -1398,6 +1403,7 @@ function gameIO() {
       if (game.types[packet.b] === undefined) {
         console.log(packet.b);
       }
+
       game.types[packet.b].create(obj, packet);
 
       obj.visual.position.x = obj.new.position.x;
@@ -1457,6 +1463,7 @@ function gameIO() {
         game.actualLvl = packet.level;
         game.actualXp = packet.lvlPercent;
       }
+      if (packet.hasBodyUpgrade !== undefined && obj.id === game.me.id) game.me.hasBodyUpgrade = packet.hasBodyUpgrade;
       if (packet.tank !== undefined && packet.tier !== undefined && obj.id === game.me.id) {
         game.renderers[0].UI.buttons.forEach(button => {
           let details = button.buttonId.split(":");

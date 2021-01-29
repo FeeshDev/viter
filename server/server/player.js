@@ -191,6 +191,7 @@ game.addType(
         obj.maxHealth = 100;
         obj.tank = 0;
         obj.tier = 0;
+        obj.hasBodyUpgrade = false;
 
         obj.tank === 0 ? obj.tier = 0 : null;
         obj.props = tankBodies[obj.tier][obj.tank];
@@ -289,6 +290,7 @@ game.addType(
             }
         }
 
+        obj.hasBodyUpgrade = (obj.level >= ((obj.tier + 1) * 10 + (obj.tier) * 10)) ? true : false;
 
         if (Date.now() > obj.regen) obj.health = Math.min(obj.health + 0.3, obj.maxHealth);
 
@@ -315,6 +317,8 @@ game.addType(
         packet.tier = obj.tier;
         packet.angle = obj.playerMouse.angle;
 
+        packet.hasBodyUpgrade = obj.hasBodyUpgrade;
+
         packet.xp = obj.xp;
         packet.level = obj.level;
         packet.lvlPercent = obj.level === 60 ? 1 : ((obj.xp - l[obj.level - 1]) / (l[obj.level] - l[obj.level - 1]) || 0);
@@ -327,6 +331,9 @@ game.addType(
         packet.maxHealth = obj.maxHealth;
         packet.tank = obj.tank;
         packet.tier = obj.tier;
+
+        packet.hasBodyUpgrade = obj.hasBodyUpgrade;
+
         packet.w = obj.body.shapes[0].width;
         packet.h = obj.body.shapes[0].height;
         packet.scale = obj.props.tankSize;
@@ -386,10 +393,10 @@ const handleMovement = obj => {
     } else {
         minus = 1;
         if (obj.playerInput[
-                directions[
-                (dirIndex[
-                    obj.dirArray[obj.dirArray.length - 1]
-                ] + 2) % 4
+            directions[
+            (dirIndex[
+                obj.dirArray[obj.dirArray.length - 1]
+            ] + 2) % 4
             ]
         ]) minus++;
         let way = 0, sign = 1;
