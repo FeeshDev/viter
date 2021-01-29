@@ -13,10 +13,8 @@ app.get("/status", function (req, res) {
 // Minifying
 const minify = true;
 
-const normalScript = fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8");
-
 if (minify) {
-    const es5Code = babel.transformSync(normalScript, {
+    const es5Code = babel.transformSync(fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8"), {
         presets: ["@babel/preset-env"],
     });
     var minifiedScript = UglifyJS.minify(es5Code.code).code;
@@ -42,7 +40,7 @@ if (fs.existsSync(pathToCheck)) {
         res.sendFile(pathToCheck);
     });
     app.get("/client/script.js", (req, res) => {
-        res.send(minify ? minifiedScript : normalScript);
+        res.send(minify ? minifiedScript : fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8"));
     });
     app.get("/client/js/", function (req, res) {
         res.send("Don't even try :)");
