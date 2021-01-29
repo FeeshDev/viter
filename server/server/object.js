@@ -24,7 +24,7 @@ let objects = [
         size: 30,
         health: 250,
         respawn: true,
-        scale: () => { return 1 },
+        scale: () => { return getRandomInt(20, 35) / 10 },
         shape: "rectangle",
         damping: 0,
         bodyType: 4,
@@ -34,7 +34,7 @@ let objects = [
         size: 30,
         health: 300,
         respawn: true,
-        scale: () => { return 1 },
+        scale: () => { return getRandomInt(25, 30) / 10 },
         shape: "rectangle",
         damping: 0,
         bodyType: 4,
@@ -44,7 +44,7 @@ let objects = [
         size: 30,
         health: 400,
         respawn: true,
-        scale: () => { return 1 },
+        scale: () => { return getRandomInt(20, 25) / 10 },
         shape: "rectangle",
         damping: 0,
         bodyType: 4,
@@ -66,7 +66,7 @@ game.addType(
         obj.body = new game.body(0);
         obj.body.type = obj.props.bodyType;
         extras ? obj.body.position = extras.pos : obj.body.position = [getRandomInt(0, MAP_SIZE), getRandomInt(0, MAP_SIZE)];
-        obj.body.angle = (obj.objType === 0 || obj.objType === 1) ? Math.random() * 2 * Math.PI : 0;
+        obj.body.angle = Math.random() * 2 * Math.PI;
         obj.ttfloat = Math.random() * 24 + 24;
         obj.scale = obj.props.scale();
         obj.props.subTypes ? obj.subObjType = getRandomInt(obj.props.subTypes[0], obj.props.subTypes[1]) : null;

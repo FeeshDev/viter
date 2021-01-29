@@ -65,15 +65,15 @@ game.addCollision('bullet', 'object', (bullet, object) => {
                 break;
 
             case 2:
-                game.findObjectById(bullet.ownerID).xp += 3000;
+                game.findObjectById(bullet.ownerID).xp += 1500;
                 break;
 
             case 3:
-                game.findObjectById(bullet.ownerID).xp += 7000;
+                game.findObjectById(bullet.ownerID).xp += 3000;
                 break;
 
             case 4:
-                game.findObjectById(bullet.ownerID).xp += 10000;
+                game.findObjectById(bullet.ownerID).xp += 5000;
                 break;
         }
         game.findObjectById(bullet.ownerID).lastDestroyed = object.id;
