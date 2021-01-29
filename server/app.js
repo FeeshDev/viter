@@ -4,9 +4,24 @@ var express = require("express");
 const fs = require("fs");
 const path = require("path");
 var app = express();
+var UglifyJS = require("uglify-js");
+var babel = require("@babel/core");
 app.get("/status", function (req, res) {
     res.send("ok");
 });
+
+// Minifying
+const minify = true;
+
+const normalScript = fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameIO.js"), "utf8");
+
+if (minify) {
+    const es5Code = babel.transformSync(normalScript, {
+        presets: ["@babel/preset-env"],
+    });
+    var minifiedScript = UglifyJS.minify(es5Code.code).code;
+}
+console.log("Finished minifying");
 
 const JavaScriptObfuscator = require('javascript-obfuscator');
 
@@ -25,6 +40,9 @@ if (fs.existsSync(pathToCheck)) {
         app.use("/client", express.static(path.resolve("..", "client")));
         let pathToCheck = path.resolve("..", "client", "index.html");
         res.sendFile(pathToCheck);
+    });
+    app.get("/client/script.js", (req, res) => {
+        res.send(minify ? minifiedScript : normalScript);
     });
     app.get("/client/js/", function (req, res) {
         res.send("Don't even try :)");

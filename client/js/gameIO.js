@@ -1794,7 +1794,7 @@ function gameIO() {
   );
   return game;
 }
-requestFrame = function (callback) {
+var requestFrame = function (callback) {
   (window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
     function (callback) {
