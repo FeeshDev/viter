@@ -172,6 +172,29 @@ const turrets = [
     ]
 ]
 
+const tree = [
+    [ // tier 0 upgrades
+        [0, 1, 2] // default upgrades
+    ],
+    [ // tier 1 upgrades
+        [0], // sniper upgrades
+        [1, 2], // machine gun upgrades
+        [3] // twin upgrades
+    ],
+    [ // tier 2 upgrades
+        [0], // hunter upgrades
+        [], // sprayer upgrades
+        [1], // shotgun upgrades
+        [1, 2, 3] // twin upgrades
+    ],
+    [ // tier 3 upgrades
+        [0], // predator upgrades
+        [1], // scatterer upgrades
+        [1, 2], // triplet upgrades
+        [3] // gunner upgrades
+    ]
+]
+
 game.addType(
     // Type
     "player",
