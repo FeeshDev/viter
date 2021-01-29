@@ -405,9 +405,9 @@ const handleMovement = obj => {
         minus = 1;
         if (obj.playerInput[
             directions[
-            (dirIndex[
-                obj.dirArray[obj.dirArray.length - 1]
-            ] + 2) % 4
+                (dirIndex[
+                    obj.dirArray[obj.dirArray.length - 1]
+                ] + 2) % 4
             ]
         ]) minus++;
         let way = 0, sign = 1;
@@ -434,9 +434,7 @@ const handleMovement = obj => {
 
 const shoot = obj => {
     obj.turrets.forEach(turret => {
-        if (turret.shootingOffset && (turret.turretCD === turret.shootingOffset)) {
-            turret.turretCD -= 0.5;
-        }
+        if (turret.shootingOffset && (turret.turretCD === turret.shootingOffset)) turret.turretCD -= 0.5;
         if (turret.turretCD !== 0) return;
         let bulletAngle = obj.playerMouse.angle + turret.offsetAngle;
         let finalPosition = {

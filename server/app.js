@@ -1,6 +1,6 @@
-var gameIO = require("gameio");
+var gameIO = require("./gameio.js");
+// var gameIO = require("gameio");
 var express = require("express");
-const { constants } = require("buffer");
 const fs = require("fs");
 const path = require("path");
 var app = express();
