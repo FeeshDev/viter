@@ -7,6 +7,8 @@ window.onload = function () {
     var controls = new game.keyboard();
     var mouse = new game.mouse();
 
+    window.onbeforeunload = () => { return "Are you sure you want to leave this page?" };
+
     // let d = false;
     // const dance = document.getElementById("dance");
 

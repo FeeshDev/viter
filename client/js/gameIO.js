@@ -288,18 +288,31 @@ function gameIO() {
         this.ctx.globalAlpha = 0.5;
 
         this.ctx.fillStyle = themes[this.theme].minimapColor1;
-        this.ctx.fillRect(this.c.width - 260 / this.ratio, this.c.height - 310 / this.ratio, 220 / this.ratio, 220 / this.ratio);
+        this.ctx.fillRect(
+          (window.innerWidth / 2 - 250 / this.ratio) + (-this.position.x / this.ratio + this.c.width / 2), 
+          (window.innerHeight / 2 - 250 / this.ratio) + (-this.position.y / this.ratio + this.c.height / 2), 
+          220 / this.ratio, 
+          220 / this.ratio
+        );
 
         this.ctx.fillStyle = themes[this.theme].minimapColor2;
-        this.ctx.fillRect(this.c.width - 250 / this.ratio, this.c.height - 300 / this.ratio, 200 / this.ratio, 200 / this.ratio);
+        this.ctx.fillRect(
+          (window.innerWidth / 2 - 240 / this.ratio) + (-this.position.x / this.ratio + this.c.width / 2), 
+          (window.innerHeight / 2 - 240 / this.ratio) + (-this.position.y / this.ratio + this.c.height / 2), 
+          200 / this.ratio, 
+          200 / this.ratio
+        );
 
         this.ctx.globalAlpha = 1;
 
         this.ctx.beginPath();
         this.ctx.fillStyle = "#fff";
-        this.ctx.arc(this.c.width - 250 / this.ratio + game.me.visual.position.x / (10 * game.gameScale) / this.ratio, this.c.height - 300 / this.ratio + game.me.visual.position.y / (10 * game.gameScale) / this.ratio, 5 / this.ratio, 0, 2 * Math.PI);
+        this.ctx.arc(
+          (window.innerWidth / 2 - 235 / this.ratio) + (-this.position.x / this.ratio + this.c.width / 2) + game.me.visual.position.x / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, 
+          (window.innerHeight / 2 - 235 / this.ratio) + (-this.position.y / this.ratio + this.c.height / 2) + game.me.visual.position.y / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, 
+          5 / this.ratio, 0, 2 * Math.PI
+        );
         this.ctx.fill();
-        //this.ctx.fillRect(this.c.width / 2 - game.me.visual.position.x / this.ratio, this.c.height / 2 - game.me.visual.position.y / this.ratio, 2000 / this.ratio, 2000 / this.ratio);
       },
       drawObjects: function () {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
