@@ -240,7 +240,6 @@ game.addType(
             obj.turrets.push({});
             for (const prop in t) obj.turrets[i][prop] = t[prop];
         });
-        // obj.turrets = [{ type: 2, offsetX: -10, offsetY: -5, offsetAngle: Math.PI / 12, turretCD: 0, turretMaxCD: 10 }, { type: 2, offsetX: 10, offsetY: -5, offsetAngle: -Math.PI / 12, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: -6, offsetY: 0, offsetAngle: Math.PI / 16, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: 6, offsetY: 0, offsetAngle: -Math.PI / 16, turretCD: 0, turretMaxCD: 10  }, { type: 2, offsetX: 0, offsetY: 10, offsetAngle: 0, turretCD: 0, turretMaxCD: 10 }];
 
         //!MOVEMENT
         obj.direction = 0;
@@ -265,11 +264,11 @@ game.addType(
         obj.lastDestroyed = undefined;
         obj.updateLB = true;
 
-        if (leaderboard.length < 6) {
+        if (leaderboard.length < 5) {
             leaderboard.push({ name: obj.name, xp: 0, id: obj.id });
-            obj.lbPos = leaderboard.length;
+            obj.lbPos = leaderboard.length - 1;
         } else {
-            obj.lbPos = 6;
+            obj.lbPos = 5;
         }
 
         obj.handleHitbox = () => {
@@ -333,29 +332,28 @@ game.addType(
             }
         }
 
-        // leaderboard.forEach((p, i) => {
-        //     if (!game.findObjectById(p.id)) {
-        //         leaderboard.splice(i, 1);
-        //         leaderboard.forEach((a, n) => {
-        //             if (n > i - 1) game.findObjectById(a.id).lbPos--;
-        //         });
-        //     }
-        // });
+        // checking for undefineds
+        leaderboard.forEach((p, i) => {
+            if (!game.findObjectById(p.id)) {
+                leaderboard.splice(i, 1);
+                leaderboard.forEach((a, n) => {
+                    if (n > i - 1 && game.findObjectById(a.id)) game.findObjectById(a.id).lbPos--;
+                });
+            }
+        });
 
         if (obj.updateLB) {
-            // if (obj.lbPos !== 6) leaderboard[obj.lbPos - 1].xp = obj.xp;
-            // if (obj.lbPos !== 1) {
-            //     while (leaderboard[obj.lbPos - 2] && obj.xp > leaderboard[obj.lbPos - 2].xp) {
-            //         obj.lbPos--;
-            //         leaderboard.splice(obj.lbPos - 1, 1);
-            //         leaderboard.splice(obj.lbPos - 2, 0, { name: obj.name, xp: obj.xp, id: obj.id });
-            //         leaderboard.forEach((p, i) => {
-            //             if (i > obj.lbPos) game.findObjectById(p.id).lbPos--;
-            //         });
-            //         if (leaderboard.length === 6) leaderboard.pop();
-            //     }
-            // }
-            // obj.updateLB = false;
+            if (obj.lbPos !== 5) leaderboard[obj.lbPos].xp = obj.xp;
+            while (obj.lbPos !== 0 && obj.xp > leaderboard[obj.lbPos - 1].xp) {
+                leaderboard.splice(obj.lbPos, 1);
+                obj.lbPos--;
+                leaderboard.splice(obj.lbPos, 0, { name: obj.name, xp: obj.xp, id: obj.id });
+                leaderboard.forEach((p, i) => {
+                    if (i > obj.lbPos) game.findObjectById(p.id).lbPos++;
+                });
+                if (leaderboard.length === 6) leaderboard.pop();
+            }
+            obj.updateLB = false;
         }
 
         obj.hasBodyUpgrade = (obj.level >= ((obj.tier + 1) * 10 + (obj.tier) * 10)) ? true : false;
