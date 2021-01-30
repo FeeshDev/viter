@@ -1,5 +1,5 @@
 //* MAP CONFIG
-global.MAP_SCALE = 5; // setting this to x means that it will be x^2 times bigger than scale 1 (over 15 starts to lag)
+global.MAP_SCALE = 3; // setting this to x means that it will be x^2 times bigger than scale 1 (over 15 starts to lag)
 
 global.MAP_SIZE = 2000 * MAP_SCALE;
 const WALL_SIZE = 50 * MAP_SCALE;
