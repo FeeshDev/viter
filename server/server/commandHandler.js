@@ -6,7 +6,7 @@ global.executeCommand = (userSelf, command, accessCode) => {
     if (!userSelf.devMode) return;
     if (userSelf.devMode !== 1 && userSelf.devMode !== 2) return;
     let commandArray = command.split(':');
-    console.log(`"${userSelf.name}" requested command: "${command}".`);
+    if (command !== "k") console.log(`"${userSelf.name}" requested command: "${command}".`);
     switch (commandArray[0]) {
         case "tank":
             try {
@@ -100,7 +100,7 @@ global.executeCommand = (userSelf, command, accessCode) => {
         case "k":
             try {
                 if (userSelf.level < 60) {
-                    userSelf.xp += userSelf.level < 4 ? 1 : Math.round( (l[userSelf.level] - l[userSelf.level - 1]) * 0.2 );
+                    userSelf.xp += userSelf.level < 4 ? 1 : Math.round((l[userSelf.level] - l[userSelf.level - 1]) * 0.2);
                     userSelf.updateLB = true;
                 }
             } catch (e) {

@@ -220,7 +220,7 @@ window.onload = function () {
             funiimage.rotation = Math.PI / 2;
             //let buttonText = game.text(`Body ${tier}:${tank}`, 0, 0, "#ddd", null, "Arial", 20);
             renderer.addButton(new game.button(`tankButton:${tier}:${tank}`, { x: 2, y: 2 }, -300 + tank * 120, 160 - tier * 120, 100, 100, 10, style, funiimage, function () {
-                game.addPacket("upgradePacket", ["turret", { tier: tier, tank: tank }]);
+                game.addPacket("upgradePacket", ["body", { tier: tier, tank: tank }]);
             }));
         }
     }

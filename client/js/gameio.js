@@ -236,6 +236,7 @@ function gameIO() {
                 render: function (ctx, ratio) {
                     this.buttons.forEach(button => {
                         if (button.buttonId.split(":")[0] === "tankButton" && game.me.hasBodyUpgrade === false) return;
+                        if (button.buttonId.split(":")[0] === "turretButton" && game.me.hasTurretUpgrade === false) return;
                         button.render(ctx, ratio, 1);
                     });
                     this.labels.forEach(label => {
@@ -1448,7 +1449,6 @@ function gameIO() {
                 obj.playerName = new game.object();
                 game.me.hasBodyUpgrade = packet.hasBodyUpgrade;
                 game.me.hasTurretUpgrade = packet.hasTurretUpgrade;
-                if (obj.id === game.me.id) game.me.availableTurrets = packet.availableTurrets;
             }
 
             if (packet.maxHealth !== undefined) obj.maxHealth = packet.maxHealth;
@@ -1522,9 +1522,6 @@ function gameIO() {
                 game.renderers[0].UI.getLabelById("score").text.text = `Score: ${packet.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
                 game.actualLvl = packet.level;
                 game.actualXp = packet.lvlPercent;
-            }
-            if (packet.availableTurrets !== undefined && obj.id === game.me.id) {
-                game.me.availableTurrets = packet.availableTurrets;
             }
             if (packet.hasBodyUpgrade !== undefined && obj.id === game.me.id) game.me.hasBodyUpgrade = packet.hasBodyUpgrade;
             if (packet.hasTurretUpgrade !== undefined && obj.id === game.me.id) game.me.hasTurretUpgrade = packet.hasTurretUpgrade;
@@ -1698,6 +1695,20 @@ function gameIO() {
             for (let i = 0; i < game.renderers[0].UI.buttons.length; i++) {
                 const button = game.renderers[0].UI.buttons[i];
                 if (button.buttonId.includes("turretButton")) game.renderers[0].UI.buttons.splice(i, 1);
+            }
+            for (let i = 0; i < packet.turrets.length; i++) {
+                //const turrets = packet.availableTurrets[i];
+                const tierIndexArray = packet.turrets[i];
+
+                let style = { fill: { default: "#29ab3a" }, stroke: { lineWidth: 4 } };
+                //let img = new Image();
+                //img.src = `./client/images/tanks/${tier}/${tank}/tank.png`;
+                //let funiimage = new game.image(img, 0, 0, 100, 100);
+                //funiimage.rotation = Math.PI / 2;
+                let buttonText = game.text(`Turret ${tierIndexArray[0]}:${tierIndexArray[1]}`, 0, 0, "#ddd", null, "Arial", 20);
+                game.renderers[0].addButton(new game.button(`turretButton:${tierIndexArray[0]}:${tierIndexArray[1]}`, { x: 2, y: 2 }, +300 + i * 120, 160, 100, 100, 10, style, buttonText, function () {
+                    game.addPacket("upgradePacket", ["turret", { tier: tierIndexArray[0], turreti: tierIndexArray[1] }]);
+                }));
             }
         }
     };

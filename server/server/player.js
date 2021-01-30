@@ -121,7 +121,7 @@ const turrets = [
             new Turret({ type: 3, maxCD: 2, dmg: 2.5, offsetY: 20, bulletScale: 0.65 }), // sprayer
             new Turret({ type: 3, maxCD: 2, dmg: 2.5, bulletScale: 0.65 })
         ],
-        [new Turret({ type: 2, maxCD: 15, dmg: 1.5, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 })], // shotgun
+        [new Turret({ type: 1, maxCD: 15, dmg: 1.5, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 })], // shotgun
         [
             new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: -10 }), // twinner (better twin)
             new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: 10 })
@@ -130,8 +130,8 @@ const turrets = [
     [ // tier 3
         [new Turret({ type: 2, maxCD: 14, dmg: 20, bulletSpeedMult: 2, lifespanMult: 2 })], // predator
         [
-            new Turret({ type: 2, maxCD: 15, dmg: 1.5, offsetX: -7, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 }), // Scatterer (twin shotgun)
-            new Turret({ type: 2, maxCD: 15, dmg: 1.5, offsetX: 7, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 })
+            new Turret({ type: 1, maxCD: 15, dmg: 1.5, offsetX: -7, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 }), // Scatterer (twin shotgun)
+            new Turret({ type: 1, maxCD: 15, dmg: 1.5, offsetX: 7, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 })
         ],
         [
             new Turret({ type: 0, maxCD: 10, dmg: 5, offsetX: -20 }), // triplet
@@ -191,6 +191,12 @@ const turretTree = [
     ],
     [ // tier 3 upgrades
         [0], // predator upgrades
+        [1], // scatterer upgrades
+        [1, 2], // triplet upgrades
+        [3] // gunner upgrades
+    ],
+    [ // tier 4 upgrades
+        [0], // idk upgrades
         [1], // scatterer upgrades
         [1, 2], // triplet upgrades
         [3] // gunner upgrades
@@ -254,7 +260,7 @@ game.addType(
         obj.dance = false;
 
         //!LEVELS
-        obj.xp = 500;
+        obj.xp = 0;
         obj.level = 0;
         obj.levelThreshold = l[0];
 
@@ -300,23 +306,6 @@ game.addType(
             obj.handleHitbox();
         }
 
-        obj.upgradeTurret = data => {
-            console.log(`Called with data: ${JSON.stringify(data)}.`)
-            let tier = data.tier;
-            let turreti = data.turreti;
-            //if (tier - obj.tier > 1) return;
-            //if (obj.tank !== 0) if (obj.tank !== tank) return;
-            if (obj.level < tier * 10) return;
-            //if (tier <= obj.turretTier) return;
-            if (!obj.availableTurrets[1].includes(turrets[tier][turreti])) return;
-
-            obj.sendPacket({ type: "tt", turrets: obj.availableTurrets[0] })
-            obj.obtainedTurrets.push(turrets[tier][turreti]);
-            obj.turretTier = tier;
-            obj.turretIndex = turreti;
-            obj.updateTurrets();
-        }
-
         obj.getAvailableTurrets = () => {
             let turretsArray = [[], []];
             let availableTurretIndexes = turretTree[obj.turretTier][obj.turretIndex];
@@ -326,6 +315,24 @@ game.addType(
             });
 
             return turretsArray;
+        }
+
+        obj.upgradeTurret = data => {
+            let tier = data.tier;
+            let turreti = data.turreti;
+            //if (tier - obj.tier > 1) return;
+            //if (obj.tank !== 0) if (obj.tank !== tank) return;
+            if (obj.level < tier * 10) return;
+            //if (tier <= obj.turretTier) return;
+            obj.availableTurrets = obj.getAvailableTurrets();
+            if (!obj.availableTurrets[1].includes(turrets[tier][turreti])) return;
+
+            obj.obtainedTurrets.push(turrets[tier][turreti]);
+            obj.turretTier = tier;
+            obj.turretIndex = turreti;
+            obj.updateTurrets();
+            obj.availableTurrets = obj.getAvailableTurrets();
+            obj.sendPacket({ type: "tt", turrets: obj.availableTurrets[0] });
         }
     },
     // Tick Update
@@ -426,6 +433,7 @@ game.addType(
         packet.hasBodyUpgrade = obj.hasBodyUpgrade;
         packet.hasTurretUpgrade = obj.hasTurretUpgrade;
         packet.availableTurrets = obj.availableTurrets[0];
+        obj.sendPacket({ type: "tt", turrets: obj.availableTurrets[0] });
 
         packet.w = obj.body.shapes[0].width;
         packet.h = obj.body.shapes[0].height;
