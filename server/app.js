@@ -184,6 +184,9 @@ game.addPacketType(
                 ws.currentPackets.push({ type: "d", time: Date.now() - t, xp: xp, level: lvl });
                 ws.self = undefined;
             }
+            ws.self.sendPacket = (packet) => {
+                ws.currentPackets.push(packet);
+            }
             console.log(`"${playerName}" started playing.`);
         }
     }

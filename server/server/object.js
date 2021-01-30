@@ -24,14 +24,14 @@ let objects = [
     },
     { //* Bronze Crate
         size: 30,
-        health: 250,
+        health: 40,
         baseScore: 1500,
         respawn: true,
         scale: () => { return getRandomInt(20, 35) / 10 },
         shape: "rectangle",
         damping: 0,
         bodyType: 4,
-        global: false
+        global: true
     },
     { //* Silver Crate
         size: 30,

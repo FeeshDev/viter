@@ -174,7 +174,7 @@ const turrets = [
     ]
 ]
 
-const tree = [
+const turretTree = [
     [ // tier 0 upgrades
         [0, 1, 2] // default upgrades
     ],
@@ -233,13 +233,17 @@ game.addType(
         obj.props = tankBodies[obj.tier][obj.tank];
 
         //!SHOOTING
-        obj.turretTier = 4;
-        obj.turretIndex = 1;
+        obj.turretTier = 0;
+        obj.turretIndex = 0;
         obj.turrets = [];
+        obj.availableTurrets = [[], []];
+        obj.obtainedTurrets = [];
+        obj.hasTurretUpgrade = false;
         turrets[obj.turretTier][obj.turretIndex].forEach((t, i) => {
             obj.turrets.push({});
             for (const prop in t) obj.turrets[i][prop] = t[prop];
         });
+        obj.obtainedTurrets.push(turrets[obj.turretTier][obj.turretIndex]);
 
         //!MOVEMENT
         obj.direction = 0;
@@ -250,7 +254,7 @@ game.addType(
         obj.dance = false;
 
         //!LEVELS
-        obj.xp = 0;
+        obj.xp = 500;
         obj.level = 0;
         obj.levelThreshold = l[0];
 
@@ -297,16 +301,31 @@ game.addType(
         }
 
         obj.upgradeTurret = data => {
+            console.log(`Called with data: ${JSON.stringify(data)}.`)
             let tier = data.tier;
             let turreti = data.turreti;
-            if (tier === 0) return;
-            if (tier - obj.tier > 1) return;
+            //if (tier - obj.tier > 1) return;
             //if (obj.tank !== 0) if (obj.tank !== tank) return;
             if (obj.level < tier * 10) return;
-            if (tier <= obj.turretTier) return;
+            //if (tier <= obj.turretTier) return;
+            if (!obj.availableTurrets[1].includes(turrets[tier][turreti])) return;
+
+            obj.sendPacket({ type: "tt", turrets: obj.availableTurrets[0] })
+            obj.obtainedTurrets.push(turrets[tier][turreti]);
             obj.turretTier = tier;
             obj.turretIndex = turreti;
             obj.updateTurrets();
+        }
+
+        obj.getAvailableTurrets = () => {
+            let turretsArray = [[], []];
+            let availableTurretIndexes = turretTree[obj.turretTier][obj.turretIndex];
+            availableTurretIndexes.forEach(turreti => {
+                turretsArray[0].push([obj.turretTier + 1, turreti]);
+                turretsArray[1].push(turrets[obj.turretTier + 1][turreti]);
+            });
+
+            return turretsArray;
         }
     },
     // Tick Update
@@ -356,6 +375,9 @@ game.addType(
         }
 
         obj.hasBodyUpgrade = (obj.level >= ((obj.tier + 1) * 10 + (obj.tier) * 10)) ? true : false;
+        obj.hasTurretUpgrade = (obj.level >= ((obj.turretTier + 1) * 10)) ? true : false;
+
+        obj.availableTurrets = obj.getAvailableTurrets();
 
         if (Date.now() > obj.regen) obj.health = Math.min(obj.health + 0.3, obj.maxHealth);
 
@@ -383,6 +405,8 @@ game.addType(
         packet.angle = obj.playerMouse.angle;
 
         packet.hasBodyUpgrade = obj.hasBodyUpgrade;
+        packet.hasTurretUpgrade = obj.hasTurretUpgrade;
+        packet.availableTurrets = obj.availableTurrets[0];
 
         packet.xp = obj.xp;
         packet.level = obj.level;
@@ -400,6 +424,8 @@ game.addType(
         packet.tier = obj.tier;
 
         packet.hasBodyUpgrade = obj.hasBodyUpgrade;
+        packet.hasTurretUpgrade = obj.hasTurretUpgrade;
+        packet.availableTurrets = obj.availableTurrets[0];
 
         packet.w = obj.body.shapes[0].width;
         packet.h = obj.body.shapes[0].height;
@@ -461,9 +487,9 @@ const handleMovement = obj => {
         minus = 1;
         if (obj.playerInput[
             directions[
-                (dirIndex[
-                    obj.dirArray[obj.dirArray.length - 1]
-                ] + 2) % 4
+            (dirIndex[
+                obj.dirArray[obj.dirArray.length - 1]
+            ] + 2) % 4
             ]
         ]) minus++;
         let way = 0, sign = 1;
