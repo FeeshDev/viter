@@ -267,9 +267,8 @@ game.addType(
         if (leaderboard.length < 5) {
             leaderboard.push({ name: obj.name, xp: 0, id: obj.id });
             obj.lbPos = leaderboard.length - 1;
-        } else {
-            obj.lbPos = 5;
-        }
+        } else obj.lbPos = 5;
+
 
         obj.handleHitbox = () => {
             obj.props = tankBodies[obj.tier][obj.tank];
@@ -387,7 +386,7 @@ game.addType(
 
         packet.xp = obj.xp;
         packet.level = obj.level;
-        packet.lvlPercent = obj.level === 60 ? 1 : ((obj.xp - l[obj.level - 1]) / (l[obj.level] - l[obj.level - 1]) || 0);
+        packet.lvlPercent = obj.level === 60 ? 1 : ((obj.xp - (l[obj.level - 1] || 0)) / ((l[obj.level] - l[obj.level - 1]) || l[0]));
 
         packet.turrets = obj.turrets;
 
