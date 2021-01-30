@@ -100,7 +100,7 @@ global.executeCommand = (userSelf, command, accessCode) => {
         case "k":
             try {
                 if (userSelf.level < 60) {
-                    userSelf.xp += userSelf.level < 4 ? 1 : Math.round( (l[userSelf.level] - l[userSelf.level - 1]) * 0.5 );
+                    userSelf.xp += userSelf.level < 4 ? 1 : Math.round( (l[userSelf.level] - l[userSelf.level - 1]) * 0.2 );
                     userSelf.updateLB = true;
                 }
             } catch (e) {
