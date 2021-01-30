@@ -18,7 +18,7 @@ if (minify) {
         presets: ["@babel/preset-env"],
     });
     var minifiedScript = UglifyJS.minify(es5Code.code).code;
-    console.log("Finished minifying");  
+    console.log("Finished minifying");
 }
 
 const JavaScriptObfuscator = require('javascript-obfuscator');
@@ -111,7 +111,7 @@ if (cert) {
     });
     let port = 80;
     app2.listen(port, () => {
-        console.log(`Redirecter listening on port ${port}.`)
+        console.log(`Redirect listening on port ${port}.`)
     });
 }
 
