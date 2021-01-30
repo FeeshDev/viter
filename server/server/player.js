@@ -15,6 +15,8 @@ const dirIndex = {
 let l = []; // level thresholds
 for (let i = 0; i < 60; i++) l.push(Math.ceil(Math.pow((i + 2), 2.635)));
 
+let leaderboard = [];
+
 class Body {
     /**
      * Generates a tank body
@@ -261,6 +263,14 @@ game.addType(
         obj.startingTime = Date.now();
         obj.regen = Date.now();
         obj.lastDestroyed = undefined;
+        obj.updateLB = true;
+
+        if (leaderboard.length < 6) {
+            leaderboard.push({ name: obj.name, xp: 0, id: obj.id });
+            obj.lbPos = leaderboard.length;
+        } else {
+            obj.lbPos = 6;
+        }
 
         obj.handleHitbox = () => {
             obj.props = tankBodies[obj.tier][obj.tank];
@@ -303,7 +313,6 @@ game.addType(
     },
     // Tick Update
     function (obj) {
-        //obj.health = Math.max(Math.min(obj.health + 0.1, 100), 0);
         obj.body.angularVelocity = 0;
         obj.body.angularForce = 0;
 
@@ -322,6 +331,31 @@ game.addType(
                 }
                 if (obj.level > 60) obj.level = 60;
             }
+        }
+
+        // leaderboard.forEach((p, i) => {
+        //     if (!game.findObjectById(p.id)) {
+        //         leaderboard.splice(i, 1);
+        //         leaderboard.forEach((a, n) => {
+        //             if (n > i - 1) game.findObjectById(a.id).lbPos--;
+        //         });
+        //     }
+        // });
+
+        if (obj.updateLB) {
+            // if (obj.lbPos !== 6) leaderboard[obj.lbPos - 1].xp = obj.xp;
+            // if (obj.lbPos !== 1) {
+            //     while (leaderboard[obj.lbPos - 2] && obj.xp > leaderboard[obj.lbPos - 2].xp) {
+            //         obj.lbPos--;
+            //         leaderboard.splice(obj.lbPos - 1, 1);
+            //         leaderboard.splice(obj.lbPos - 2, 0, { name: obj.name, xp: obj.xp, id: obj.id });
+            //         leaderboard.forEach((p, i) => {
+            //             if (i > obj.lbPos) game.findObjectById(p.id).lbPos--;
+            //         });
+            //         if (leaderboard.length === 6) leaderboard.pop();
+            //     }
+            // }
+            // obj.updateLB = false;
         }
 
         obj.hasBodyUpgrade = (obj.level >= ((obj.tier + 1) * 10 + (obj.tier) * 10)) ? true : false;
@@ -358,6 +392,8 @@ game.addType(
         packet.lvlPercent = obj.level === 60 ? 1 : ((obj.xp - l[obj.level - 1]) / (l[obj.level] - l[obj.level - 1]) || 0);
 
         packet.turrets = obj.turrets;
+
+        packet.lb = leaderboard;
     },
     // Add
     function (obj, packet) {

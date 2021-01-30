@@ -58,6 +58,7 @@ game.addCollision('bullet', 'object', (bullet, object) => {
         } else {
             game.findObjectById(bullet.ownerID).xp += object.baseScore;
         }
+        game.findObjectById(bullet.ownerID).updateLB = true;
         game.findObjectById(bullet.ownerID).lastDestroyed = object.id;
     }
 });
@@ -84,7 +85,7 @@ game.addCollision('bullet', 'player', (bullet, player) => {
             );
             if (them.level === 60 && you.xp + scoreToGive < 50623) scoreToGive = 50623 - you.xp;
             game.findObjectById(bullet.ownerID).xp += scoreToGive;
-
+            player.updateLB = true;
         } else player.regen = Date.now() + 20000; // next regen in 20 s
     }
 });

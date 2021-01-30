@@ -131,8 +131,8 @@ require("./server/object.js");
 require("./server/player.js");
 require("./server/wall.js");
 require("./server/bullet.js");
-require("./server/gameManager.js")
-require("./server/commandHandler.js")
+require("./server/gameManager.js");
+require("./server/commandHandler.js");
 
 //! WEBSOCKET EVENTS
 game.wsopen = function (ws) {

@@ -29,6 +29,10 @@ function colorLuminance(hex, lum) {
   return rgb;
 }
 
+function normalizeCoords(c, canvasPos, ratio, canvasDimen) {
+  return c + (-canvasPos / ratio + canvasDimen / 2);
+}
+
 const smoothing = 0.04;
 
 let themes = [
@@ -59,7 +63,8 @@ function gameIO() {
     renderers: [],
     scenes: [],
     particles: [],
-    envs: {}
+    envs: {},
+    leaderboard: []
   };
   game.gameScale = 1;
   game.gamepad = function () {
@@ -289,16 +294,16 @@ function gameIO() {
 
         this.ctx.fillStyle = themes[this.theme].minimapColor1;
         this.ctx.fillRect(
-          (window.innerWidth / 2 - 250 / this.ratio) + (-this.position.x / this.ratio + this.c.width / 2), 
-          (window.innerHeight / 2 - 250 / this.ratio) + (-this.position.y / this.ratio + this.c.height / 2), 
+          normalizeCoords(window.innerWidth / 2 - 250 / this.ratio, this.position.x, this.ratio, this.c.width),
+          normalizeCoords(window.innerHeight / 2 - 250 / this.ratio, this.position.x, this.ratio, this.c.height),
           220 / this.ratio, 
           220 / this.ratio
         );
 
         this.ctx.fillStyle = themes[this.theme].minimapColor2;
         this.ctx.fillRect(
-          (window.innerWidth / 2 - 240 / this.ratio) + (-this.position.x / this.ratio + this.c.width / 2), 
-          (window.innerHeight / 2 - 240 / this.ratio) + (-this.position.y / this.ratio + this.c.height / 2), 
+          normalizeCoords(window.innerWidth / 2 - 240 / this.ratio, this.position.x, this.ratio, this.c.width),
+          normalizeCoords(window.innerHeight / 2 - 240 / this.ratio, this.position.x, this.ratio, this.c.height),
           200 / this.ratio, 
           200 / this.ratio
         );
@@ -308,11 +313,46 @@ function gameIO() {
         this.ctx.beginPath();
         this.ctx.fillStyle = "#fff";
         this.ctx.arc(
-          (window.innerWidth / 2 - 235 / this.ratio) + (-this.position.x / this.ratio + this.c.width / 2) + game.me.visual.position.x / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, 
-          (window.innerHeight / 2 - 235 / this.ratio) + (-this.position.y / this.ratio + this.c.height / 2) + game.me.visual.position.y / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, 
+          normalizeCoords((window.innerWidth / 2 - 235 / this.ratio) + game.me.visual.position.x / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.x, this.ratio, this.c.width), 
+          normalizeCoords((window.innerHeight / 2 - 235 / this.ratio) + game.me.visual.position.y / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.y, this.ratio, this.c.height), 
           5 / this.ratio, 0, 2 * Math.PI
         );
         this.ctx.fill();
+      },
+      drawLeaderboard: function () {
+        this.ctx.globalAlpha = 0.5;
+
+        this.ctx.fillStyle = themes[this.theme].minimapColor1;
+        this.ctx.fillRect(
+          normalizeCoords(-(window.innerWidth / 2 - 20 / this.ratio), this.position.x, this.ratio, this.c.width), 
+          normalizeCoords(-(window.innerHeight / 2 - 20 / this.ratio), this.position.y, this.ratio, this.c.height), 
+          300 / this.ratio, 
+          230 / this.ratio
+        );
+
+        this.ctx.font = "20px Montserrat";
+
+        let textWidth = this.ctx.measureText("leaderboard");
+        this.ctx.fillStyle = "#ffffff";
+        this.ctx.fillText(
+          "leaderboard", 
+          normalizeCoords(-(window.innerWidth / 2 - 170 / this.ratio + textWidth.width / 2), this.position.x, this.ratio, this.c.width), 
+          normalizeCoords(-(window.innerHeight / 2 - 55 / this.ratio), this.position.y, this.ratio, this.c.height)
+        );
+
+        this.ctx.font = "15px Montserrat";
+
+        game.leaderboard.forEach((info, i) => {
+          const text = `${info.name}: ${info.xp}`;
+          textWidth = this.ctx.measureText(text);
+          this.ctx.fillText(
+            text, 
+            normalizeCoords(-(window.innerWidth / 2 - 170 / this.ratio + textWidth.width / 2), this.position.x, this.ratio, this.c.width), 
+            normalizeCoords(-(window.innerHeight / 2 - (55 + 35 * (i + 1)) / this.ratio), this.position.y, this.ratio, this.c.height)
+          );
+        });
+
+        this.ctx.globalAlpha = 1;
       },
       drawObjects: function () {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -582,7 +622,7 @@ function gameIO() {
     if (strokeStyle) stroke = true;
     element.strokeStyle = strokeStyle || "#000";
     element.fillStyle = fillStyle || "#000";
-    element.font = font || "Arial";
+    element.font = font || "Montserrat";
     element.fontSize = fontSize || 30;
     element.otherParams = otherParams || "";
     element.opacity = opacity || 1;
@@ -642,7 +682,7 @@ function gameIO() {
     element.style = style || { fill: { default: "#000" }, stroke: { default: 0, hover: 0, click: 0, lineWidth: 0 } };
     element.position = new game.Vector2(0, 0);
     element.offset = new game.Vector2(x || 0, y || 0);
-    element.inside = inside || game.text("No Value", 0, 0, "#ddd", null, "Arial", 32); //@ {game.text}, {game.image}
+    element.inside = inside || game.text("No Value", 0, 0, "#ddd", null, "Montserrat", 32); //@ {game.text}, {game.image}
 
     element.onclick = onclick || function () {
       console.log(`Button with ID: "${this.buttonId}" was pressed.`)
@@ -701,8 +741,8 @@ function gameIO() {
     }
 
     element.isPointInside = function (point) {
-      let relativeX = (this.position.x - (-game.renderers[0].position.x / this.ratio + game.renderers[0].c.width / 2)) * this.ratio;
-      let relativeY = (this.position.y - (-game.renderers[0].position.y / this.ratio + game.renderers[0].c.height / 2)) * this.ratio;
+      const relativeX = (this.position.x - normalizeCoords(0, game.renderers[0].position.x, this.ratio, game.renderers[0].c.width)) * this.ratio;
+      const relativeY = (this.position.y - normalizeCoords(0, game.renderers[0].position.y, this.ratio, game.renderers[0].c.height)) * this.ratio;
 
       point.x -= window.innerWidth / 2;
       point.y -= window.innerHeight / 2;
@@ -749,7 +789,7 @@ function gameIO() {
     element.style = style || { color: "#ae1919", stroke: null, lineWidth: 0 };
     element.position = new game.Vector2(0, 0);
     element.offset = new game.Vector2(x || 0, y || 0);
-    element.text = text || game.text("No Value", 0, 0, "#ddd", null, "Arial", 32); //@ {game.text}, {game.image}
+    element.text = text || game.text("No Value", 0, 0, "#ddd", null, "Montserrat", 32); //@ {game.text}, {game.image}
 
     element.render = function (ctx, ratio, opacity) {
       this.ratio = ratio;
@@ -1449,6 +1489,8 @@ function gameIO() {
     },
     // Update
     "y": function (packet) {
+      if (packet.lb) game.leaderboard = packet.lb;
+
       if (game.getObj(packet.a[0]) == null) {
         game.askForObj(packet.a[0]);
         return;
