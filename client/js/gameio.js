@@ -343,7 +343,7 @@ function gameIO() {
                 this.ctx.font = "15px Montserrat";
 
                 game.leaderboard.forEach((info, i) => {
-                    const text = `${info.name}: ${info.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g)}`;
+                    const text = `${info.name}: ${info.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
                     textWidth = this.ctx.measureText(text);
                     this.ctx.fillText(
                         text,
@@ -1679,7 +1679,7 @@ function gameIO() {
             if (minutes) totalTime += `${minutes}m `;
             if (seconds) totalTime += `${seconds + ms / 1000}s `;
             document.getElementById('time').innerHTML = totalTime;
-            document.getElementById("score").innerHTML = `Score: ${packet.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g)}`;
+            document.getElementById("score").innerHTML = `Score: ${packet.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
             document.getElementById("level").innerHTML = `Level: ${packet.level}`;
             document.getElementById("return").addEventListener("click", () => {
                 document.getElementById('death-screen').style.display = "none";
