@@ -296,7 +296,7 @@ function gameIO() {
         this.ctx.fillRect(
           normalizeCoords(window.innerWidth / 2 - 250 / this.ratio, this.position.x, this.ratio, this.c.width),
           normalizeCoords(window.innerHeight / 2 - 250 / this.ratio, this.position.x, this.ratio, this.c.height),
-          220 / this.ratio, 
+          220 / this.ratio,
           220 / this.ratio
         );
 
@@ -304,7 +304,7 @@ function gameIO() {
         this.ctx.fillRect(
           normalizeCoords(window.innerWidth / 2 - 240 / this.ratio, this.position.x, this.ratio, this.c.width),
           normalizeCoords(window.innerHeight / 2 - 240 / this.ratio, this.position.x, this.ratio, this.c.height),
-          200 / this.ratio, 
+          200 / this.ratio,
           200 / this.ratio
         );
 
@@ -313,8 +313,8 @@ function gameIO() {
         this.ctx.beginPath();
         this.ctx.fillStyle = "#fff";
         this.ctx.arc(
-          normalizeCoords((window.innerWidth / 2 - 235 / this.ratio) + game.me.visual.position.x / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.x, this.ratio, this.c.width), 
-          normalizeCoords((window.innerHeight / 2 - 235 / this.ratio) + game.me.visual.position.y / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.y, this.ratio, this.c.height), 
+          normalizeCoords((window.innerWidth / 2 - 235 / this.ratio) + game.me.visual.position.x / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.x, this.ratio, this.c.width),
+          normalizeCoords((window.innerHeight / 2 - 235 / this.ratio) + game.me.visual.position.y / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.y, this.ratio, this.c.height),
           5 / this.ratio, 0, 2 * Math.PI
         );
         this.ctx.fill();
@@ -324,9 +324,9 @@ function gameIO() {
 
         this.ctx.fillStyle = themes[this.theme].minimapColor1;
         this.ctx.fillRect(
-          normalizeCoords(-(window.innerWidth / 2 - 20 / this.ratio), this.position.x, this.ratio, this.c.width), 
-          normalizeCoords(-(window.innerHeight / 2 - 20 / this.ratio), this.position.y, this.ratio, this.c.height), 
-          300 / this.ratio, 
+          normalizeCoords(-(window.innerWidth / 2 - 20 / this.ratio), this.position.x, this.ratio, this.c.width),
+          normalizeCoords(-(window.innerHeight / 2 - 20 / this.ratio), this.position.y, this.ratio, this.c.height),
+          300 / this.ratio,
           230 / this.ratio
         );
 
@@ -335,8 +335,8 @@ function gameIO() {
         let textWidth = this.ctx.measureText("leaderboard");
         this.ctx.fillStyle = "#ffffff";
         this.ctx.fillText(
-          "leaderboard", 
-          normalizeCoords(-(window.innerWidth / 2 - 170 / this.ratio + textWidth.width / 2), this.position.x, this.ratio, this.c.width), 
+          "leaderboard",
+          normalizeCoords(-(window.innerWidth / 2 - 170 / this.ratio + textWidth.width / 2), this.position.x, this.ratio, this.c.width),
           normalizeCoords(-(window.innerHeight / 2 - 55 / this.ratio), this.position.y, this.ratio, this.c.height)
         );
 
@@ -346,8 +346,8 @@ function gameIO() {
           const text = `${info.name}: ${info.xp}`;
           textWidth = this.ctx.measureText(text);
           this.ctx.fillText(
-            text, 
-            normalizeCoords(-(window.innerWidth / 2 - 170 / this.ratio + textWidth.width / 2), this.position.x, this.ratio, this.c.width), 
+            text,
+            normalizeCoords(-(window.innerWidth / 2 - 170 / this.ratio + textWidth.width / 2), this.position.x, this.ratio, this.c.width),
             normalizeCoords(-(window.innerHeight / 2 - (55 + 35 * (i + 1)) / this.ratio), this.position.y, this.ratio, this.c.height)
           );
         });
