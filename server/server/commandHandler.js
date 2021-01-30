@@ -1,6 +1,10 @@
+let l = []; // level thresholds
+for (let i = 0; i < 60; i++) l.push(Math.ceil(Math.pow((i + 2), 2.635)));
+
 global.executeCommand = (userSelf, command, accessCode) => {
     if (!userSelf) return;
     if (!userSelf.devMode) return;
+    if (userSelf.devMode !== 1 && userSelf.devMode !== 2) return;
     let commandArray = command.split(':');
     console.log(`"${userSelf.name}" requested command: "${command}".`);
     switch (commandArray[0]) {
@@ -84,6 +88,24 @@ global.executeCommand = (userSelf, command, accessCode) => {
                 } catch (e) {
                     console.log(e);
                 }
+            break;
+        case "setXP":
+            try {
+                userSelf.xp = parseInt(commandArray[1]);
+                userSelf.updateLB = true;
+            } catch (e) {
+                console.log(e);
+            }
+            break;
+        case "k":
+            try {
+                if (userSelf.level < 60) {
+                    userSelf.xp += userSelf.level < 4 ? 1 : Math.round( (l[userSelf.level] - l[userSelf.level - 1]) * 0.5 );
+                    userSelf.updateLB = true;
+                }
+            } catch (e) {
+                console.log(e);
+            }
             break;
         default:
             console.log(`"${userSelf.name}" requested command: "${command}" which could not be found.`);

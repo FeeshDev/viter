@@ -11,7 +11,7 @@ app.get("/status", function (req, res) {
 });
 
 // Minifying
-const minify = true;
+const minify = false;
 
 if (minify) {
     const es5Code = babel.transformSync(fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8"), {

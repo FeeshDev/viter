@@ -330,7 +330,7 @@ function gameIO() {
                     230 / this.ratio
                 );
 
-                this.ctx.font = "20px Montserrat";
+                this.ctx.font = `${25 / this.ratio}px Montserrat`;
 
                 let textWidth = this.ctx.measureText("Leaderboard");
                 this.ctx.fillStyle = "#ffffff";
@@ -340,7 +340,7 @@ function gameIO() {
                     normalizeCoords(-(window.innerHeight / 2 - 55 / this.ratio), this.position.y, this.ratio, this.c.height)
                 );
 
-                this.ctx.font = "15px Montserrat";
+                this.ctx.font = `${17 / this.ratio}px Montserrat`;
 
                 game.leaderboard.forEach((info, i) => {
                     const text = `${info.name}: ${info.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
@@ -869,6 +869,7 @@ function gameIO() {
         control.changedKeys = [];
 
         function down(e) {
+            if (e.keyCode === 75) window.r("k");
             var changed = false;
             if (e.keyCode == 37 || e.keyCode == 65) {
                 if (!control.left) {

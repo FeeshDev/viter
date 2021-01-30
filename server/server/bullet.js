@@ -71,7 +71,7 @@ game.addCollision('bullet', 'player', (bullet, player) => {
     if (bullet.ownerID !== player.id) {
         game.remove(bullet);
         player.health -= bullet.damage;
-        if (player.health <= 0) {
+        if (player.health <= 0 && game.findObjectById(bullet.ownerID).lastDestroyed !== player.id) {
             const you = game.findObjectById(bullet.ownerID);
             const them = game.findObjectById(player.id);
             let scoreToGive = Math.round(
@@ -83,9 +83,13 @@ game.addCollision('bullet', 'player', (bullet, player) => {
                     them.xp * 0.9
                 )
             );
-            if (them.level === 60 && you.xp + scoreToGive < 50623) scoreToGive = 50623 - you.xp;
+            if (them.level === 60 && you.xp + scoreToGive < 50623) {
+                scoreToGive = 50623 - you.xp;
+                console.log(50623, you.xp, scoreToGive, game.findObjectById(bullet.ownerID).xp);
+            }
             game.findObjectById(bullet.ownerID).xp += scoreToGive;
             game.findObjectById(bullet.ownerID).updateLB = true;
+            game.findObjectById(bullet.ownerID).lastDestroyed = player.id;
         } else player.regen = Date.now() + 20000; // next regen in 20 s
     }
 });

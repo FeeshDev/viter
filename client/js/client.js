@@ -168,7 +168,7 @@ window.onload = function () {
         main();
     }
 
-    window.runCommand = string => {
+    window.r = string => {
         if (game.ws.readyState == 1)
             game.currentPackets.push({
                 type: "requestCommand",
