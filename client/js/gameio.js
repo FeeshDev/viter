@@ -1446,6 +1446,8 @@ function gameIO() {
                 obj.turrets = [];
                 obj.playerName = new game.object();
                 game.me.hasBodyUpgrade = packet.hasBodyUpgrade;
+                game.me.hasTurretUpgrade = packet.hasTurretUpgrade;
+                if (obj.id === game.me.id) game.me.availableTurrets = packet.availableTurrets;
             }
 
             if (packet.maxHealth !== undefined) obj.maxHealth = packet.maxHealth;
@@ -1520,7 +1522,11 @@ function gameIO() {
                 game.actualLvl = packet.level;
                 game.actualXp = packet.lvlPercent;
             }
+            if (packet.availableTurrets !== undefined && obj.id === game.me.id) {
+                game.me.availableTurrets = packet.availableTurrets;
+            }
             if (packet.hasBodyUpgrade !== undefined && obj.id === game.me.id) game.me.hasBodyUpgrade = packet.hasBodyUpgrade;
+            if (packet.hasTurretUpgrade !== undefined && obj.id === game.me.id) game.me.hasTurretUpgrade = packet.hasTurretUpgrade;
             if (packet.tank !== undefined && packet.tier !== undefined && obj.id === game.me.id) {
                 game.renderers[0].UI.buttons.forEach(button => {
                     let details = button.buttonId.split(":");
@@ -1685,6 +1691,13 @@ function gameIO() {
                 document.getElementById('death-screen').style.display = "none";
                 document.getElementById('menu').style.display = "flex";
             });
+        },
+        // Clear and update turrets
+        "tt": function (packet) {
+            for (let i = 0; i < game.renderers[0].UI.buttons.length; i++) {
+                const button = game.renderers[0].UI.buttons[i];
+                if (button.buttonId.includes("turretButton")) game.renderers[0].UI.buttons.splice(i, 1);
+            }
         }
     };
     game.addPacketType = function (type, func) {
@@ -1764,6 +1777,7 @@ function gameIO() {
         var currentFPS = Math.max(fps.getFPS(), 30);
         game.serverDetails.ticksSincePacket += 1 / (currentFPS / 60);
         //game.serverDetails.ticksSincePacket += 1;
+
         for (var i = 0; i < game.objects.length; i++) {
             var obj = game.objects[i];
             obj.visual.rotation = game.lerp(obj.old.rotation, obj.new.rotation);

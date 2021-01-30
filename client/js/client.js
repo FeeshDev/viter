@@ -207,7 +207,6 @@ window.onload = function () {
     renderer.addLabel(new game.label("level", { x: 2, y: Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1) }, 0, -120, 420, 30, 15, { color: "rgba(35, 145, 50, 0.9)" }, levelText));
 
     let bodies = [1, 2, 2, 2];
-    //let tank = 0;
 
     for (let i = 0; i < bodies.length; i++) {
         const tier = i;
@@ -221,10 +220,9 @@ window.onload = function () {
             funiimage.rotation = Math.PI / 2;
             //let buttonText = game.text(`Body ${tier}:${tank}`, 0, 0, "#ddd", null, "Arial", 20);
             renderer.addButton(new game.button(`tankButton:${tier}:${tank}`, { x: 2, y: 2 }, -300 + tank * 120, 160 - tier * 120, 100, 100, 10, style, funiimage, function () {
-                game.addPacket("upgradePacket", ["body", { tier: tier, tank: tank }]);
+                game.addPacket("upgradePacket", ["turret", { tier: tier, tank: tank }]);
             }));
         }
-        //tank++;
     }
 
     /*
