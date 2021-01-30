@@ -332,10 +332,10 @@ function gameIO() {
 
                 this.ctx.font = "20px Montserrat";
 
-                let textWidth = this.ctx.measureText("leaderboard");
+                let textWidth = this.ctx.measureText("Leaderboard");
                 this.ctx.fillStyle = "#ffffff";
                 this.ctx.fillText(
-                    "leaderboard",
+                    "Leaderboard",
                     normalizeCoords(-(window.innerWidth / 2 - 170 / this.ratio + textWidth.width / 2), this.position.x, this.ratio, this.c.width),
                     normalizeCoords(-(window.innerHeight / 2 - 55 / this.ratio), this.position.y, this.ratio, this.c.height)
                 );
@@ -343,7 +343,7 @@ function gameIO() {
                 this.ctx.font = "15px Montserrat";
 
                 game.leaderboard.forEach((info, i) => {
-                    const text = `${info.name}: ${info.xp}`;
+                    const text = `${info.name}: ${info.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g)}`;
                     textWidth = this.ctx.measureText(text);
                     this.ctx.fillText(
                         text,
@@ -1679,7 +1679,7 @@ function gameIO() {
             if (minutes) totalTime += `${minutes}m `;
             if (seconds) totalTime += `${seconds + ms / 1000}s `;
             document.getElementById('time').innerHTML = totalTime;
-            document.getElementById("score").innerHTML = `Score: ${packet.xp}`;
+            document.getElementById("score").innerHTML = `Score: ${packet.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g)}`;
             document.getElementById("level").innerHTML = `Level: ${packet.level}`;
             document.getElementById("return").addEventListener("click", () => {
                 document.getElementById('death-screen').style.display = "none";
