@@ -552,8 +552,9 @@ function gameIO() {
         element.offsetY = offsetY || 0;
         element.opacity = opacity || 1;
         element.type = "image";
-        element.renderSpecific = function (ctx, ratio) {
+        element.renderSpecific = function (ctx, ratio, cum) {
             try {
+                //console.log(cum)
                 ctx.rotate(1.5708);
                 ctx.drawImage(this.image, ((-this.width / 2) + this.offsetX) / ratio, ((-this.height / 2) + this.offsetY) / ratio, this.width / ratio, this.height / ratio);
                 ctx.rotate(-1.5708);
@@ -686,7 +687,7 @@ function gameIO() {
         };
     }
 
-    game.button = function (id, anchors, x, y, width, height, radius, style, inside, onclick, opacity) {
+    game.button = function (id, anchors, x, y, width, height, radius, style, inside, onclick, opacity, batch) {
         var element = {};
         element.buttonId = id || null;
         element.anchors = anchors || { x: 2, y: 2 };
@@ -701,6 +702,7 @@ function gameIO() {
         element.position = new game.Vector2(0, 0);
         element.offset = new game.Vector2(x || 0, y || 0);
         element.inside = inside || game.text("No Value", 0, 0, "#ddd", null, "Montserrat", 32); //@ {game.text}, {game.image}
+        element.batch = batch || [];
 
         element.onclick = onclick || function () {
             console.log(`Button with ID: "${this.buttonId}" was pressed.`)
@@ -748,6 +750,16 @@ function gameIO() {
 
             ctx.rotate(-this.rotation);
             ctx.translate(-this.position.x, -this.position.y);
+
+            this.batch.forEach(batchElement => {
+                batchElement.position.x = game.renderers[0].c.width / this.anchors.x + this.offset.x / ratio;
+                batchElement.position.y = game.renderers[0].c.height / this.anchors.y + this.offset.y / ratio;
+                ctx.translate(batchElement.position.x, batchElement.position.y);
+                ctx.rotate(batchElement.rotation);
+                batchElement.renderSpecific(ctx, ratio);
+                ctx.rotate(-batchElement.rotation);
+                ctx.translate(-batchElement.position.x, -batchElement.position.y);
+            });
 
             element.inside.position.x = game.renderers[0].c.width / this.anchors.x + this.offset.x / ratio;
             element.inside.position.y = game.renderers[0].c.height / this.anchors.y + this.offset.y / ratio;
@@ -1715,19 +1727,48 @@ function gameIO() {
                 if (button.buttonId.split(":")[0] === "turretButton") buttons.splice(i, 1);
             }*/
 
-            for (let i = 0; i < packet.turrets.length; i++) {
-                //const turrets = packet.availableTurrets[i];
-                const tierIndexArray = packet.turrets[i];
+            for (let i = 0; i < packet.turrets[0].length; i++) {
+                const tierIndexArray = packet.turrets[0][i];
+                const turretsArray = packet.turrets[1][i];
+                let batch = [];
 
-                let style = { fill: { default: "#29ab3a" }, stroke: { lineWidth: 4 } };
-                //let img = new Image();
-                //img.src = `./client/images/tanks/${tier}/${tank}/tank.png`;
-                //let funiimage = new game.image(img, 0, 0, 100, 100);
-                //funiimage.rotation = Math.PI / 2;
-                let buttonText = game.text(`Turret ${tierIndexArray[0]}:${tierIndexArray[1]}`, 0, 0, "#ddd", null, "Arial", 20);
-                game.renderers[0].addButton(new game.button(`turretButton:${tierIndexArray[0]}:${tierIndexArray[1]}`, { x: 2, y: 2 }, +300 + i * 120, 160, 100, 100, 10, style, buttonText, function () {
+                turretsArray.forEach(turret => {
+                    let turretImg = new Image();
+                    switch (turret.type) {
+                        case 0:
+                            turretImg.src = `./client/images/cannons/default.png`;
+                            break;
+                        case 1:
+                            turretImg.src = `./client/images/cannons/shotgun.png`;
+                            break;
+                        case 2:
+                            turretImg.src = `./client/images/cannons/sniper.png`;
+                            break;
+                        case 3:
+                            turretImg.src = `./client/images/cannons/machinegun.png`;
+                            break;
+                        default:
+                            turretImg.src = `./client/images/cannons/default.png`;
+                            break;
+                    }
+                    let turretObj = new game.image(turretImg, 0, 0, 200, 200);
+                    turretObj.offsetX = turret.offsetX || 0;
+                    turretObj.offsetY = turret.offsetY || 0;
+                    turretObj.offsetAngle = turret.offsetAngle || 0;
+                    turretObj.rotation = Math.PI / 2;
+                    batch.push(turretObj);
+                });
+
+                let cannon = new Image();
+                cannon.src = `./client/images/turrets/default.png`;
+                let cannonImg = new game.image(cannon, 0, 0, 200, 200);
+                cannonImg.rotation = Math.PI / 2;
+
+                let style = { fill: { default: "#29AB61" }, stroke: { lineWidth: 4 } };
+                let button = new game.button(`turretButton:${tierIndexArray[0]}:${tierIndexArray[1]}`, { x: 2, y: 2 }, 300 + i * 120, 60, 100, 100, 10, style, cannonImg, function () {
                     game.addPacket("upgradePacket", ["turret", { tier: tierIndexArray[0], turreti: tierIndexArray[1] }]);
-                }));
+                }, 1, batch)
+                game.renderers[0].addButton(button);
             }
         }
     };

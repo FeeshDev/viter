@@ -334,7 +334,7 @@ game.addType(
             obj.turretIndex = turreti;
             obj.updateTurrets();
             obj.availableTurrets = obj.getAvailableTurrets();
-            obj.sendPacket({ type: "tt", turrets: obj.availableTurrets[0] });
+            obj.sendPacket({ type: "tt", turrets: obj.availableTurrets });
         }
     },
     // Tick Update
@@ -415,7 +415,7 @@ game.addType(
 
         packet.hasBodyUpgrade = obj.hasBodyUpgrade;
         packet.hasTurretUpgrade = obj.hasTurretUpgrade;
-        packet.availableTurrets = obj.availableTurrets[0];
+        packet.availableTurrets = obj.availableTurrets;
 
         packet.xp = obj.xp;
         packet.level = obj.level;
@@ -434,8 +434,8 @@ game.addType(
 
         packet.hasBodyUpgrade = obj.hasBodyUpgrade;
         packet.hasTurretUpgrade = obj.hasTurretUpgrade;
-        packet.availableTurrets = obj.availableTurrets[0];
-        obj.sendPacket({ type: "tt", turrets: obj.availableTurrets[0] });
+        packet.availableTurrets = obj.availableTurrets;
+        obj.sendPacket({ type: "tt", turrets: obj.availableTurrets });
 
         packet.w = obj.body.shapes[0].width;
         packet.h = obj.body.shapes[0].height;
