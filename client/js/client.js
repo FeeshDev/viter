@@ -43,7 +43,7 @@ window.onload = function () {
                     nameColor = "#7fd5ff";
                     break;
                 case 3:
-                    nameColor = "#916";
+                    nameColor = "#ae0505";
                     break;
                 default:
                     nameColor = "#fff";
