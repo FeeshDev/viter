@@ -1770,6 +1770,10 @@ function gameIO() {
                 }, 1, batch)
                 game.renderers[0].addButton(button);
             }
+        },
+        // Playercount
+        "p": function (packet) {
+            document.getElementById("playerCount").innerHTML = `${packet.count} players shooting.`
         }
     };
     game.addPacketType = function (type, func) {
