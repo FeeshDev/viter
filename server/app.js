@@ -27,7 +27,7 @@ if (fs.existsSync(path.resolve("/", "etc", "letsencrypt"))) {
 
 
 //* Encoding
-const encode = false;
+let encode = false;
 if (cert) encode = true;
 
 const JavaScriptObfuscator = require('javascript-obfuscator');
