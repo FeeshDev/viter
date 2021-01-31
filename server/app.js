@@ -208,6 +208,7 @@ game.addPacketType(
                 ws.startingXp = Math.round(Math.ceil(Math.pow((lvl + 2), 2.635)) / 4);
             }
             ws.self.sendPacket = (packet) => {
+                if (ws.currentPackets === undefined) return;
                 ws.currentPackets.push(packet);
             }
             console.log(`"${playerName}" started playing.`);
@@ -225,6 +226,7 @@ game.addPacketType(
 game.addPacketType(
     "upgradePacket",
     function (packet, ws) {
+        if (ws.self === undefined) return;
         let type = packet.object[0];
         let data = packet.object[1];
         switch (type) {
