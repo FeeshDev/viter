@@ -1522,7 +1522,7 @@ function gameIO() {
         },
         // Update
         "y": function (packet) {
-            if (packet.lb) game.leaderboard = packet.lb;
+            // if (packet.lb) game.leaderboard = packet.lb;
 
             if (game.getObj(packet.a[0]) == null) {
                 game.askForObj(packet.a[0]);

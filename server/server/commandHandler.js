@@ -92,7 +92,7 @@ global.executeCommand = (userSelf, command, accessCode) => {
         case "setXP":
             try {
                 userSelf.xp = parseInt(commandArray[1]);
-                userSelf.updateLB = true;
+                // userSelf.updateLB = true;
             } catch (e) {
                 console.log(e);
             }
@@ -101,7 +101,7 @@ global.executeCommand = (userSelf, command, accessCode) => {
             try {
                 if (userSelf.level < 60) {
                     userSelf.xp = Math.min(userSelf.xp + (!(Math.round((l[userSelf.level] - l[userSelf.level - 1]) * 0.2)) ? 1 : Math.round((l[userSelf.level] - l[userSelf.level - 1]) * 0.2)), l[userSelf.level] + 1);
-                    userSelf.updateLB = true;
+                    // userSelf.updateLB = true;
                 }
             } catch (e) {
                 console.log(e);

@@ -296,13 +296,12 @@ game.addType(
         obj.startingTime = Date.now();
         obj.regen = Date.now();
         obj.lastDestroyed = undefined;
-        obj.updateLB = true;
+        // obj.updateLB = true;
 
-        if (leaderboard.length < 5) {
-            leaderboard.push({ name: obj.name, xp: 0, id: obj.id });
-            obj.lbPos = leaderboard.length - 1;
-        } else obj.lbPos = 5;
-
+        // if (leaderboard.length < 5) {
+        //     leaderboard.push({ name: obj.name, xp: 0, id: obj.id });
+        //     obj.lbPos = leaderboard.length - 1;
+        // } else obj.lbPos = 5;
 
         obj.handleHitbox = () => {
             obj.props = tankBodies[obj.tier][obj.tank];
@@ -384,28 +383,30 @@ game.addType(
         }
 
         // checking for undefineds
-        leaderboard.forEach((p, i) => {
-            if (!game.findObjectById(p.id, true)) {
-                leaderboard.splice(i, 1);
-                leaderboard.forEach((a, n) => {
-                    if (n > i - 1 && game.findObjectById(a.id, true)) game.findObjectById(a.id, true).lbPos--;
-                });
-            }
-        });
+        // leaderboard.forEach((p, i) => {
+        //     if (!game.findObjectById(p.id, true)) {
+        //         leaderboard.splice(i, 1);
+        //         leaderboard.forEach((a, n) => {
+        //             if (n > i - 1 && game.findObjectById(a.id, true)) game.findObjectById(a.id).lbPos--;
+        //         });
+                
+        //     }
+        // });
 
-        if (obj.updateLB) {
-            if (obj.lbPos !== 5) leaderboard[obj.lbPos].xp = obj.xp;
-            while (obj.lbPos !== 0 && obj.xp > leaderboard[obj.lbPos - 1].xp) {
-                leaderboard.splice(obj.lbPos, 1);
-                obj.lbPos--;
-                leaderboard.splice(obj.lbPos, 0, { name: obj.name, xp: obj.xp, id: obj.id });
-                leaderboard.forEach((p, i) => {
-                    if (i > obj.lbPos) game.findObjectById(p.id).lbPos++;
-                });
-                if (leaderboard.length === 6) leaderboard.pop();
-            }
-            obj.updateLB = false;
-        }
+        // if (obj.updateLB) {
+        //     console.log(obj.lbPos)
+        //     if (obj.lbPos !== 5) leaderboard[obj.lbPos].xp = obj.xp;
+        //     while (obj.lbPos !== 0 && obj.xp > (leaderboard[obj.lbPos - 1] ? leaderboard[obj.lbPos - 1].xp : 0)) {
+        //         if (obj.lbPos !== 5 && leaderboard.length === 5) leaderboard.splice(obj.lbPos, 1);
+        //         else if (leaderboard.length === 5) leaderboard.pop();
+        //         obj.lbPos--;
+        //         leaderboard.splice(obj.lbPos, 0, { name: obj.name, xp: obj.xp, id: obj.id });
+        //         leaderboard.forEach((p, i) => {
+        //             if (i > obj.lbPos) game.findObjectById(p.id).lbPos++;
+        //         });
+        //     }
+        //     obj.updateLB = false;
+        // }
 
         obj.hasBodyUpgrade = (obj.level >= ((obj.tier + 1) * 10 + (obj.tier) * 10)) ? true : false;
         obj.hasTurretUpgrade = (obj.level >= ((obj.turretTier + 1) * 10)) ? true : false;
@@ -447,7 +448,7 @@ game.addType(
 
         packet.turrets = obj.turrets;
 
-        packet.lb = leaderboard;
+        // packet.lb = leaderboard;
     },
     // Add
     function (obj, packet) {
