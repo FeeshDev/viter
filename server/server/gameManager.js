@@ -12,9 +12,9 @@ game.create("wall", { x: MAP_SIZE + WALL_SIZE / 2, y: MAP_SIZE / 2, w: WALL_SIZE
 const
     TREE_COUNT = 30 * Math.pow(global.MAP_SCALE, 2),
     ROCK_COUNT = 17 * Math.pow(global.MAP_SCALE, 2),
-    BRONZE_COUNT = 5 * Math.pow(global.MAP_SCALE, 2),
-    SILVER_COUNT = 2 * Math.pow(global.MAP_SCALE, 2),
-    GOLD_COUNT = 0.4 * Math.pow(global.MAP_SCALE, 2);
+    BRONZE_COUNT = 6 * Math.pow(global.MAP_SCALE, 2),
+    SILVER_COUNT = 3 * Math.pow(global.MAP_SCALE, 2),
+    GOLD_COUNT = 0.6 * Math.pow(global.MAP_SCALE, 2);
 
 const TYPE_TREE = 0,
     TYPE_ROCK = 1,

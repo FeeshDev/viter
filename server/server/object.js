@@ -25,7 +25,7 @@ let objects = [
     { //* Bronze Crate
         size: 30,
         health: 80,
-        baseScore: 400,
+        baseScore: 600,
         respawn: true,
         scale: () => { return getRandomInt(20, 35) / 10 },
         shape: "rectangle",
@@ -35,8 +35,8 @@ let objects = [
     },
     { //* Silver Crate
         size: 30,
-        health: 180,
-        baseScore: 1000,
+        health: 160,
+        baseScore: 1200,
         respawn: true,
         scale: () => { return getRandomInt(25, 30) / 10 },
         shape: "rectangle",
@@ -46,8 +46,8 @@ let objects = [
     },
     { //* Gold Crate
         size: 30,
-        health: 420,
-        baseScore: 4000,
+        health: 200,
+        baseScore: 2600,
         respawn: true,
         scale: () => { return getRandomInt(20, 25) / 10 },
         shape: "rectangle",
