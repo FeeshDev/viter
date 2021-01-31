@@ -153,7 +153,7 @@ game.wsopen = function (ws) {
     ws.isPlaying - false;
     ws.currentPackets.push({ type: "p", count: game.clients.length });
     setInterval(() => {
-        if (ws.isPlaying !== true) ws.currentPackets.push({ type: "p", count: game.clients.length });
+        if (ws.isPlaying !== true) if (ws.currentPackets !== undefined) ws.currentPackets.push({ type: "p", count: game.clients.length });
     }, 10000);
     //ws.self = game.create("spectator");
     /*
@@ -198,7 +198,7 @@ game.addPacketType(
             });
             ws.isPlaying = true;
             if (ws.currentPackets !== []) ws.currentPackets.push({ type: "i", list: game.globalCoordPackets });
-            ws.currentPackets.push({ type: "s", scale: MAP_SCALE });
+            if (ws.currentPackets !== []) ws.currentPackets.push({ type: "s", scale: MAP_SCALE });
             ws.self.death = (t, xp, lvl) => {
                 ws.currentPackets.push({ type: "d", time: Date.now() - t, xp: xp, level: lvl });
                 ws.self = undefined;
