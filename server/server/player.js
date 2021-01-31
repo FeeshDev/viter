@@ -145,7 +145,11 @@ const turrets = [
             new Turret({ type: 0, maxCD: 10, dmg: 3, offsetX: 20, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
             new Turret({ type: 0, maxCD: 10, dmg: 3, offsetX: 12, shootingOffset: 3, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
             new Turret({ type: 0, maxCD: 10, dmg: 3, offsetX: 4, shootingOffset: 7, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
-        ]
+        ],
+        [
+            new Turret({ type: 3, maxCD: 2, dmg: 4, offsetY: 18, bulletScale: 0.65 }), // pelleteer
+            new Turret({ type: 3, maxCD: 2, dmg: 4, bulletScale: 0.65 })
+        ],
     ],
     [ // tier 4
         [
@@ -170,7 +174,12 @@ const turrets = [
             new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: 20, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
             new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: 12, shootingOffset: 3, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
             new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: 4, shootingOffset: 6, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
-        ]
+        ],
+        [
+            new Turret({ type: 3, maxCD: 2, dmg: 3, offsetY: 25, bulletScale: 0.65 }),
+            new Turret({ type: 3, maxCD: 2, dmg: 3, offsetY: 15, bulletScale: 0.65 }), // railgun
+            new Turret({ type: 3, maxCD: 2, dmg: 3, bulletScale: 0.65 })
+        ],
     ]
 ]
 
@@ -180,12 +189,12 @@ const turretTree = [
     ],
     [ // tier 1 upgrades
         [0], // sniper upgrades
-        [1, 2], // machine gun upgrades
+        [1, 2, 4], // machine gun upgrades
         [3] // twin upgrades
     ],
     [ // tier 2 upgrades
         [0], // hunter upgrades
-        [], // sprayer upgrades
+        [4], // sprayer upgrades
         [1], // shotgun upgrades
         [1, 2, 3] // twinner upgrades
     ],
@@ -193,9 +202,11 @@ const turretTree = [
         [0], // predator upgrades
         [1], // scatterer upgrades
         [1, 2], // triplet upgrades
-        [3] // gunner upgrades
+        [3], // gunner upgrades
+        [4] // pelleteer upgrades
     ],
     [ // tier 4 upgrades
+        [],
         [],
         [],
         [],
