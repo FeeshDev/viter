@@ -52,6 +52,7 @@ const handleMovement = (obj) => {
 game.addCollision('bullet', 'object', (bullet, object) => {
     game.remove(bullet);
     object.health -= bullet.damage;
+    if (!game.findObjectById(bullet.ownerID, true)) return;
     if (object.health <= 0 && game.findObjectById(bullet.ownerID).lastDestroyed !== object.id) {
         if (object.objType <= 1) {
             game.findObjectById(bullet.ownerID).xp += object.baseScore + Math.round((object.scale - 1) / 1 * 10);
@@ -71,6 +72,7 @@ game.addCollision('bullet', 'player', (bullet, player) => {
     if (bullet.ownerID !== player.id) {
         game.remove(bullet);
         player.health -= bullet.damage;
+        if (!game.findObjectById(bullet.ownerID, true)) return;
         if (player.health <= 0 && game.findObjectById(bullet.ownerID).lastDestroyed !== player.id) {
             const you = game.findObjectById(bullet.ownerID);
             const them = game.findObjectById(player.id);
