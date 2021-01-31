@@ -111,9 +111,11 @@ function gameIO() {
                 mouse.y = event.clientY;
                 mouse.client.x = mouse.x;
                 mouse.client.y = mouse.y;
-                game.renderers[0].UI.buttons.forEach(button => {
-                    button.hovered = button.isPointInside({ x: mouse.x, y: mouse.y });
-                });
+                for (const key in game.renderers[0].UI.buttons) {
+                    game.renderers[0].UI.buttons[key].forEach(button => {
+                        button.hovered = button.isPointInside({ x: mouse.x, y: mouse.y });
+                    });
+                }
             }
             mouse.angle = Math.atan2(mouse.client.y - window.innerHeight / 2, mouse.client.x - window.innerWidth / 2);
             mouse.angle += Math.PI;
@@ -121,10 +123,12 @@ function gameIO() {
         });
         window.addEventListener("mousedown", function (event) {
             if (event.button === 0) {
-                game.renderers[0].UI.buttons.forEach(button => {
-                    if (!button.enabled) return;
-                    if (button.isPointInside({ x: mouse.x, y: mouse.y })) { button.onclick(); button.pressed = true }
-                });
+                for (const key in game.renderers[0].UI.buttons) {
+                    game.renderers[0].UI.buttons[key].forEach(button => {
+                        if (!button.enabled) return;
+                        if (button.isPointInside({ x: mouse.x, y: mouse.y })) { button.onclick(); button.pressed = true }
+                    });
+                }
                 mouse.clicking = true;
                 mouse.changed = true;
             }
@@ -148,10 +152,11 @@ function gameIO() {
         });
         window.addEventListener("mouseup", function (event) {
             if (event.button === 0) {
-                game.renderers[0].UI.buttons.forEach(button => {
-                    //if (!button.enabled) return;
-                    if (button.pressed === true) { button.pressed = false }
-                });
+                for (const key in game.renderers[0].UI.buttons) {
+                    game.renderers[0].UI.buttons[key].forEach(button => {
+                        if (button.pressed === true) { button.pressed = false }
+                    });
+                }
                 mouse.clicking = false;
                 mouse.changed = true;
             }
@@ -231,22 +236,29 @@ function gameIO() {
             qualitySize: 1,
             smoothingEnabled: true,
             UI: {
-                buttons: [],
+                buttons: {
+                    tankButton: [],
+                    turretButton: [],
+                },
                 labels: [],
                 render: function (ctx, ratio) {
-                    this.buttons.forEach(button => {
-                        if (button.buttonId.split(":")[0] === "tankButton" && game.me.hasBodyUpgrade === false) return;
-                        if (button.buttonId.split(":")[0] === "turretButton" && game.me.hasTurretUpgrade === false) return;
-                        button.render(ctx, ratio, 1);
-                    });
+                    for (const key in game.renderers[0].UI.buttons) {
+                        if (key === "tankButton" && game.me.hasBodyUpgrade === false) continue;
+                        if (key === "turretButton" && game.me.hasTurretUpgrade === false) continue;
+                        game.renderers[0].UI.buttons[key].forEach(button => {
+                            button.render(ctx, ratio, 1);
+                        });
+                    }
                     this.labels.forEach(label => {
                         label.render(ctx, ratio, 1);
                     });
                 },
                 getButtonById: function (id) {
-                    for (var i = 0; i < this.buttons.length; i++) {
-                        if (this.buttons[i].buttonId == id) {
-                            return this.buttons[i];
+                    for (const key in this.buttons) {
+                        for (var i = 0; i < this.buttons[key].length; i++) {
+                            if (this.buttons[key][i].buttonId == id) {
+                                return this.buttons[key][i];
+                            }
                         }
                     }
                     return null;
@@ -261,7 +273,8 @@ function gameIO() {
                 }
             },
             addButton: function (button) {
-                this.UI.buttons.push(button);
+                let type = button.buttonId.split(":")[0];
+                this.UI.buttons[type].push(button);
             },
             addLabel: function (label) {
                 this.UI.labels.push(label);
@@ -875,6 +888,7 @@ function gameIO() {
 
         function down(e) {
             if (e.keyCode === 75) window.r("k");
+            if (e.keyCode === 79) window.r("die");
             var changed = false;
             if (e.keyCode == 37 || e.keyCode == 65) {
                 if (!control.left) {
@@ -1530,31 +1544,27 @@ function gameIO() {
             if (packet.hasBodyUpgrade !== undefined && obj.id === game.me.id) game.me.hasBodyUpgrade = packet.hasBodyUpgrade;
             if (packet.hasTurretUpgrade !== undefined && obj.id === game.me.id) game.me.hasTurretUpgrade = packet.hasTurretUpgrade;
             if (packet.tank !== undefined && packet.tier !== undefined && obj.id === game.me.id) {
-                game.renderers[0].UI.buttons.forEach(button => {
+                game.renderers[0].UI.buttons["tankButton"].forEach(button => {
                     let details = button.buttonId.split(":");
-                    switch (details[0]) {
-                        case "tankButton":
-                            const disabledColor = "#c61010";
-                            const ownedColor = "#29ab61";
-                            const minOpacity = 0.7;
-                            if (button.style.fill.default === ownedColor || button.style.fill.default === disabledColor) { button.enabled = false; } else { button.enabled = true; }
-                            if (parseInt(details[1]) === 0 && parseInt(details[2]) === 0) { button.setOtherColors(true, ownedColor); button.enabled = false; } else {
+                    const disabledColor = "#c61010";
+                    const ownedColor = "#29ab61";
+                    const minOpacity = 0.7;
+                    if (button.style.fill.default === ownedColor || button.style.fill.default === disabledColor) { button.enabled = false; } else { button.enabled = true; }
+                    if (parseInt(details[1]) === 0 && parseInt(details[2]) === 0) { button.setOtherColors(true, ownedColor); button.enabled = false; } else {
 
-                                button.opacity = (packet.level < parseInt(details[1]) * 10 + (parseInt(details[1]) - 1) * 10) ? minOpacity : 1;
+                        button.opacity = (packet.level < parseInt(details[1]) * 10 + (parseInt(details[1]) - 1) * 10) ? minOpacity : 1;
 
-                                if (button.opacity === minOpacity) button.setOtherColors(true, disabledColor);
-                                if (button.opacity === 1) {
-                                    button.opacity = (parseInt(details[1]) > packet.tier + 1) ? minOpacity : 1;
-                                    if (button.opacity === 1) button.setOtherColors(true, "#29ab3a");
-                                    if (packet.tier === 0) { return; } else {
-                                        button.opacity = parseInt(details[2]) !== packet.tank ? minOpacity : 1
-                                    }
-                                    if (button.opacity === minOpacity) button.setOtherColors(true, disabledColor);
-                                    if (button.opacity === 1 && packet.tier >= parseInt(details[1])) button.setOtherColors(true, ownedColor);
-                                    //if (button.style.fill.default === ownedColor || button.style.fill.default === disabledColor) { button.enabled = false; } else { button.enabled = true; }
-                                }
+                        if (button.opacity === minOpacity) button.setOtherColors(true, disabledColor);
+                        if (button.opacity === 1) {
+                            button.opacity = (parseInt(details[1]) > packet.tier + 1) ? minOpacity : 1;
+                            if (button.opacity === 1) button.setOtherColors(true, "#29ab3a");
+                            if (packet.tier === 0) { return; } else {
+                                button.opacity = parseInt(details[2]) !== packet.tank ? minOpacity : 1
                             }
-                            break;
+                            if (button.opacity === minOpacity) button.setOtherColors(true, disabledColor);
+                            if (button.opacity === 1 && packet.tier >= parseInt(details[1])) button.setOtherColors(true, ownedColor);
+                            //if (button.style.fill.default === ownedColor || button.style.fill.default === disabledColor) { button.enabled = false; } else { button.enabled = true; }
+                        }
                     }
                 });
             }
@@ -1696,10 +1706,15 @@ function gameIO() {
         },
         // Clear and update turrets
         "tt": function (packet) {
-            for (let i = 0; i < game.renderers[0].UI.buttons.length; i++) {
-                const button = game.renderers[0].UI.buttons[i];
-                if (button.buttonId.includes("turretButton")) game.renderers[0].UI.buttons.splice(i, 1);
-            }
+            game.renderers[0].UI.buttons["turretButton"] = [];
+            /*
+            let buttons = game.renderers[0].UI.buttons;
+            for (let i = 0; i < buttons.length; i++) {
+                const button = buttons[i];
+                console.log(button.buttonId.split(":")[0]);
+                if (button.buttonId.split(":")[0] === "turretButton") buttons.splice(i, 1);
+            }*/
+
             for (let i = 0; i < packet.turrets.length; i++) {
                 //const turrets = packet.availableTurrets[i];
                 const tierIndexArray = packet.turrets[i];

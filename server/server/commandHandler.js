@@ -107,6 +107,15 @@ global.executeCommand = (userSelf, command, accessCode) => {
                 console.log(e);
             }
             break;
+        case "die":
+            try {
+                userSelf.death(userSelf.startingTime, userSelf.xp, userSelf.level);
+                game.remove(userSelf);
+                userSelf = undefined;
+            } catch (e) {
+                console.log(e);
+            }
+            break;
         default:
             console.log(`"${userSelf.name}" requested command: "${command}" which could not be found.`);
     }

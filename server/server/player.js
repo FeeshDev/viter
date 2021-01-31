@@ -194,7 +194,7 @@ const turretTree = [
         [1], // scatterer upgrades
         [1, 2], // triplet upgrades
         [3] // gunner upgrades
-    ]
+    ],
     [ // tier 4 upgrades
         [],
         [],
@@ -309,10 +309,12 @@ game.addType(
         obj.getAvailableTurrets = () => {
             let turretsArray = [[], []];
             let availableTurretIndexes = turretTree[obj.turretTier][obj.turretIndex];
-            availableTurretIndexes.forEach(turreti => {
-                turretsArray[0].push([obj.turretTier + 1, turreti]);
-                turretsArray[1].push(turrets[obj.turretTier + 1][turreti]);
-            });
+            if (availableTurretIndexes !== []) {
+                availableTurretIndexes.forEach(turreti => {
+                    turretsArray[0].push([obj.turretTier + 1, turreti]);
+                    turretsArray[1].push(turrets[obj.turretTier + 1][turreti]);
+                });
+            }
 
             return turretsArray;
         }
