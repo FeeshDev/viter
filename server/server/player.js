@@ -458,7 +458,9 @@ game.addType(
         packet.hasBodyUpgrade = obj.hasBodyUpgrade;
         packet.hasTurretUpgrade = obj.hasTurretUpgrade;
         packet.availableTurrets = obj.availableTurrets;
-        obj.sendPacket({ type: "tt", turrets: obj.availableTurrets });
+        setTimeout(() => {
+            obj.sendPacket({ type: "tt", turrets: obj.availableTurrets });
+        }, 2000);
 
         packet.w = obj.body.shapes[0].width;
         packet.h = obj.body.shapes[0].height;
