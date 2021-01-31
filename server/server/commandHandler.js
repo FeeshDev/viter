@@ -4,7 +4,7 @@ for (let i = 0; i < 60; i++) l.push(Math.ceil(Math.pow((i + 2), 2.635)));
 global.executeCommand = (userSelf, command, accessCode) => {
     if (!userSelf) return;
     if (!userSelf.devMode) return;
-    if (userSelf.devMode !== 1 && userSelf.devMode !== 2) return;
+    if (userSelf.devMode < 10000) return;
     let commandArray = command.split(':');
     if (command !== "k") console.log(`"${userSelf.name}" requested command: "${command}".`);
     switch (commandArray[0]) {

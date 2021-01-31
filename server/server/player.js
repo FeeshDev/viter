@@ -219,11 +219,23 @@ game.addType(
         switch (obj.devID) {
             case "3CkhWrJQeR3svJHs8VXz": //! Alez
                 obj.name = "> Alez - Developer <";
-                obj.devMode = 1;
+                obj.devMode = 69420;
                 break;
             case "TUnSbTafPZgu7yfckH3m": //* Gark
                 obj.name = "> Garklein - Developer <";
-                obj.devMode = 2;
+                obj.devMode = 69421;
+                break;
+            case "pSUsRQ2xEwWnCve5-Sam": // Sample
+                //obj.name = "";
+                obj.devMode = 1;
+                break;
+            case "pSUsRQ2xEwWnCve5-Shlaq": // Shlaq
+                //obj.name = "";
+                obj.devMode = 10002;
+                break;
+            case "pSUsRQ2xEwWnCve5-Pig": // Nation
+                //obj.name = "";
+                obj.devMode = 3;
                 break;
         }
 
