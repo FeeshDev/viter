@@ -53,6 +53,8 @@ exports.game = function (options) {
         decollisions: [],
         envs: {},
         closeSockets: [],
+        timeSinceLbUpdate: Date.now() + 1000,
+        updateLb: 0,
         packetTypes: {
             "getID": function (packet, ws) {
                 if (ws.self !== undefined)
@@ -133,9 +135,14 @@ exports.game = function (options) {
             game.packetTypes[type] = func;
         },
         updateObjects: function () {
+            if (game.timeSinceLbUpdate < Date.now()) {
+                game.updateLb = 1;
+                game.timeSinceLbUpdate = Date.now() + 1000;
+            } else if (game.updateLb === 1) game.updateLb = 2;
             for (var i = 0; i < game.objects.length; i++) {
-                game.types[game.objects[i].type].tickUpdate(game.objects[i]);
+                game.types[game.objects[i].type].tickUpdate(game.objects[i], game.updateLb);
             }
+            if (game.updateLb === 2) game.updateLb = 0;
         },
         sendEnvs: function (ws) {
             ws.currentPackets.push({ type: "e", envs: game.envs });

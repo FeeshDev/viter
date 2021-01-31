@@ -259,7 +259,7 @@ window.onload = function () {
         renderer.drawGrid();
         renderer.render(scene);
         renderer.drawMinimap();
-        // renderer.drawLeaderboard();
+        renderer.drawLeaderboard();
         renderer.drawObjects();
         renderer.UI.render(renderer.ctx, renderer.ratio);
         requestFrame(main);
