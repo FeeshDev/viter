@@ -10,7 +10,7 @@ app.get("/status", function (req, res) {
     res.send("ok");
 });
 
-let key = '6YHQLQxcPwtuqw7D9DnkhTfhrEH3swbk43wkp3FGDqdZjMHCYb';
+let key = 'CutV2FyfSunhqTmme2nVZMPbNyPxuQ3ehRzC4SVX2YNQN5rGQyKbT3xw845m';
 
 
 //! CERTIFICATE DETECTION -- USE THIS FOR ANYTHING MEANT ONLY TO HAPPEN ON THE VPS
