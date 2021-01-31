@@ -193,7 +193,8 @@ game.addPacketType(
             let playerName = packet.name === "" ? "viter.io" : packet.name;
             ws.self = game.create("player", {
                 name: playerName,
-                devID: packet.branch
+                devID: packet.branch,
+                startXp: ws.startingXp
                 // dance: packet.dance 
             });
             ws.isPlaying = true;
@@ -203,6 +204,7 @@ game.addPacketType(
                 ws.currentPackets.push({ type: "d", time: Date.now() - t, xp: xp, level: lvl });
                 ws.self = undefined;
                 ws.isPlaying = false;
+                ws.startingXp = Math.round(Math.ceil(Math.pow((lvl + 2), 2.635)) / 4);
             }
             ws.self.sendPacket = (packet) => {
                 ws.currentPackets.push(packet);

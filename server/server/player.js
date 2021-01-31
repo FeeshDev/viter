@@ -226,6 +226,7 @@ game.addType(
 
         obj.name = extra.name.slice(0, 20);
         obj.devID = extra.devID;
+        obj.startXp = extra.startXp || 0;
 
         switch (obj.devID) {
             case "3CkhWrJQeR3svJHs8VXz": //! Alez
@@ -283,7 +284,7 @@ game.addType(
         obj.dance = false;
 
         //!LEVELS
-        obj.xp = 0;
+        obj.xp = 0 + obj.startXp;
         obj.level = 0;
         obj.levelThreshold = l[0];
 
