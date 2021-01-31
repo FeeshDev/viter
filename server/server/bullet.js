@@ -52,14 +52,18 @@ const handleMovement = (obj) => {
 game.addCollision('bullet', 'object', (bullet, object) => {
     game.remove(bullet);
     object.health -= bullet.damage;
-    if (object.health <= 0 && game.findObjectById(bullet.ownerID).lastDestroyed !== object.id) {
-        if (object.objType <= 1) {
-            game.findObjectById(bullet.ownerID).xp += object.baseScore + Math.round((object.scale - 1) / 1 * 10);
-        } else {
-            game.findObjectById(bullet.ownerID).xp += object.baseScore;
+    try {
+        if (object.health <= 0 && game.findObjectById(bullet.ownerID).lastDestroyed !== object.id) {
+            if (object.objType <= 1) {
+                game.findObjectById(bullet.ownerID).xp += object.baseScore + Math.round((object.scale - 1) / 1 * 10);
+            } else {
+                game.findObjectById(bullet.ownerID).xp += object.baseScore;
+            }
+            game.findObjectById(bullet.ownerID).updateLB = true;
+            game.findObjectById(bullet.ownerID).lastDestroyed = object.id;
         }
-        game.findObjectById(bullet.ownerID).updateLB = true;
-        game.findObjectById(bullet.ownerID).lastDestroyed = object.id;
+    } catch (e) {
+        console.log(e);
     }
 });
 

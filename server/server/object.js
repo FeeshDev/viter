@@ -2,7 +2,7 @@ let objects = [
     { //* Tree
         size: 22,
         health: 80,
-        baseScore: 10,
+        baseScore: 30,
         respawn: true,
         scale: () => { return getRandomInt(10, 20) / 10 },
         shape: 'circle',
@@ -14,7 +14,7 @@ let objects = [
     { //* Rock
         size: 22,
         health: 200,
-        baseScore: 40,
+        baseScore: 70,
         respawn: true,
         scale: () => { return getRandomInt(10, 15) / 10 },
         shape: 'circle',
@@ -24,19 +24,19 @@ let objects = [
     },
     { //* Bronze Crate
         size: 30,
-        health: 40,
-        baseScore: 1500,
+        health: 80,
+        baseScore: 400,
         respawn: true,
         scale: () => { return getRandomInt(20, 35) / 10 },
         shape: "rectangle",
         damping: 0,
         bodyType: 4,
-        global: true
+        global: false
     },
     { //* Silver Crate
         size: 30,
-        health: 300,
-        baseScore: 3000,
+        health: 180,
+        baseScore: 1000,
         respawn: true,
         scale: () => { return getRandomInt(25, 30) / 10 },
         shape: "rectangle",
@@ -46,8 +46,8 @@ let objects = [
     },
     { //* Gold Crate
         size: 30,
-        health: 400,
-        baseScore: 5000,
+        health: 420,
+        baseScore: 4000,
         respawn: true,
         scale: () => { return getRandomInt(20, 25) / 10 },
         shape: "rectangle",

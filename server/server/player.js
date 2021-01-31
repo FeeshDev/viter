@@ -21,11 +21,11 @@ class Body {
     /**
      * Generates a tank body
      * @param {number} hitboxIndex the index of the hitbox
-     * @param {number} speedMod speed multiplier
+     * @param {number=} speedMod speed multiplier
      * @param {number=} healthMod health multiplier
      * @param {number=} scale size multiplier
      */
-    constructor(hitboxIndex, speedMod, healthMod = 1, scale = 1) {
+    constructor(hitboxIndex, speedMod = 1, healthMod = 1, scale = 1) {
         this.hitbox = hitboxes[hitboxIndex];
         this.speedMod = speedMod;
         this.healthMod = healthMod;
@@ -40,21 +40,21 @@ let tankBodies = [
     ],
     [ //* Tier 1
         //* Tank 0
-        new Body(1, 1.2, 1, 1), //* Serpent MK I - 1.0
+        new Body(1, 1.1, 1, 1), //* Serpent MK I - 1.0
         //* Tank 1
-        new Body(0, 1, 1.2, 1), //* Squire MK I - 1.1
+        new Body(0, 1, 1.1, 1), //* Squire MK I - 1.1
     ],
     [ //* Tier 2
         //* Tank 0
-        new Body(1, 1.4, 0.8, 1), //* Serpent MK II - 2.0
+        new Body(1, 1.2, 0.7, 1), //* Serpent MK II - 2.0
         //* Tank 1
-        new Body(2, 0.8, 1.4, 1), //* Squire MK II - 2.1
+        new Body(2, 0.9, 1.4, 1), //* Squire MK II - 2.1
     ],
     [ //* Tier 3
         //* Tank 0
-        new Body(1, 2, 0.5, 1), //* Basilisk - 3.0
+        new Body(1, 1.4, 0.5, 1), //* Basilisk - 3.0
         //* Tank 1
-        new Body(1, 0.6, 2, 1), //* Knight - 3.1
+        new Body(1, 0.8, 2, 1), //* Knight - 3.1
     ]
 ];
 
