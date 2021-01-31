@@ -10,22 +10,72 @@ app.get("/status", function (req, res) {
     res.send("ok");
 });
 
-// Minifying
-const minify = false;
+let key = '6YHQLQxcPwtuqw7D9DnkhTfhrEH3swbk43wkp3FGDqdZjMHCYb';
 
-if (minify) {
+
+//! CERTIFICATE DETECTION -- USE THIS FOR ANYTHING MEANT ONLY TO HAPPEN ON THE VPS
+
+let cert = undefined;
+
+if (fs.existsSync(path.resolve("/", "etc", "letsencrypt"))) {
+    console.log("Certificate detected!")
+    cert = {
+        key: fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "privkey.pem")),
+        cert: fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "fullchain.pem"))
+    };
+}
+
+
+//* Encoding
+const encode = cert ? true : false;
+
+const JavaScriptObfuscator = require('javascript-obfuscator');
+
+const obfuscateText = function (data) {
+    console.log("Obfuscating code...");
+    //let writePath = dirPath.replace('clean_js', path.join('client', 'static', 'js'));
+    /*fs.readFile(dirPath, "utf8", function (err, data) {
+        var obfuscationResult = JavaScriptObfuscator.obfuscate(data, {
+            optionsPreset: 'low-obfuscation',
+            debugProtection: true,
+            debugProtectionInterval: true,
+            disableConsoleOutput: true,
+            stringArrayEncoding: ['base64'],
+            reservedNames: [
+                'hrefInc'
+            ]
+            //disableConsoleOutput: true,
+            //identifierNamesGenerator: 'hexadecimal',
+            //target: 'browser',
+        });*/
+
+    var obfuscationResult = JavaScriptObfuscator.obfuscate(data, {
+        optionsPreset: 'low-obfuscation',
+        debugProtection: true,
+        debugProtectionInterval: true,
+        disableConsoleOutput: true,
+        stringArrayEncoding: ['base64'],
+        reservedNames: []
+    })
+
+    console.log("Obfuscating complete!");
+    return obfuscationResult._obfuscatedCode;
+
+    /*
+    fs.writeFile(dirPath, obfuscationResult, 'utf-8', function (err) {
+        if (err) return console.log(err);
+    });*/
+}
+
+if (encode) {
     const es5Code = babel.transformSync(fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8"), {
         presets: ["@babel/preset-env"],
     });
     var minifiedScript = UglifyJS.minify(es5Code.code).code;
     console.log("Finished minifying");
+    minifiedScript = obfuscateText(minifiedScript);
 }
 
-const JavaScriptObfuscator = require('javascript-obfuscator');
-
-const obfuscate = false;
-
-let key = '6YHQLQxcPwtuqw7D9DnkhTfhrEH3swbk43wkp3FGDqdZjMHCYb';
 
 let pathToCheck = path.resolve("..", "client", "index.html");
 if (fs.existsSync(pathToCheck)) {
@@ -41,38 +91,15 @@ if (fs.existsSync(pathToCheck)) {
     });
     app.get("/client/script.js", (req, res) => {
         res.writeHead(200, { "Content-Type": "text/javascript" });
-        res.end(minify ? minifiedScript : fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8"));
+        res.end(encode ? minifiedScript : fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8"));
     });
     app.get("/client/js/", function (req, res) {
         res.send("Don't even try :)");
     });
 }
 
+
 /*
-const obfuscatePathToFile = function (dirPath) {
-    //let writePath = dirPath.replace('clean_js', path.join('client', 'static', 'js'));
-    fs.readFile(dirPath, "utf8", function (err, data) {
-        var obfuscationResult = JavaScriptObfuscator.obfuscate(data, {
-            optionsPreset: 'low-obfuscation',
-            debugProtection: true,
-            debugProtectionInterval: true,
-            disableConsoleOutput: true,
-            stringArrayEncoding: ['base64'],
-            reservedNames: [
-                'hrefInc'
-            ]
-            //disableConsoleOutput: true,
-            //identifierNamesGenerator: 'hexadecimal',
-            //target: 'browser',
-        });
-
-        fs.writeFile(dirPath, obfuscationResult, 'utf-8', function (err) {
-            if (err) return console.log(err);
-        });
-
-    });
-}
-
 const obfuscateClientCode = function () {
     fs.readdir(path.resolve("..", "client", "js"), function (err, files) {
         files.forEach(function (file) {
@@ -88,21 +115,7 @@ const obfuscateClientCode = function () {
         });
     });
     console.log('Obfuscation process ended.');
-}
-
-if (obfuscate) {
-    obfuscateClientCode();
 }*/
-
-let cert = undefined;
-
-if (fs.existsSync(path.resolve("/", "etc", "letsencrypt"))) {
-    console.log("Certificate detected!")
-    cert = {
-        key: fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "privkey.pem")),
-        cert: fs.readFileSync(path.resolve("/", "etc", "letsencrypt", "live", "viter.io", "fullchain.pem"))
-    };
-}
 
 if (cert) {
     let app2 = express();
