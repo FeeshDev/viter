@@ -189,7 +189,7 @@ const turretTree = [
     ],
     [ // tier 1 upgrades
         [0], // sniper upgrades
-        [1, 2, 4], // machine gun upgrades
+        [1, 2], // machine gun upgrades
         [3] // twin upgrades
     ],
     [ // tier 2 upgrades
