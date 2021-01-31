@@ -30,11 +30,20 @@ window.onload = function () {
             let nameColor = "#fff";
 
             switch (packet.devMode) {
-                case 1:
+                case 69420:
                     nameColor = "#fc5603";
                     break;
-                case 2:
+                case 69421:
                     nameColor = "#9b28de";
+                    break;
+                case 1:
+                    nameColor = "#f6730b";
+                    break;
+                case 10002:
+                    nameColor = "#7fd5ff";
+                    break;
+                case 3:
+                    nameColor = "#916";
                     break;
                 default:
                     nameColor = "#fff";
