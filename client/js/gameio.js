@@ -320,6 +320,26 @@ function gameIO() {
                 );
                 this.ctx.fill();
             },
+            drawObjects: function () {
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+                if (game.globalObjects === undefined) return;
+                game.globalObjects.forEach(obj => {
+                    //if (obj.type === 'bullet') {
+                    ////if (obj.objType !== 0) return;
+                    ////if (obj.subObjType === 0) return
+                    if (!obj) return;
+                    this.ctx.beginPath();
+                    this.ctx.fillStyle = "#000";
+                    this.ctx.arc(
+                        normalizeCoords((window.innerWidth / 2 - 235 / this.ratio) + obj.pos.x / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.x, this.ratio, this.c.width),
+                        normalizeCoords((window.innerHeight / 2 - 235 / this.ratio) + obj.pos.y / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.y, this.ratio, this.c.height),
+                        5 / this.ratio, 0, 2 * Math.PI
+                    );
+                    this.ctx.fill();
+                    //}
+                });
+            },
             drawLeaderboard: function () {
                 this.ctx.globalAlpha = 0.5;
 
@@ -354,22 +374,6 @@ function gameIO() {
                 });
 
                 this.ctx.globalAlpha = 1;
-            },
-            drawObjects: function () {
-                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-                if (game.globalObjects === undefined) return;
-                game.globalObjects.forEach(obj => {
-                    //if (obj.type === 'bullet') {
-                    ////if (obj.objType !== 0) return;
-                    ////if (obj.subObjType === 0) return
-                    if (!obj) return;
-                    this.ctx.beginPath();
-                    this.ctx.fillStyle = "#000";
-                    this.ctx.arc(this.c.width - 250 / this.ratio + obj.pos.x / (10 * game.gameScale) / this.ratio, this.c.height - 300 / this.ratio + obj.pos.y / (10 * game.gameScale) / this.ratio, 5 / this.ratio, 0, 2 * Math.PI);
-                    this.ctx.fill();
-                    //}
-                });
             },
             drawGrid: function () {
                 this.ctx.strokeStyle = "#000000";

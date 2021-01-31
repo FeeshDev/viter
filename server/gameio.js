@@ -84,7 +84,7 @@ exports.game = function (options) {
             }
             return null;
         },
-        findObjectById: function (id) {
+        findObjectById: function (id, dontLog) {
             for (let i = id; i >= 0; i--) {
                 if (game.objects[i]) {
                     if (game.objects[i].id == id) {
@@ -94,7 +94,7 @@ exports.game = function (options) {
             }
             // if the program hasn't returned yet then do a full game.objects search
             // should never happen but can't be too safe
-            console.log("Had to search longer");
+            if (!dontLog) console.log("Had to search longer");
             for (let i = 0; i < game.objects.length; i++) {
                 if (game.objects[i]) {
                     if (game.objects[i].id == id) {
@@ -102,7 +102,7 @@ exports.game = function (options) {
                     }
                 }
             }
-            console.log(`Object ${id} not found`);
+            if (!dontLog) console.log(`Object ${id} not found`);
             return null;
         },
         toBuffer: function (string) {

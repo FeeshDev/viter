@@ -187,19 +187,19 @@ const turretTree = [
         [0], // hunter upgrades
         [], // sprayer upgrades
         [1], // shotgun upgrades
-        [1, 2, 3] // twin upgrades
+        [1, 2, 3] // twinner upgrades
     ],
     [ // tier 3 upgrades
         [0], // predator upgrades
         [1], // scatterer upgrades
         [1, 2], // triplet upgrades
         [3] // gunner upgrades
-    ],
+    ]
     [ // tier 4 upgrades
-        [0], // idk upgrades
-        [1], // scatterer upgrades
-        [1, 2], // triplet upgrades
-        [3] // gunner upgrades
+        [],
+        [],
+        [],
+        []
     ]
 ]
 
@@ -359,10 +359,10 @@ game.addType(
 
         // checking for undefineds
         leaderboard.forEach((p, i) => {
-            if (!game.findObjectById(p.id)) {
+            if (!game.findObjectById(p.id, true)) {
                 leaderboard.splice(i, 1);
                 leaderboard.forEach((a, n) => {
-                    if (n > i - 1 && game.findObjectById(a.id)) game.findObjectById(a.id).lbPos--;
+                    if (n > i - 1 && game.findObjectById(a.id, true)) game.findObjectById(a.id, true).lbPos--;
                 });
             }
         });
