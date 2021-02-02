@@ -413,6 +413,21 @@ function gameIO() {
                     gridSetter += gridSpace;
                 }
                 this.ctx.globalAlpha = 1;
+            },
+            drawPerformance: function (avg, min, max) {
+                this.ctx.globalAlpha = 0.5;
+                this.ctx.fillStyle = `${35 / this.ratio}px Montserrat`;
+                this.ctx.fillText(
+                    "avg/min/max", 
+                    normalizeCoords(window.innerWidth / 2 - 150 / this.ratio, this.position.x, this.ratio, this.c.width), 
+                    normalizeCoords(-(window.innerHeight / 2 - 40 / this.ratio), this.position.y, this.ratio, this.c.height), 
+                );
+                this.ctx.fillText(
+                    `fps: ${Math.round(avg)} ${Math.round(min)} ${Math.round(max)}`, 
+                    normalizeCoords(window.innerWidth / 2 - 150 / this.ratio, this.position.x, this.ratio, this.c.width), 
+                    normalizeCoords(-(window.innerHeight / 2 - 70 / this.ratio), this.position.y, this.ratio, this.c.height), 
+                );
+                this.ctx.globalAlpha = 1;
             }
         });
         game.renderers[game.renderers.length - 1].ctx.imageSmoothingEnabled = true;
@@ -1479,12 +1494,12 @@ function gameIO() {
                 obj.playerName = new game.object();
                 game.me.hasBodyUpgrade = packet.hasBodyUpgrade;
                 game.me.hasTurretUpgrade = packet.hasTurretUpgrade;
-
-                if (packet.maxHealth !== undefined) obj.maxHealth = packet.maxHealth;
-                if (packet.health !== undefined) obj.health = packet.health;
-
-                if (obj.health) obj.healthBar = new game.object();
             }
+
+            if (packet.maxHealth !== undefined) obj.maxHealth = packet.maxHealth;
+            if (packet.health !== undefined) obj.health = packet.health;
+
+            if (obj.health) obj.healthBar = new game.object();
 
             if (packet.objType !== undefined) obj.objType = packet.objType;
             if (packet.subObjType !== undefined) obj.subObjType = packet.subObjType;
@@ -1773,7 +1788,7 @@ function gameIO() {
         },
         // Playercount
         "p": function (packet) {
-            document.getElementById("playerCount").innerHTML = `${packet.count} players shooting.`
+            document.getElementById("playerCount").innerHTML = `${packet.count} player${packet.count > 1 ? "s" : ""} shooting`
         }
     };
     game.addPacketType = function (type, func) {
