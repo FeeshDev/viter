@@ -508,7 +508,7 @@ exports.game = function (options) {
                     Math.min(...game.tickArray),
                     Math.max(...game.tickArray)
                 ];
-                game.sendNextTickArray = Date.now() + 500;
+                game.sendNextTickArray = Date.now() + game.statUpdate;
                 game.tickArray = [];
                 for (let c = 0; c < game.clients.length; c++) {
                     game.clients[c].currentPackets.push({ type: "t", data: game.tickValues });
@@ -526,7 +526,8 @@ exports.game = function (options) {
             game.lastTick = game.now;
             game.tickArray = [];
             game.tickValues = [];
-            game.sendNextTickArray = Date.now() + 500;
+            game.statUpdate = 2000;
+            game.sendNextTickArray = Date.now() + game.statUpdate;
             //game.mainInterval = game.gameloop.setGameLoop( game.main, 1000 * game.timeStep );
             //game.mainInterval = setInterval( game.main, 1000 * game.timeStep );
             game.main();

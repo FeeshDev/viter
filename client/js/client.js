@@ -241,8 +241,10 @@ window.onload = function () {
     }));
     */
 
+    const statUpdate = 2000;
+
     let timeSinceLastFrame = Date.now();
-    let nextDrawFps = Date.now() + 500;
+    let nextDrawFps = Date.now() + statUpdate;
     let fpsArray = [];
     let fpsValues = [];
 
@@ -277,7 +279,7 @@ window.onload = function () {
             ];
             fpsArray = [];
             game.setPingValues();
-            nextDrawFps = Date.now() + 500;
+            nextDrawFps = Date.now() + statUpdate;
         }
         renderer.drawPerformance(fpsValues[0], fpsValues[1], fpsValues[2]);
         timeSinceLastFrame = Date.now();
