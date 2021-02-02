@@ -1479,12 +1479,12 @@ function gameIO() {
                 obj.playerName = new game.object();
                 game.me.hasBodyUpgrade = packet.hasBodyUpgrade;
                 game.me.hasTurretUpgrade = packet.hasTurretUpgrade;
+
+                if (packet.maxHealth !== undefined) obj.maxHealth = packet.maxHealth;
+                if (packet.health !== undefined) obj.health = packet.health;
+
+                if (obj.health) obj.healthBar = new game.object();
             }
-
-            if (packet.maxHealth !== undefined) obj.maxHealth = packet.maxHealth;
-            if (packet.health !== undefined) obj.health = packet.health;
-
-            if (obj.health) obj.healthBar = new game.object();
 
             if (packet.objType !== undefined) obj.objType = packet.objType;
             if (packet.subObjType !== undefined) obj.subObjType = packet.subObjType;
