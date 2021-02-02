@@ -244,6 +244,13 @@ game.addPacketType(
         }
     }
 );
+
+game.addPacketType(
+    "ping",
+    (packet, ws) => {
+        ws.currentPackets.push({ type: "ping", data: packet.object });
+    }
+);
 /*game.addPacketType(
     "getObject",
     function( packet, ws ) {

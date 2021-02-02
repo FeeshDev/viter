@@ -267,6 +267,7 @@ window.onload = function () {
         renderer.drawLeaderboard();
         renderer.drawObjects();
         renderer.UI.render(renderer.ctx, renderer.ratio);
+        game.addPacket("ping", Date.now());
         fpsArray.push(1000 / (Date.now() - timeSinceLastFrame));
         if (Date.now() > nextDrawFps) {
             fpsValues = [
@@ -275,6 +276,7 @@ window.onload = function () {
                 Math.max(...fpsArray)
             ];
             fpsArray = [];
+            game.setPingValues();
             nextDrawFps = Date.now() + 500;
         }
         renderer.drawPerformance(fpsValues[0], fpsValues[1], fpsValues[2]);

@@ -65,7 +65,9 @@ function gameIO() {
         particles: [],
         envs: {},
         leaderboard: [],
-        serverStats: []
+        serverStats: [],
+        pingArray: [],
+        pingValues: []
     };
     game.gameScale = 1;
     game.gamepad = function () {
@@ -432,6 +434,11 @@ function gameIO() {
                     `tps: ${Math.round(game.serverStats[0])} ${Math.round(game.serverStats[1])} ${Math.round(game.serverStats[2])}`, 
                     normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
                     normalizeCoords(-(window.innerHeight / 2 - 100 / this.ratio), this.position.y, this.ratio, this.c.height), 
+                );
+                this.ctx.fillText(
+                    `ping: ${Math.round(game.pingValues[0])} ${Math.round(game.pingValues[1])} ${Math.round(game.pingValues[2])}`, 
+                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
+                    normalizeCoords(-(window.innerHeight / 2 - 130 / this.ratio), this.position.y, this.ratio, this.c.height), 
                 );
                 this.ctx.globalAlpha = 1;
             }
@@ -1356,6 +1363,15 @@ function gameIO() {
         return element;
     }
 
+    game.setPingValues = function() {
+        game.pingValues = [
+            game.pingArray.reduce((p, c) => p + c, 0) / game.pingArray.length, 
+            Math.min(...game.pingArray), 
+            Math.max(...game.pingArray)
+        ];
+        game.pingArray = [];
+    }
+
     // Networking Portion
 
     game.me = { id: -1, score: 0, visual: { position: new game.Vector2(0, 0) }, new: { position: new game.Vector2(0, 0) }, old: { position: new game.Vector2(0, 0) } };
@@ -1799,6 +1815,9 @@ function gameIO() {
         // tick stats
         "t": function (packet) {
             game.serverStats = packet.data;
+        },
+        "ping": function (packet) {
+            game.pingArray.push(Date.now() - packet.data);
         }
     };
     game.addPacketType = function (type, func) {
