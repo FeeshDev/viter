@@ -421,22 +421,22 @@ function gameIO() {
                 this.ctx.globalAlpha = 0.5;
                 this.ctx.fillStyle = `${35 / this.ratio}px Montserrat`;
                 this.ctx.fillText(
-                    "avg/min/max", 
+                    "Avg/Min/Max", 
                     normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
                     normalizeCoords(-(window.innerHeight / 2 - 40 / this.ratio), this.position.y, this.ratio, this.c.height), 
                 );
                 this.ctx.fillText(
-                    `fps: ${Math.round(avg)} ${Math.round(min)} ${Math.round(max)}`, 
+                    `FPS: ${Math.round(avg)} ${Math.round(min)} ${Math.round(max)}`, 
                     normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
                     normalizeCoords(-(window.innerHeight / 2 - 70 / this.ratio), this.position.y, this.ratio, this.c.height), 
                 );
                 this.ctx.fillText(
-                    `tps: ${Math.round(game.serverStats[0])} ${Math.round(game.serverStats[1])} ${Math.round(game.serverStats[2])}`, 
+                    `TPS: ${Math.round(game.serverStats[0])} ${Math.round(game.serverStats[1])} ${Math.round(game.serverStats[2])}`, 
                     normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
                     normalizeCoords(-(window.innerHeight / 2 - 100 / this.ratio), this.position.y, this.ratio, this.c.height), 
                 );
                 this.ctx.fillText(
-                    `ping: ${Math.round(game.pingValues[0])} ${Math.round(game.pingValues[1])} ${Math.round(game.pingValues[2])}`, 
+                    `Ping: ${Math.round(game.pingValues[0])} ${Math.round(game.pingValues[1])} ${Math.round(game.pingValues[2])}`, 
                     normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
                     normalizeCoords(-(window.innerHeight / 2 - 130 / this.ratio), this.position.y, this.ratio, this.c.height), 
                 );
