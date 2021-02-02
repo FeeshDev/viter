@@ -501,6 +501,19 @@ exports.game = function (options) {
             game.sendPackets();
             var dt = Date.now() - game.now;
             //console.log( dt );
+            game.tickArray.push(1000 / (Date.now() - game.lastTick));
+            if (Date.now() > game.sendNextTickArray) {
+                game.tickValues = [
+                    game.tickArray.reduce((p, c) => p + c, 0) / game.tickArray.length,
+                    Math.min(...game.tickArray),
+                    Math.max(...game.tickArray)
+                ];
+                game.sendNextTickArray = Date.now() + 500;
+                game.tickArray = [];
+                for (let c = 0; c < game.clients.length; c++) {
+                    game.clients[c].currentPackets.push({ type: "t", data: game.tickValues });
+                }
+            }
             if (1000 * game.timeStep - dt > 0) {
                 setTimeout(game.main, 1000 * game.timeStep - dt);
             } else {
@@ -511,6 +524,9 @@ exports.game = function (options) {
         start: function () {
             game.now = Date.now();
             game.lastTick = game.now;
+            game.tickArray = [];
+            game.tickValues = [];
+            game.sendNextTickArray = Date.now() + 500;
             //game.mainInterval = game.gameloop.setGameLoop( game.main, 1000 * game.timeStep );
             //game.mainInterval = setInterval( game.main, 1000 * game.timeStep );
             game.main();

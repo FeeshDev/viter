@@ -64,7 +64,8 @@ function gameIO() {
         scenes: [],
         particles: [],
         envs: {},
-        leaderboard: []
+        leaderboard: [],
+        serverStats: []
     };
     game.gameScale = 1;
     game.gamepad = function () {
@@ -419,13 +420,18 @@ function gameIO() {
                 this.ctx.fillStyle = `${35 / this.ratio}px Montserrat`;
                 this.ctx.fillText(
                     "avg/min/max", 
-                    normalizeCoords(window.innerWidth / 2 - 150 / this.ratio, this.position.x, this.ratio, this.c.width), 
+                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
                     normalizeCoords(-(window.innerHeight / 2 - 40 / this.ratio), this.position.y, this.ratio, this.c.height), 
                 );
                 this.ctx.fillText(
                     `fps: ${Math.round(avg)} ${Math.round(min)} ${Math.round(max)}`, 
-                    normalizeCoords(window.innerWidth / 2 - 150 / this.ratio, this.position.x, this.ratio, this.c.width), 
+                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
                     normalizeCoords(-(window.innerHeight / 2 - 70 / this.ratio), this.position.y, this.ratio, this.c.height), 
+                );
+                this.ctx.fillText(
+                    `tps: ${Math.round(game.serverStats[0])} ${Math.round(game.serverStats[1])} ${Math.round(game.serverStats[2])}`, 
+                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
+                    normalizeCoords(-(window.innerHeight / 2 - 100 / this.ratio), this.position.y, this.ratio, this.c.height), 
                 );
                 this.ctx.globalAlpha = 1;
             }
@@ -1789,6 +1795,10 @@ function gameIO() {
         // Playercount
         "p": function (packet) {
             document.getElementById("playerCount").innerHTML = `${packet.count} player${packet.count > 1 ? "s" : ""} shooting`
+        },
+        // tick stats
+        "t": function (packet) {
+            game.serverStats = packet.data;
         }
     };
     game.addPacketType = function (type, func) {

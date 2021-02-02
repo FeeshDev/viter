@@ -269,9 +269,13 @@ window.onload = function () {
         renderer.UI.render(renderer.ctx, renderer.ratio);
         fpsArray.push(1000 / (Date.now() - timeSinceLastFrame));
         if (Date.now() > nextDrawFps) {
-            nextDrawFps = Date.now() + 500;
-            fpsValues = [fpsArray.reduce((p, c) => p + c, 0) / fpsArray.length, Math.min(...fpsArray), Math.max(...fpsArray)]
+            fpsValues = [
+                fpsArray.reduce((p, c) => p + c, 0) / fpsArray.length, 
+                Math.min(...fpsArray), 
+                Math.max(...fpsArray)
+            ];
             fpsArray = [];
+            nextDrawFps = Date.now() + 500;
         }
         renderer.drawPerformance(fpsValues[0], fpsValues[1], fpsValues[2]);
         timeSinceLastFrame = Date.now();
