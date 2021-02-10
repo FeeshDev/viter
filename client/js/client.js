@@ -84,7 +84,7 @@ window.onload = function () {
                         turretImg.src = `./client/images/cannons/default.png`;
                         break;
                 }
-                let turretObj = new game.image(turretImg, 0, 0, 220, 220);
+                let turretObj = new game.image(turretImg, 0, 0, 220 * turret.scale, 220 * turret.scale);
                 turretObj.offsetX = turret.offsetX || 0;
                 turretObj.offsetY = turret.offsetY || 0;
                 turretObj.offsetAngle = turret.offsetAngle || 0;
@@ -244,8 +244,10 @@ window.onload = function () {
     }));
     */
 
+    const statUpdate = 2000;
+
     let timeSinceLastFrame = Date.now();
-    let nextDrawFps = Date.now() + 500;
+    let nextDrawFps = Date.now() + statUpdate;
     let fpsArray = [];
     let fpsValues = [];
 
@@ -274,13 +276,13 @@ window.onload = function () {
         fpsArray.push(1000 / (Date.now() - timeSinceLastFrame));
         if (Date.now() > nextDrawFps) {
             fpsValues = [
-                fpsArray.reduce((p, c) => p + c, 0) / fpsArray.length, 
-                Math.min(...fpsArray), 
+                fpsArray.reduce((p, c) => p + c, 0) / fpsArray.length,
+                Math.min(...fpsArray),
                 Math.max(...fpsArray)
             ];
             fpsArray = [];
             game.setPingValues();
-            nextDrawFps = Date.now() + 500;
+            nextDrawFps = Date.now() + statUpdate;
         }
         renderer.drawPerformance(fpsValues[0], fpsValues[1], fpsValues[2]);
         timeSinceLastFrame = Date.now();

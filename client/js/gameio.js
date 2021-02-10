@@ -421,24 +421,24 @@ function gameIO() {
                 this.ctx.globalAlpha = 0.5;
                 this.ctx.fillStyle = `${35 / this.ratio}px Montserrat`;
                 this.ctx.fillText(
-                    "Avg/Min/Max", 
-                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
-                    normalizeCoords(-(window.innerHeight / 2 - 40 / this.ratio), this.position.y, this.ratio, this.c.height), 
+                    "Avg/Min/Max",
+                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width),
+                    normalizeCoords(-(window.innerHeight / 2 - 40 / this.ratio), this.position.y, this.ratio, this.c.height),
                 );
                 this.ctx.fillText(
-                    `FPS: ${Math.round(avg)} ${Math.round(min)} ${Math.round(max)}`, 
-                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
-                    normalizeCoords(-(window.innerHeight / 2 - 70 / this.ratio), this.position.y, this.ratio, this.c.height), 
+                    `FPS: ${Math.round(avg)} ${Math.round(min)} ${Math.round(max)}`,
+                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width),
+                    normalizeCoords(-(window.innerHeight / 2 - 70 / this.ratio), this.position.y, this.ratio, this.c.height),
                 );
                 this.ctx.fillText(
-                    `TPS: ${Math.round(game.serverStats[0])} ${Math.round(game.serverStats[1])} ${Math.round(game.serverStats[2])}`, 
-                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
-                    normalizeCoords(-(window.innerHeight / 2 - 100 / this.ratio), this.position.y, this.ratio, this.c.height), 
+                    `TPS: ${Math.round(game.serverStats[0])} ${Math.round(game.serverStats[1])} ${Math.round(game.serverStats[2])}`,
+                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width),
+                    normalizeCoords(-(window.innerHeight / 2 - 100 / this.ratio), this.position.y, this.ratio, this.c.height),
                 );
                 this.ctx.fillText(
-                    `Ping: ${Math.round(game.pingValues[0])} ${Math.round(game.pingValues[1])} ${Math.round(game.pingValues[2])}`, 
-                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width), 
-                    normalizeCoords(-(window.innerHeight / 2 - 130 / this.ratio), this.position.y, this.ratio, this.c.height), 
+                    `Ping: ${Math.round(game.pingValues[0])} ${Math.round(game.pingValues[1])} ${Math.round(game.pingValues[2])}`,
+                    normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width),
+                    normalizeCoords(-(window.innerHeight / 2 - 130 / this.ratio), this.position.y, this.ratio, this.c.height),
                 );
                 this.ctx.globalAlpha = 1;
             }
@@ -1363,10 +1363,10 @@ function gameIO() {
         return element;
     }
 
-    game.setPingValues = function() {
+    game.setPingValues = function () {
         game.pingValues = [
-            game.pingArray.reduce((p, c) => p + c, 0) / game.pingArray.length, 
-            Math.min(...game.pingArray), 
+            game.pingArray.reduce((p, c) => p + c, 0) / game.pingArray.length,
+            Math.min(...game.pingArray),
             Math.max(...game.pingArray)
         ];
         game.pingArray = [];
@@ -1641,7 +1641,7 @@ function gameIO() {
                             turretImg.src = `./client/images/cannons/default.png`;
                             break;
                     }
-                    let turretObj = new game.image(turretImg, 0, 0, 220, 220);
+                    let turretObj = new game.image(turretImg, 0, 0, 220 * turret.scale, 220 * turret.scale);
                     turretObj.offsetX = turret.offsetX || 0;
                     turretObj.offsetY = turret.offsetY || 0;
                     turretObj.offsetAngle = turret.offsetAngle || 0;
@@ -1794,7 +1794,7 @@ function gameIO() {
                             turretImg.src = `./client/images/cannons/default.png`;
                             break;
                     }
-                    let turretObj = new game.image(turretImg, 0, 0, 200, 200);
+                    let turretObj = new game.image(turretImg, 0, 0, 200 * turret.scale, 200 * turret.scale);
                     turretObj.offsetX = turret.offsetX || 0;
                     turretObj.offsetY = turret.offsetY || 0;
                     turretObj.offsetAngle = turret.offsetAngle || 0;
