@@ -19,7 +19,7 @@ window.onload = function () {
 
     const TYPE_TREE = 0, TYPE_ROCK = 1, TYPE_BRONZE = 2, TYPE_SILVER = 3, TYPE_GOLD = 4;
     const BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, BULLET_MACHINEGUN = 3;
-    const TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, TURRET_MACHINEGUN = 3, TURRET_SPRAYER = 4;
+    const TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, TURRET_MACHINEGUN = 3;
 
     //#region Add types
     game.addType(
@@ -76,9 +76,6 @@ window.onload = function () {
                         break;
                     case TURRET_MACHINEGUN:
                         turretImg.src = `./client/images/cannons/machinegun.png`;
-                        break;
-                    case TURRET_SPRAYER:
-                        turretImg.src = `./client/images/cannons/sprayer.png`;
                         break;
                     default:
                         turretImg.src = `./client/images/cannons/default.png`;

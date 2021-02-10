@@ -1634,9 +1634,6 @@ function gameIO() {
                         case 3:
                             turretImg.src = `./client/images/cannons/machinegun.png`;
                             break;
-                        case 4:
-                            turretImg.src = `./client/images/cannons/sprayer.png`;
-                            break;
                         default:
                             turretImg.src = `./client/images/cannons/default.png`;
                             break;
@@ -1786,9 +1783,6 @@ function gameIO() {
                             break;
                         case 3:
                             turretImg.src = `./client/images/cannons/machinegun.png`;
-                            break;
-                        case 4:
-                            turretImg.src = `./client/images/cannons/sprayer.png`;
                             break;
                         default:
                             turretImg.src = `./client/images/cannons/default.png`;

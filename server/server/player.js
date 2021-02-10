@@ -112,7 +112,7 @@ const turrets = [
     ],
     [ // tier 1
         [new Turret({ type: 2, maxCD: 20, dmg: 10, bulletSpeedMult: 2, lifespanMult: 2 })], // sniper
-        [new Turret({ type: 4, maxCD: 3, dmg: 2.5, bulletScale: 0.65 })], // machine gun
+        [new Turret({ type: 3, maxCD: 3, dmg: 2.5, bulletScale: 0.65 })], // machine gun
         [
             new Turret({ type: 0, maxCD: 10, dmg: 5, offsetX: -10 }), // twin
             new Turret({ type: 0, maxCD: 10, dmg: 5, offsetX: 10 })
@@ -542,8 +542,6 @@ const shoot = obj => {
             x: Math.sin(2 * Math.PI - obj.playerMouse.angle + turret.turretAngle) * turret.distance,
             y: Math.cos(2 * Math.PI - obj.playerMouse.angle + turret.turretAngle) * turret.distance
         }
-        let spread = undefined;
-        let sign = undefined;
         switch (turret.type) {
 
             // Shotgun
@@ -568,8 +566,8 @@ const shoot = obj => {
 
             // Machine Gun
             case 3:
-                spread = Math.random() * (Math.PI / 4);
-                sign = (Math.random() > 0.5) ? 1 : -1;
+                let spread = Math.random() * (Math.PI / 4);
+                let sign = (Math.random() > 0.5) ? 1 : -1;
                 bulletAngle = bulletAngle - (spread * sign) / 2;
                 game.create("bullet", {
                     type: turret.type, pos: [obj.body.position[0] + finalPosition.x,
@@ -584,23 +582,6 @@ const shoot = obj => {
                 });
                 break;
 
-            // Sprayer
-            case 4:
-                spread = Math.random() * (Math.PI / 4);
-                sign = (Math.random() > 0.5) ? 1 : -1;
-                bulletAngle = bulletAngle - (spread * sign) / 2;
-                game.create("bullet", {
-                    type: turret.type - 1, pos: [obj.body.position[0] + finalPosition.x,
-                    obj.body.position[1] + finalPosition.y],
-                    angle: bulletAngle,
-                    velocity: obj.body.velocity,
-                    ownerID: obj.id,
-                    damage: turret.bulletDmg,
-                    scale: turret.bulletScale * turret.scale,
-                    bulletSpeedMult: turret.bulletSpeedMult,
-                    lifespanMult: turret.lifespanMult
-                });
-                break;
             default:
                 game.create("bullet", {
                     type: turret.type,

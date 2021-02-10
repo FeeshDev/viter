@@ -14,6 +14,7 @@ game.addType(
         obj.lifespanCap = 40 * extra.lifespanMult;
 
         obj.body = new game.body(0);
+        obj.body.type = 5;
         obj.body.angle = extra.angle;
         obj.body.addShape(new game.circle(10 * obj.scale));
 
