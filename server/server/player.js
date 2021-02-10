@@ -68,26 +68,27 @@ class Turret {
     constructor({
         type, maxCD, dmg, offsetX = 0, offsetY = 0,
         offsetAngle = 0, bulletScale = 1, bulletSpeedMult = 1,
-        lifespanMult = 1, shootingOffset = 0
+        lifespanMult = 1, shootingOffset = 0, turretScale = 1,
     }) {
         let l;
         switch (type) {
             case 0:
-                l = 41.8;
+                l = 41.8 * turretScale;
                 break;
             case 2:
-                l = 51.04;
+                l = 51.04 * turretScale;
                 break;
 
             // Shotgun and machine gun have the same length
             default:
-                l = 32.56
+                l = 32.56 * turretScale;
                 break;
         }
         let sa = shootingOffset % maxCD
         let bs = bullets[type];
         let bulletYOffset = l - bs;
         this.type = type;
+        this.scale = turretScale;
         this.turretCD = sa;
         this.turretMaxCD = maxCD;
         this.length = l;
@@ -556,7 +557,7 @@ const shoot = obj => {
                         velocity: obj.body.velocity,
                         ownerID: obj.id,
                         damage: turret.bulletDmg,
-                        scale: turret.bulletScale,
+                        scale: turret.bulletScale * turret.scale,
                         bulletSpeedMult: turret.bulletSpeedMult,
                         lifespanMult: turret.lifespanMult
                     });
@@ -575,7 +576,7 @@ const shoot = obj => {
                     velocity: obj.body.velocity,
                     ownerID: obj.id,
                     damage: turret.bulletDmg,
-                    scale: turret.bulletScale,
+                    scale: turret.bulletScale * turret.scale,
                     bulletSpeedMult: turret.bulletSpeedMult,
                     lifespanMult: turret.lifespanMult
                 });
@@ -590,7 +591,7 @@ const shoot = obj => {
                     velocity: obj.body.velocity,
                     ownerID: obj.id,
                     damage: turret.bulletDmg,
-                    scale: turret.bulletScale,
+                    scale: turret.bulletScale * turret.scale,
                     bulletSpeedMult: turret.bulletSpeedMult,
                     lifespanMult: turret.lifespanMult
                 });
