@@ -67,6 +67,7 @@ class Turret {
         type, maxCD, dmg, offsetX = 0, offsetY = 0,
         offsetAngle = 0, bulletScale = 1, bulletSpeedMult = 1,
         lifespanMult = 1, shootingOffset = 0, turretScale = 1,
+        bulletCount = 1, spread = 0
     }) {
         let l;
         switch (type) {
@@ -125,6 +126,8 @@ class Turret {
         this.bulletSpeedMult = bulletSpeedMult;
         this.lifespanMult = lifespanMult;
         this.shootingOffset = sa;
+        this.bulletCount = bulletCount;
+        this.spread = spread;
     }
 }
 
@@ -134,7 +137,7 @@ const turrets = [
     ],
     [ // tier 1
         [new Turret({ type: 2, maxCD: 20, dmg: 10, bulletSpeedMult: 2, lifespanMult: 2 })], // sniper
-        [new Turret({ type: 3, maxCD: 3, dmg: 2.5, bulletScale: 0.65 })], // machine gun
+        [new Turret({ type: 3, maxCD: 3, dmg: 2.5, bulletScale: 0.65, spread: Math.PI / 4 })], // machine gun
         [
             new Turret({ type: 0, maxCD: 10, dmg: 5, offsetX: -10 }), // twin
             new Turret({ type: 0, maxCD: 10, dmg: 5, offsetX: 10 })
@@ -143,10 +146,10 @@ const turrets = [
     [ // tier 2
         [new Turret({ type: 4, maxCD: 15, dmg: 15, bulletSpeedMult: 2, lifespanMult: 2 })], // hunter
         [
-            new Turret({ type: 5, maxCD: 2, dmg: 2.5, offsetY: 20, bulletScale: 0.65 }), // sprayer
-            new Turret({ type: 5, maxCD: 2, dmg: 2.5, bulletScale: 0.65 })
+            new Turret({ type: 5, maxCD: 2, dmg: 2.5, offsetY: 20, bulletScale: 0.65, spread: Math.PI / 4 }), // sprayer
+            new Turret({ type: 5, maxCD: 2, dmg: 2.5, bulletScale: 0.65, spread: Math.PI / 4 })
         ],
-        [new Turret({ type: 1, maxCD: 15, dmg: 1.5, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 })], // shotgun
+        [new Turret({ type: 1, maxCD: 15, dmg: 1.5, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6, spread: Math.PI / 8, bulletCount: 6 })], // shotgun
         [
             new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: -10 }), // twinner (better twin)
             new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: 10 })
@@ -155,8 +158,8 @@ const turrets = [
     [ // tier 3
         [new Turret({ type: 4, maxCD: 14, dmg: 20, bulletSpeedMult: 2, lifespanMult: 2 })], // predator
         [
-            new Turret({ type: 1, maxCD: 15, dmg: 1.5, offsetX: -7, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 }), // Scatterer (twin shotgun)
-            new Turret({ type: 1, maxCD: 15, dmg: 1.5, offsetX: 7, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 })
+            new Turret({ type: 1, maxCD: 15, dmg: 1.5, offsetX: -7, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6, spread: Math.PI / 8, bulletCount: 6 }), // Scatterer (twin shotgun)
+            new Turret({ type: 1, maxCD: 15, dmg: 1.5, offsetX: 7, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6, spread: Math.PI / 8, bulletCount: 6 })
         ],
         [
             new Turret({ type: 0, maxCD: 10, dmg: 5, offsetX: -20 }), // triplet
@@ -172,8 +175,8 @@ const turrets = [
             new Turret({ type: 0, maxCD: 10, dmg: 3, offsetX: 4, shootingOffset: 7, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
         ],
         [
-            new Turret({ type: 5, maxCD: 2, dmg: 4, offsetY: 18, bulletScale: 0.65 }), // pelleteer
-            new Turret({ type: 5, maxCD: 2, dmg: 4, bulletScale: 0.65 })
+            new Turret({ type: 5, maxCD: 2, dmg: 4, offsetY: 18, bulletScale: 0.65, spread: Math.PI / 4 }), // pelleteer
+            new Turret({ type: 5, maxCD: 2, dmg: 4, bulletScale: 0.65, spread: Math.PI / 4 })
         ],
     ],
     [ // tier 4
@@ -183,9 +186,9 @@ const turrets = [
             new Turret({ type: 4, maxCD: 10, dmg: 10, bulletSpeedMult: 2, lifespanMult: 2 })
         ],
         [
-            new Turret({ type: 1, maxCD: 10, dmg: 1.5, offsetX: -4, offsetAngle: -Math.PI / 10, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 }), // Scattershot (shotgun triplet)
-            new Turret({ type: 1, maxCD: 10, dmg: 1.5, offsetX: 4, offsetAngle: Math.PI / 10, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 }),
-            new Turret({ type: 1, maxCD: 10, dmg: 1.5, offsetY: 10, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 })
+            new Turret({ type: 1, maxCD: 10, dmg: 1.5, offsetX: -4, offsetAngle: -Math.PI / 10, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6, spread: Math.PI / 8, bulletCount: 6 }), // Scattershot (shotgun triplet)
+            new Turret({ type: 1, maxCD: 10, dmg: 1.5, offsetX: 4, offsetAngle: Math.PI / 10, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6, spread: Math.PI / 8, bulletCount: 6 }),
+            new Turret({ type: 1, maxCD: 10, dmg: 1.5, offsetY: 10, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6, spread: Math.PI / 8, bulletCount: 6 })
         ],
         [
             new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: -20 }), // Trifecta (better triplet)
@@ -201,9 +204,9 @@ const turrets = [
             new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: 4, shootingOffset: 6, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
         ],
         [
-            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 25, bulletScale: 0.65 }),
-            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 15, bulletScale: 0.65 }), // railgun
-            new Turret({ type: 5, maxCD: 2, dmg: 3, bulletScale: 0.65 })
+            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 25, bulletScale: 0.65, spread: Math.PI / 4 }),
+            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 15, bulletScale: 0.65, spread: Math.PI / 4 }), // railgun
+            new Turret({ type: 5, maxCD: 2, dmg: 3, bulletScale: 0.65, spread: Math.PI / 4 })
         ],
     ]
 ]
@@ -560,93 +563,22 @@ const shoot = obj => {
             x: Math.sin(2 * Math.PI - obj.playerMouse.angle + turret.turretAngle) * turret.distance,
             y: Math.cos(2 * Math.PI - obj.playerMouse.angle + turret.turretAngle) * turret.distance
         }
-        switch (turret.type) {
-
-            // Shotgun
-            case 1:
-                for (let i = 0; i < 6; i++) {
-                    let spread = Math.random() * (Math.PI / 8);
-                    let sign = (Math.random() > 0.5) ? 1 : -1;
-                    bulletAngle = bulletAngle - (spread * sign) / 2;
-                    game.create("bullet", {
-                        type: turret.type,
-                        pos: [
-                            obj.body.position[0] + finalPosition.x, 
-                            obj.body.position[1] + finalPosition.y
-                        ],
-                        angle: bulletAngle,
-                        velocity: obj.body.velocity,
-                        ownerID: obj.id,
-                        damage: turret.bulletDmg,
-                        scale: turret.bulletScale * turret.scale,
-                        bulletSpeedMult: turret.bulletSpeedMult,
-                        lifespanMult: turret.lifespanMult
-                    });
-                }
-                break;
-
-            // Machine Gun
-            case 3: 
-                {
-                    let spread = Math.random() * (Math.PI / 4);
-                    let sign = (Math.random() > 0.5) ? 1 : -1;
-                    bulletAngle = bulletAngle - (spread * sign) / 2;
-                    game.create("bullet", {
-                        type: turret.type, 
-                        pos: [
-                            obj.body.position[0] + finalPosition.x,
-                            obj.body.position[1] + finalPosition.y
-                        ],
-                        angle: bulletAngle,
-                        velocity: obj.body.velocity,
-                        ownerID: obj.id,
-                        damage: turret.bulletDmg,
-                        scale: turret.bulletScale * turret.scale,
-                        bulletSpeedMult: turret.bulletSpeedMult,
-                        lifespanMult: turret.lifespanMult
-                    });
-                }
-                break;
-
-            // Sprayer (same as machine gun)
-            case 5: 
-                {
-                    let spread = Math.random() * (Math.PI / 4);
-                    let sign = (Math.random() > 0.5) ? 1 : -1;
-                    bulletAngle = bulletAngle - (spread * sign) / 2;
-                    game.create("bullet", {
-                        type: turret.type, 
-                        pos: [
-                            obj.body.position[0] + finalPosition.x,
-                            obj.body.position[1] + finalPosition.y
-                        ],
-                        angle: bulletAngle,
-                        velocity: obj.body.velocity,
-                        ownerID: obj.id,
-                        damage: turret.bulletDmg,
-                        scale: turret.bulletScale * turret.scale,
-                        bulletSpeedMult: turret.bulletSpeedMult,
-                        lifespanMult: turret.lifespanMult
-                    });
-                }
-                break;
-
-            default:
-                game.create("bullet", {
-                    type: turret.type,
-                    pos: [
-                        obj.body.position[0] + finalPosition.x,
-                        obj.body.position[1] + finalPosition.y
-                    ],
-                    angle: bulletAngle,
-                    velocity: obj.body.velocity,
-                    ownerID: obj.id,
-                    damage: turret.bulletDmg,
-                    scale: turret.bulletScale * turret.scale,
-                    bulletSpeedMult: turret.bulletSpeedMult,
-                    lifespanMult: turret.lifespanMult
-                });
-                break
+        for (let i = 0; i < turret.bulletCount; i++) {
+            let ba = bulletAngle + Math.random() * turret.spread - turret.spread / 2;
+            game.create("bullet", {
+                type: turret.type,
+                pos: [
+                    obj.body.position[0] + finalPosition.x, 
+                    obj.body.position[1] + finalPosition.y
+                ],
+                angle: ba,
+                velocity: obj.body.velocity,
+                ownerID: obj.id,
+                damage: turret.bulletDmg,
+                scale: turret.bulletScale * turret.scale,
+                bulletSpeedMult: turret.bulletSpeedMult,
+                lifespanMult: turret.lifespanMult
+            });
         }
         turret.turretCD = turret.turretMaxCD;
     });
