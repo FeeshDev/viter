@@ -2,8 +2,6 @@ const DEFAULT_SCALE = 0.5;
 
 let hitboxes = [{ w: 180, h: 210 }, { w: 150, h: 150 }, { w: 214, h: 200 }];
 
-const bullets = [1, 0.6, 1, 0.65]; // bullet scales
-
 const directions = ["up", "left", "down", "right"];
 const dirIndex = {
     "up": 0,
@@ -72,27 +70,45 @@ class Turret {
     }) {
         let l;
         switch (type) {
+
+            // default
             case 0:
-                l = 41.8 * turretScale;
-                break;
-            case 2:
-                l = 51.04 * turretScale;
+                l = 41.8;
                 break;
 
-            // Shotgun and machine gun have the same length
+            // shotgun
+            case 1:
+                l = 32.56;
+                break;
+            
+            // sniper
+            case 2:
+                l = 51.04;
+                break;
+
+            // machine gun
+            case 3:
+                l = 32.56;
+                break;
+            // hunter
+            case 4:
+                l = 51.04;  
+                break;
+
             default:
-                l = 32.56 * turretScale;
+                console.log(`Error: turret ${type} does not have a length`);
+                process.exit()
                 break;
         }
+        l *= turretScale;
         let sa = shootingOffset % maxCD
-        let bs = bullets[type];
-        let bulletYOffset = l - bs;
+        let bulletYOffset = l - bulletScale;
+
         this.type = type;
         this.scale = turretScale;
         this.turretCD = sa;
         this.turretMaxCD = maxCD;
         this.length = l;
-        this.bulletSize = bs;
         this.distance = Math.sqrt(Math.pow(Math.abs(offsetX), 2) + Math.pow(Math.abs(offsetY + bulletYOffset), 2));
         this.turretAngle = Math.atan2(-offsetY - bulletYOffset, offsetX);
         this.offsetX = offsetX;
@@ -119,7 +135,7 @@ const turrets = [
         ]
     ],
     [ // tier 2
-        [new Turret({ type: 2, maxCD: 15, dmg: 15, bulletSpeedMult: 2, lifespanMult: 2 })], // hunter
+        [new Turret({ type: 4, maxCD: 15, dmg: 15, bulletSpeedMult: 2, lifespanMult: 2 })], // hunter
         [
             new Turret({ type: 3, maxCD: 2, dmg: 2.5, offsetY: 20, bulletScale: 0.65 }), // sprayer
             new Turret({ type: 3, maxCD: 2, dmg: 2.5, bulletScale: 0.65 })
@@ -131,7 +147,7 @@ const turrets = [
         ]
     ],
     [ // tier 3
-        [new Turret({ type: 2, maxCD: 14, dmg: 20, bulletSpeedMult: 2, lifespanMult: 2 })], // predator
+        [new Turret({ type: 4, maxCD: 14, dmg: 20, bulletSpeedMult: 2, lifespanMult: 2 })], // predator
         [
             new Turret({ type: 1, maxCD: 15, dmg: 1.5, offsetX: -7, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 }), // Scatterer (twin shotgun)
             new Turret({ type: 1, maxCD: 15, dmg: 1.5, offsetX: 7, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 })
@@ -158,7 +174,7 @@ const turrets = [
         [
             new Turret({ type: 2, maxCD: 10, dmg: 10, offsetX: -10, offsetAngle: -Math.PI / 100, bulletSpeedMult: 2, lifespanMult: 2 }), // Focused Sniper
             new Turret({ type: 2, maxCD: 10, dmg: 10, offsetX: 10, offsetAngle: Math.PI / 100, bulletSpeedMult: 2, lifespanMult: 2 }),
-            new Turret({ type: 2, maxCD: 10, dmg: 10, bulletSpeedMult: 2, lifespanMult: 2 })
+            new Turret({ type: 4, maxCD: 10, dmg: 10, bulletSpeedMult: 2, lifespanMult: 2 })
         ],
         [
             new Turret({ type: 1, maxCD: 10, dmg: 1.5, offsetX: -4, offsetAngle: -Math.PI / 10, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 }), // Scattershot (shotgun triplet)
@@ -442,9 +458,7 @@ game.addType(
         packet.hasBodyUpgrade = obj.hasBodyUpgrade;
         packet.hasTurretUpgrade = obj.hasTurretUpgrade;
         packet.availableTurrets = obj.availableTurrets;
-        setTimeout(() => {
-            obj.sendPacket({ type: "tt", turrets: obj.availableTurrets });
-        }, 2000);
+        setTimeout(() => obj.sendPacket({ type: "tt", turrets: obj.availableTurrets }), 2000);
 
         packet.w = obj.body.shapes[0].width;
         packet.h = obj.body.shapes[0].height;
@@ -492,9 +506,7 @@ const handleMovement = obj => {
                 });
             });
 
-            indexesToSplice.forEach((d, i) => {
-                obj.dirArray.splice(d - i, 1);
-            });
+            indexesToSplice.forEach((d, i) => obj.dirArray.splice(d - i, 1));
         }
         if (keysToAdd.length) keysToAdd.forEach(k => obj.dirArray.push(k));
         obj.dirString = nextDir;
@@ -552,7 +564,10 @@ const shoot = obj => {
                     bulletAngle = bulletAngle - (spread * sign) / 2;
                     game.create("bullet", {
                         type: turret.type,
-                        pos: [obj.body.position[0] + finalPosition.x, obj.body.position[1] + finalPosition.y],
+                        pos: [
+                            obj.body.position[0] + finalPosition.x, 
+                            obj.body.position[1] + finalPosition.y
+                        ],
                         angle: bulletAngle,
                         velocity: obj.body.velocity,
                         ownerID: obj.id,
@@ -570,8 +585,11 @@ const shoot = obj => {
                 let sign = (Math.random() > 0.5) ? 1 : -1;
                 bulletAngle = bulletAngle - (spread * sign) / 2;
                 game.create("bullet", {
-                    type: turret.type, pos: [obj.body.position[0] + finalPosition.x,
-                    obj.body.position[1] + finalPosition.y],
+                    type: turret.type, 
+                    pos: [
+                        obj.body.position[0] + finalPosition.x,
+                        obj.body.position[1] + finalPosition.y
+                    ],
                     angle: bulletAngle,
                     velocity: obj.body.velocity,
                     ownerID: obj.id,
@@ -585,8 +603,10 @@ const shoot = obj => {
             default:
                 game.create("bullet", {
                     type: turret.type,
-                    pos: [obj.body.position[0] + finalPosition.x,
-                    obj.body.position[1] + finalPosition.y],
+                    pos: [
+                        obj.body.position[0] + finalPosition.x,
+                        obj.body.position[1] + finalPosition.y
+                    ],
                     angle: bulletAngle,
                     velocity: obj.body.velocity,
                     ownerID: obj.id,

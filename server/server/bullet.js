@@ -50,6 +50,9 @@ const handleMovement = (obj) => {
 }
 
 game.addCollision('bullet', 'object', (bullet, object) => {
+
+    // hunter bullets goes through trees
+    if (bullet.bulletType === 4 && object.objType === 0) return;
     game.remove(bullet);
     object.health -= bullet.damage;
     if (!game.findObjectById(bullet.ownerID, true)) return;
