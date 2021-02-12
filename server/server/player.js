@@ -90,9 +90,15 @@ class Turret {
             case 3:
                 l = 32.56;
                 break;
+
             // hunter
             case 4:
                 l = 51.04;  
+                break;
+            
+            // sprayer
+            case 5:
+                l = 41.8;
                 break;
 
             default:
@@ -137,8 +143,8 @@ const turrets = [
     [ // tier 2
         [new Turret({ type: 4, maxCD: 15, dmg: 15, bulletSpeedMult: 2, lifespanMult: 2 })], // hunter
         [
-            new Turret({ type: 3, maxCD: 2, dmg: 2.5, offsetY: 20, bulletScale: 0.65 }), // sprayer
-            new Turret({ type: 3, maxCD: 2, dmg: 2.5, bulletScale: 0.65 })
+            new Turret({ type: 5, maxCD: 2, dmg: 2.5, offsetY: 20, bulletScale: 0.65 }), // sprayer
+            new Turret({ type: 5, maxCD: 2, dmg: 2.5, bulletScale: 0.65 })
         ],
         [new Turret({ type: 1, maxCD: 15, dmg: 1.5, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6 })], // shotgun
         [
@@ -166,8 +172,8 @@ const turrets = [
             new Turret({ type: 0, maxCD: 10, dmg: 3, offsetX: 4, shootingOffset: 7, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
         ],
         [
-            new Turret({ type: 3, maxCD: 2, dmg: 4, offsetY: 18, bulletScale: 0.65 }), // pelleteer
-            new Turret({ type: 3, maxCD: 2, dmg: 4, bulletScale: 0.65 })
+            new Turret({ type: 5, maxCD: 2, dmg: 4, offsetY: 18, bulletScale: 0.65 }), // pelleteer
+            new Turret({ type: 5, maxCD: 2, dmg: 4, bulletScale: 0.65 })
         ],
     ],
     [ // tier 4
@@ -195,9 +201,9 @@ const turrets = [
             new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: 4, shootingOffset: 6, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
         ],
         [
-            new Turret({ type: 3, maxCD: 2, dmg: 3, offsetY: 25, bulletScale: 0.65 }),
-            new Turret({ type: 3, maxCD: 2, dmg: 3, offsetY: 15, bulletScale: 0.65 }), // railgun
-            new Turret({ type: 3, maxCD: 2, dmg: 3, bulletScale: 0.65 })
+            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 25, bulletScale: 0.65 }),
+            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 15, bulletScale: 0.65 }), // railgun
+            new Turret({ type: 5, maxCD: 2, dmg: 3, bulletScale: 0.65 })
         ],
     ]
 ]
@@ -580,24 +586,49 @@ const shoot = obj => {
                 break;
 
             // Machine Gun
-            case 3:
-                let spread = Math.random() * (Math.PI / 4);
-                let sign = (Math.random() > 0.5) ? 1 : -1;
-                bulletAngle = bulletAngle - (spread * sign) / 2;
-                game.create("bullet", {
-                    type: turret.type, 
-                    pos: [
-                        obj.body.position[0] + finalPosition.x,
-                        obj.body.position[1] + finalPosition.y
-                    ],
-                    angle: bulletAngle,
-                    velocity: obj.body.velocity,
-                    ownerID: obj.id,
-                    damage: turret.bulletDmg,
-                    scale: turret.bulletScale * turret.scale,
-                    bulletSpeedMult: turret.bulletSpeedMult,
-                    lifespanMult: turret.lifespanMult
-                });
+            case 3: 
+                {
+                    let spread = Math.random() * (Math.PI / 4);
+                    let sign = (Math.random() > 0.5) ? 1 : -1;
+                    bulletAngle = bulletAngle - (spread * sign) / 2;
+                    game.create("bullet", {
+                        type: turret.type, 
+                        pos: [
+                            obj.body.position[0] + finalPosition.x,
+                            obj.body.position[1] + finalPosition.y
+                        ],
+                        angle: bulletAngle,
+                        velocity: obj.body.velocity,
+                        ownerID: obj.id,
+                        damage: turret.bulletDmg,
+                        scale: turret.bulletScale * turret.scale,
+                        bulletSpeedMult: turret.bulletSpeedMult,
+                        lifespanMult: turret.lifespanMult
+                    });
+                }
+                break;
+
+            // Sprayer (same as machine gun)
+            case 5: 
+                {
+                    let spread = Math.random() * (Math.PI / 4);
+                    let sign = (Math.random() > 0.5) ? 1 : -1;
+                    bulletAngle = bulletAngle - (spread * sign) / 2;
+                    game.create("bullet", {
+                        type: turret.type, 
+                        pos: [
+                            obj.body.position[0] + finalPosition.x,
+                            obj.body.position[1] + finalPosition.y
+                        ],
+                        angle: bulletAngle,
+                        velocity: obj.body.velocity,
+                        ownerID: obj.id,
+                        damage: turret.bulletDmg,
+                        scale: turret.bulletScale * turret.scale,
+                        bulletSpeedMult: turret.bulletSpeedMult,
+                        lifespanMult: turret.lifespanMult
+                    });
+                }
                 break;
 
             default:

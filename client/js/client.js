@@ -1,4 +1,5 @@
 window.onload = function () {
+
     //! Constants and vars
     var game = new gameIO();
     var renderer = new game.renderer();
@@ -18,8 +19,8 @@ window.onload = function () {
     // });
 
     const TYPE_TREE = 0, TYPE_ROCK = 1, TYPE_BRONZE = 2, TYPE_SILVER = 3, TYPE_GOLD = 4;
-    const BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, BULLET_MACHINEGUN = 3, BULLET_HUNTER = 4;
-    const TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, TURRET_MACHINEGUN = 3, TURRET_HUNTER = 4;
+    const BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, BULLET_MACHINEGUN = 3, BULLET_HUNTER = 4, BULLET_SPRAYER = 5;
+    const TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, TURRET_MACHINEGUN = 3, TURRET_HUNTER = 4, TURRET_SPRAYER = 5;
 
     //#region Add types
     game.addType(
@@ -80,8 +81,8 @@ window.onload = function () {
                     case TURRET_HUNTER:
                         turretImg.src = `./client/images/cannons/hunter.png`;
                         break;
-                    default:
-                        turretImg.src = `./client/images/cannons/default.png`;
+                    case TURRET_SPRAYER:
+                        turretImg.src = `./client/images/cannons/sprayer.png`;
                         break;
                 }
                 let turretObj = new game.image(turretImg, 0, 0, 220 * turret.scale, 220 * turret.scale);
@@ -150,10 +151,13 @@ window.onload = function () {
                     bullet.src = `./client/images/bullets/sniper.png`;
                     break;
                 case BULLET_MACHINEGUN:
-                    bullet.src = `./client/images/bullets/sniper.png`;
+                    bullet.src = `./client/images/bullets/shotgun.png`;
                     break;
                 case BULLET_HUNTER:
                     bullet.src = `./client/images/bullets/sniper.png`;
+                    break;
+                case BULLET_SPRAYER:    
+                    bullet.src = `./client/images/bullets/shotgun.png`;
                     break;
             }
             // obj.visual = new game.circle(packet.x, packet.y, 10 * packet.scale, "#000");

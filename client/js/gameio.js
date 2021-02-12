@@ -1637,8 +1637,8 @@ function gameIO() {
                         case 4:
                             turretImg.src = `./client/images/cannons/hunter.png`;
                             break;
-                        default:
-                            turretImg.src = `./client/images/cannons/default.png`;
+                        case 5:
+                            turretImg.src = `./client/images/cannons/sprayer.png`;
                             break;
                     }
                     let turretObj = new game.image(turretImg, 0, 0, 220 * turret.scale, 220 * turret.scale);
@@ -1790,8 +1790,8 @@ function gameIO() {
                         case 4:
                             turretImg.src = `./client/images/cannons/hunter.png`;
                             break;
-                        default:
-                            turretImg.src = `./client/images/cannons/default.png`;
+                        case 5:
+                            turretImg.src = `./client/images/cannons/sprayer.png`;
                             break;
                     }
                     let turretObj = new game.image(turretImg, 0, 0, 200 * turret.scale, 200 * turret.scale);
