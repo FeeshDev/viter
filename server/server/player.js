@@ -41,19 +41,19 @@ let tankBodies = [
         //* Tank 0
         new Body({ hitboxIndex: 1, speedMod: 1.1 }), //* Serpent MK I - 1.0
         //* Tank 1
-        new Body({ hitboxIndex: 0, healthMod: 1.1}), //* Squire MK I - 1.1
+        new Body({ hitboxIndex: 0, healthMod: 1.1, fov: 1.2 }), //* Squire MK I - 1.1
     ],
     [ //* Tier 2
         //* Tank 0
         new Body({ hitboxIndex: 1, speedMod: 1.1, healthMod: 0.7 }), //* Serpent MK II - 2.0
         //* Tank 1
-        new Body({ hitboxIndex: 1, speedMod: 0.9, healthMod: 1.4 }), //* Squire MK II - 2.1
+        new Body({ hitboxIndex: 1, speedMod: 0.9, healthMod: 1.4, fov: 1.6 }), //* Squire MK II - 2.1
     ],
     [ //* Tier 3
         //* Tank 0
         new Body({ hitboxIndex: 1, speedMod: 1.3, healthMod: 0.5 }), //* Basilisk - 3.0
         //* Tank 1
-        new Body({ hitboxIndex: 1, speedMod: 0.8, healthMod: 2 }), //* Knight - 3.1
+        new Body({ hitboxIndex: 1, speedMod: 0.8, healthMod: 2, fov: 2 }), //* Knight - 3.1
     ]
 ];
 

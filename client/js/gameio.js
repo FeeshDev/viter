@@ -1977,14 +1977,14 @@ function gameIO() {
 
         // Score smoothing
         if (game.clientLvl < game.actualLvl) {
-            game.clientXp += Math.min(Math.max(smoothing * (game.actualLvl + game.actualXp - game.clientLvl - game.clientXp), 0.001));
+            game.clientXp += Math.max(smoothing * (game.actualLvl + game.actualXp - game.clientLvl - game.clientXp), 0.001);
             while (game.clientXp >= 1) {
                 game.clientLvl++;
                 game.clientXp -= 1;
             }
         }
         if (game.clientLvl === game.actualLvl) {
-            game.clientXp += Math.min(Math.max(smoothing * (game.actualLvl + game.actualXp - game.clientLvl - game.clientXp), 0.001));
+            game.clientXp += Math.max(smoothing * (game.actualLvl + game.actualXp - game.clientLvl - game.clientXp), 0.001);
             if (game.clientXp > game.actualXp) game.clientXp = game.actualXp;
         }
         game.renderers[0].UI.getLabelById("level").width = 420 * game.clientXp;

@@ -192,11 +192,9 @@ exports.game = function (options) {
                 if (game.notUpdatedIsClose(game.clients[i], obj, game.clients[i].self.fov)) {
                     game.clients[i].closeObjects.push(obj);
                     if (game.clients[i].closeObjects.indexOf(obj) != -1) {
-                        console.log(game.clients[i].self.fov)
                         if (!game.clients[i].self || game.clients[i].self.fov === 1) {
                             game.clients[i].currentPackets.push(game.add(obj));
                         } else {
-                            console.log(game.add(obj))
                             const p = game.add(obj);
                             p.x /= game.clients[i].self.fov;
                             p.y /= game.clients[i].self.fov;
@@ -270,7 +268,6 @@ exports.game = function (options) {
                             delete packet.type;
                         }
                     });
-                    //console.log(client.currentPackets);
                     client.send(game.msgpack.encode(client.currentPackets));
                     client.currentPackets = client.nextPackets;
                     client.nextPackets = [];
