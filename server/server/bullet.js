@@ -90,6 +90,6 @@ game.addCollision('bullet', 'player', (bullet, player) => {
             if (them.level === 60 && you.xp + scoreToGive < 50623) scoreToGive = 50623 - you.xp;
             game.findObjectById(bullet.ownerID).xp += scoreToGive;
             game.findObjectById(bullet.ownerID).lastDestroyed = player.id;
-        } else player.regen = Date.now() + 20000; // next regen in 20 s
+        } else player.regen = Date.now() + 15000; // next regen in 15 s
     }
 });

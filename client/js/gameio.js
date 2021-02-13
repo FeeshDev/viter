@@ -303,7 +303,7 @@ function gameIO() {
                 this.ctx.setTransform(1, 0, 0, 1, 0, 0);
                 this.ctx.fillStyle = themes[this.theme].backgroundColor;
                 this.ctx.globalAlpha = 1;
-                this.ctx.fillRect(this.c.width / 2 - game.me.visual.position.x / this.ratio, this.c.height / 2 - game.me.visual.position.y / this.ratio, 2000 * game.gameScale / this.ratio, 2000 * game.gameScale / this.ratio);
+                this.ctx.fillRect(this.c.width / 2 - game.me.visual.position.x / this.ratio, this.c.height / 2 - game.me.visual.position.y / this.ratio, 2000 * game.gameScale / this.ratio / game.me.fov, 2000 * game.gameScale / this.ratio / game.me.fov);
             },
             drawMinimap: function () {
                 this.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -330,31 +330,26 @@ function gameIO() {
                 this.ctx.beginPath();
                 this.ctx.fillStyle = "#fff";
                 this.ctx.arc(
-                    normalizeCoords((window.innerWidth / 2 - 235 / this.ratio) + game.me.visual.position.x / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.x, this.ratio, this.c.width),
-                    normalizeCoords((window.innerHeight / 2 - 235 / this.ratio) + game.me.visual.position.y / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.y, this.ratio, this.c.height),
+                    normalizeCoords((window.innerWidth / 2 - 235 / this.ratio) + game.me.visual.position.x * game.me.fov / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.x, this.ratio, this.c.width),
+                    normalizeCoords((window.innerHeight / 2 - 235 / this.ratio) + game.me.visual.position.y * game.me.fov / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.y, this.ratio, this.c.height),
                     5 / this.ratio, 0, 2 * Math.PI
                 );
                 this.ctx.fill();
-            },
-            drawObjects: function () {
-                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
 
+                // drawing global objects
                 if (game.globalObjects === undefined) return;
                 game.globalObjects.forEach(obj => {
-                    //if (obj.type === 'bullet') {
-                    ////if (obj.objType !== 0) return;
-                    ////if (obj.subObjType === 0) return
                     if (!obj) return;
                     this.ctx.beginPath();
                     this.ctx.fillStyle = "#000";
                     this.ctx.arc(
-                        normalizeCoords((window.innerWidth / 2 - 235 / this.ratio) + obj.pos.x / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.x, this.ratio, this.c.width),
-                        normalizeCoords((window.innerHeight / 2 - 235 / this.ratio) + obj.pos.y / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.y, this.ratio, this.c.height),
+                        normalizeCoords((window.innerWidth / 2 - 235 / this.ratio) + obj.pos.x * game.me.fov / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.x, this.ratio, this.c.width),
+                        normalizeCoords((window.innerHeight / 2 - 235 / this.ratio) + obj.pos.y * game.me.fov / ((10 + 0.5 * this.ratio) * game.gameScale) / this.ratio, this.position.y, this.ratio, this.c.height),
                         5 / this.ratio, 0, 2 * Math.PI
                     );
                     this.ctx.fill();
-                    //}
                 });
+
             },
             drawLeaderboard: function () {
                 this.ctx.globalAlpha = 0.5;
@@ -395,7 +390,7 @@ function gameIO() {
                 this.ctx.strokeStyle = "#000000";
                 this.ctx.globalAlpha = 0.05;
                 this.ctx.lineWidth = 4 / this.ratio;
-                let gridSpace = 100 / this.ratio;
+                let gridSpace = 100 / this.ratio / game.me.fov;
                 let gridSetter;
 
                 gridSetter = (this.c.width / 2 - game.me.visual.position.x / this.ratio % gridSpace) % gridSpace - 0 / this.ratio;
@@ -544,11 +539,10 @@ function gameIO() {
             },
             render: function (ctx, ratio, opacity) {
                 opacity = Math.min(Math.max(0, opacity), 1);
-                var size = this.size;
+                var size = this.size
                 opacity = Math.min(this.opacity * opacity, 1);
                 if (opacity <= 0)
                     return;
-                //if (this.type != "image") console.log(`X:${this.position.x} cum:${this.type}`)
 
                 ctx.translate(this.position.x / ratio, this.position.y / ratio);
                 ctx.rotate(this.rotation);
@@ -570,7 +564,7 @@ function gameIO() {
             }
         }
     }
-    game.image = function (image, x, y, width, height, opacity, offsetX, offsetY) {
+    game.image = function (image, x, y, width, height, opacity, offsetX, offsetY, dontScale) {
         var element = new game.object();
         element.image = image || null;
         element.position = new game.Vector2(x || 0, y || 0);
@@ -580,12 +574,14 @@ function gameIO() {
         element.offsetY = offsetY || 0;
         element.opacity = opacity || 1;
         element.type = "image";
-        element.renderSpecific = function (ctx, ratio, cum) {
+        element.dontScale = dontScale;
+        element.renderSpecific = function (ctx, ratio) {
+            const w = this.dontScale ? this.width : this.width / game.me.fov;
+            const h = this.dontScale ? this.width : this.height / game.me.fov;
             try {
-                //console.log(cum)
-                ctx.rotate(1.5708);
-                ctx.drawImage(this.image, ((-this.width / 2) + this.offsetX) / ratio, ((-this.height / 2) + this.offsetY) / ratio, this.width / ratio, this.height / ratio);
-                ctx.rotate(-1.5708);
+                ctx.rotate(Math.PI / 2);
+                ctx.drawImage(this.image, ((-w / 2) + this.offsetX) / ratio, ((-h / 2) + this.offsetY) / ratio, w / ratio, h / ratio);
+                ctx.rotate(-Math.PI / 2);
             } catch (e) {
             }
         }
@@ -972,6 +968,10 @@ function gameIO() {
 
         window.addEventListener('keydown', down, false);
 
+        window.addEventListener("wheel", w => {
+            if (w.deltaY) window.r(`${w.deltaY > 0 ? "out" : "in"}`);
+        });
+
         function up(e) {
             if (e.keyCode == 37 || e.keyCode == 65) {
                 control.left = false;
@@ -1346,11 +1346,11 @@ function gameIO() {
 
             //* Object Render
             this.belowObjects.forEach(function (object) {
-                object.render(ctx, ratio, opacity);
+                object.render(ctx, ratio * 1, opacity);
             });
 
             this.objects.forEach(function (object) {
-                object.render(ctx, ratio, opacity);
+                object.render(ctx, ratio * 1, opacity);
             });
 
             //! UI RENDER
@@ -1374,7 +1374,14 @@ function gameIO() {
 
     // Networking Portion
 
-    game.me = { id: -1, score: 0, visual: { position: new game.Vector2(0, 0) }, new: { position: new game.Vector2(0, 0) }, old: { position: new game.Vector2(0, 0) } };
+    game.me = { 
+        id: -1, 
+        score: 0, 
+        visual: { position: new game.Vector2(0, 0) }, 
+        new: { position: new game.Vector2(0, 0) }, 
+        old: { position: new game.Vector2(0, 0) },
+        fov: 1 
+    };
     game.ws = { readyState: -1, send: function () { }, close: function () { } };
     game.connecting = false;
     game.spectating = true;
@@ -1477,7 +1484,9 @@ function gameIO() {
             game.spectating = packet.s;
             for (var i = 0; i < game.objects.length; i++) {
                 if (game.objects[i].id == packet.id) {
+                    const oldFov = game.me.fov;
                     game.me = game.objects[i];
+                    game.me.fov = oldFov;
                 }
             }
         },
@@ -1540,12 +1549,14 @@ function gameIO() {
                 obj.cannon.cannon = obj.new.mouseAngle;
             }
             if (obj.playerName) {
+                console.log(obj.playerName)
+                obj.playerName.fontSize = 26 / game.me.fov;
                 obj.playerName.position.x = obj.new.position.x;
-                obj.playerName.position.y = obj.new.position.y + 60;
+                obj.playerName.position.y = obj.new.position.y + 60 / game.me.fov;
             }
             if (obj.healthBar) {
                 obj.healthBar.position.x = obj.new.position.x;
-                obj.healthBar.position.y = obj.new.position.y - 60;
+                obj.healthBar.position.y = obj.new.position.y - 60 / game.me.fov;
             }
             if (obj.turrets !== undefined) {
                 obj.turrets.forEach(turret => {
@@ -1642,8 +1653,10 @@ function gameIO() {
                             break;
                     }
                     let turretObj = new game.image(turretImg, 0, 0, 220 * turret.scale, 220 * turret.scale);
-                    turretObj.offsetX = turret.offsetX || 0;
-                    turretObj.offsetY = turret.offsetY || 0;
+                    turretObj.offsetX = turret.offsetX / game.me.fov || 0;
+                    turretObj.offsetY = turret.offsetY / game.me.fov || 0;
+                    turretObj.ogOffsetX = turret.offsetX || 0;
+                    turretObj.ogOffsetY = turret.offestY || 0;
                     turretObj.offsetAngle = turret.offsetAngle || 0;
                     obj.turrets.push(turretObj);
                     game.scenes[0].add(turretObj, 3);
@@ -1794,7 +1807,7 @@ function gameIO() {
                             turretImg.src = `./client/images/cannons/sprayer.png`;
                             break;
                     }
-                    let turretObj = new game.image(turretImg, 0, 0, 200 * turret.scale, 200 * turret.scale);
+                    let turretObj = new game.image(turretImg, 0, 0, 200 * turret.scale, 200 * turret.scale, 100, 0, 0, true);
                     turretObj.offsetX = turret.offsetX || 0;
                     turretObj.offsetY = turret.offsetY || 0;
                     turretObj.offsetAngle = turret.offsetAngle || 0;
@@ -1804,7 +1817,7 @@ function gameIO() {
 
                 let cannon = new Image();
                 cannon.src = `./client/images/turrets/default.png`;
-                let cannonImg = new game.image(cannon, 0, 0, 200, 200);
+                let cannonImg = new game.image(cannon, 0, 0, 200, 200, 100, 0, 0, true);
                 cannonImg.rotation = Math.PI / 2;
 
                 let style = { fill: { default: "#29AB61" }, stroke: { lineWidth: 4 } };
@@ -1824,6 +1837,10 @@ function gameIO() {
         },
         "ping": function (packet) {
             game.pingArray.push(Date.now() - packet.data);
+        },
+        // fov change
+        "f": function (packet) {
+            game.me.fov = packet.fov;
         }
     };
     game.addPacketType = function (type, func) {
@@ -1915,27 +1932,31 @@ function gameIO() {
                 obj.cannon.rotation = game.lerp(obj.old.mouseAngle, obj.new.mouseAngle);
             }
             if (obj.playerName) {
+                obj.playerName.fontSize = 26 / game.me.fov;
                 obj.playerName.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
-                obj.playerName.position.y = game.lerp(obj.old.position.y, obj.new.position.y) + 60;
+                obj.playerName.position.y = game.lerp(obj.old.position.y, obj.new.position.y) + 60 / game.me.fov;
             }
             if (obj.healthBar) {
                 if (obj.healthBar.type !== "roundRectangle") {
-                    obj.healthBar = new game.roundRectangle(0, 0, (obj.health / obj.maxHealth) * 100, 10, 3, "#FF0000");
+                    obj.healthBar = new game.roundRectangle(0, 0, (obj.health / obj.maxHealth) * 100 / game.me.fov, 10 / game.me.fov, 3, "#FF0000");
                     this.scenes[0].add(obj.healthBar, 10);
                 }
 
                 obj.healthBar.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
-                obj.healthBar.position.y = game.lerp(obj.old.position.y, obj.new.position.y) - 60;
+                obj.healthBar.position.y = game.lerp(obj.old.position.y, obj.new.position.y) - 60 / game.me.fov;
 
+                obj.healthBar.height = 10 / game.me.fov;
                 if (obj.health !== obj.maxHealth) {
                     obj.healthBar.opacity = 1;
-                    obj.healthBar.width = (obj.health / obj.maxHealth) * 100;
+                    obj.healthBar.width = (obj.health / obj.maxHealth) * 100 / game.me.fov;
                 } else {
                     obj.healthBar.opacity = 0;
                 }
             }
             if (obj.turrets !== undefined) {
                 obj.turrets.forEach(turret => {
+                    turret.offSetX = turret.ogOffsetX / game.me.fov;
+                    turret.offsetY = turret.ogOffsetY / game.me.fov;
                     turret.position.x = game.lerp(obj.old.position.x, obj.new.position.x);
                     turret.position.y = game.lerp(obj.old.position.y, obj.new.position.y);
                     turret.rotation = game.lerp(obj.old.mouseAngle + turret.offsetAngle, obj.new.mouseAngle + turret.offsetAngle);

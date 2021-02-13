@@ -180,6 +180,7 @@ window.onload = function () {
         setTimeout(() => {
             document.getElementById("menu").style.display = "none";
         }, 500);
+        game.me.fov = 1;
         game.clientLvl = 0;
         game.clientXp = 0;
         game.actualLvl = 0;
@@ -201,7 +202,9 @@ window.onload = function () {
     game.packetFunctions["setID"] = function (packet) {
         for (var i = 0; i < game.objects.length; i++) {
             if (game.objects[i].id == packet.id) {
+                const oldFov = game.me.fov;
                 game.me = game.objects[i];
+                game.me.fov = oldFov;
             }
         }
         scene.camera.position = game.me.visual.position;
@@ -235,7 +238,7 @@ window.onload = function () {
             let style = { fill: { default: "#29ab3a" }, stroke: { lineWidth: 4 } };
             let img = new Image();
             img.src = `./client/images/tanks/${tier}/${tank}/tank.png`;
-            let funiimage = new game.image(img, 0, 0, 100, 100);
+            let funiimage = new game.image(img, 0, 0, 100, 100, 100, 0, 0, true);
             funiimage.rotation = Math.PI / 2;
             //let buttonText = game.text(`Body ${tier}:${tank}`, 0, 0, "#ddd", null, "Arial", 20);
             renderer.addButton(new game.button(`tankButton:${tier}:${tank}`, { x: 2, y: 2 }, -300 + tank * 120, 160 - tier * 120, 100, 100, 10, style, funiimage, function () {
@@ -277,7 +280,6 @@ window.onload = function () {
         renderer.render(scene);
         renderer.drawMinimap();
         renderer.drawLeaderboard();
-        renderer.drawObjects();
         renderer.UI.render(renderer.ctx, renderer.ratio);
         game.addPacket("ping", Date.now());
         fpsArray.push(1000 / (Date.now() - timeSinceLastFrame));

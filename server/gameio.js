@@ -65,7 +65,14 @@ exports.game = function (options) {
                     return;
                 for (var i = 0; i < game.objects.length; i++) {
                     if (game.objects[i].id == packet.object.id) {
-                        ws.currentPackets.push(game.add(game.objects[i]));
+                        if (!ws.self || ws.self.fov === 1) {
+                            ws.currentPackets.push(game.add(game.objects[i]));
+                        } else {
+                            const p = game.add(game.objects[i]);
+                            p.x /= ws.self.fov;
+                            p.y /= ws.self.fov;
+                            ws.currentPackets.push(p);
+                        }
                     }
                 }
             },
@@ -182,10 +189,19 @@ exports.game = function (options) {
                 if (game.clients[i].self === undefined) {
                     continue;
                 }
-                if (game.notUpdatedIsClose(game.clients[i], obj)) {
+                if (game.notUpdatedIsClose(game.clients[i], obj, game.clients[i].self.fov)) {
                     game.clients[i].closeObjects.push(obj);
                     if (game.clients[i].closeObjects.indexOf(obj) != -1) {
-                        game.clients[i].currentPackets.push(game.add(obj));
+                        console.log(game.clients[i].self.fov)
+                        if (!game.clients[i].self || game.clients[i].self.fov === 1) {
+                            game.clients[i].currentPackets.push(game.add(obj));
+                        } else {
+                            console.log(game.add(obj))
+                            const p = game.add(obj);
+                            p.x /= game.clients[i].self.fov;
+                            p.y /= game.clients[i].self.fov;
+                            game.clients[i].currentPackets.push(p);
+                        }
                     }
                 }
             }
@@ -369,11 +385,11 @@ exports.game = function (options) {
             }
             return false;
         },
-        notUpdatedIsClose: function (client, object) {
+        notUpdatedIsClose: function (client, object, fov) {
             if (client.self === undefined) {
                 return false;
             }
-            if (Math.abs(client.self.body.position[0] - object.body.position[0]) < 1920 / 2 + 500 && Math.abs(client.self.body.position[1] - object.body.position[1]) < 1080 / 2 + 500) {
+            if (Math.abs(client.self.body.position[0] - object.body.position[0]) < 1920 * fov / 2 + 500 && Math.abs(client.self.body.position[1] - object.body.position[1]) < 1080 * fov / 2 + 500) {
                 return true;
             }
             return false;
@@ -391,10 +407,17 @@ exports.game = function (options) {
             for (var i = 0; i < game.objects.length; i++) {
                 if (!game.objects[i].updateAtAll)
                     continue;
-                if (game.notUpdatedIsClose(client, game.objects[i])) {
+                if (game.notUpdatedIsClose(client, game.objects[i], client.self.fov)) {
                     closeObjects.push(game.objects[i]);
                     if (client.closeObjects.indexOf(game.objects[i]) == -1) {
-                        client.currentPackets.push(game.add(game.objects[i]));
+                        if (!client.self || client.self.fov === 1) {
+                            client.currentPackets.push(game.add(game.objects[i]))
+                        } else {
+                            const p = game.add(game.objects[i]);
+                            p.x /= client.self.fov;
+                            p.y /= client.self.fov;
+                            client.currentPackets.push(p);
+                        }
                     }
                 } else if (client.closeObjects.indexOf(game.objects[i]) != -1) {
                     client.currentPackets.push(game.removePacket(game.objects[i]));
@@ -490,7 +513,14 @@ exports.game = function (options) {
             for (var u = 0; u < game.clients.length; u++) {
                 for (var f = 0; f < game.clients[u].closeObjects.length; f++) {
                     if (game.clients[u].closeObjects[f].packet != null) {
-                        game.clients[u].currentPackets.push(game.clients[u].closeObjects[f].packet);
+                        if (!game.clients[u].self || game.clients[u].self.fov === 1) {
+                            game.clients[u].currentPackets.push(game.clients[u].closeObjects[f].packet)
+                        } else {
+                            const p = game.createPacket(game.clients[u].closeObjects[f]);
+                            p.a[1] /= game.clients[u].self.fov;
+                            p.a[2] /= game.clients[u].self.fov;
+                            game.clients[u].currentPackets.push(p);
+                        }
                     }
                 }
             }

@@ -1,3 +1,5 @@
+const v8 = require('v8'); // for deep copies
+
 const DEFAULT_SCALE = 0.5;
 
 let hitboxes = [{ w: 180, h: 210 }, { w: 150, h: 150 }, { w: 214, h: 200 }];
@@ -20,41 +22,38 @@ let timeSinceLbUpdate = Date.now() + 500;
 class Body {
     /**
      * Generates a tank body
-     * @param {number} hitboxIndex the index of the hitbox
-     * @param {number=} speedMod speed multiplier
-     * @param {number=} healthMod health multiplier
-     * @param {number=} scale size multiplier
      */
-    constructor(hitboxIndex, speedMod = 1, healthMod = 1, scale = 1) {
+    constructor({ hitboxIndex, speedMod = 1, healthMod = 1, scale = 1, fov = 1 }) {
         this.hitbox = hitboxes[hitboxIndex];
         this.speedMod = speedMod;
         this.healthMod = healthMod;
         this.tankSize = scale;
+        this.fov = fov;
     }
 }
 
 let tankBodies = [
     [ //* Tier 0
         //* Tank 0
-        new Body(0, 1, 1, 1) //* Default - 0.0
+        new Body({ hitboxIndex: 0 } ) //* Default - 0.0
     ],
     [ //* Tier 1
         //* Tank 0
-        new Body(1, 1.1, 1, 1), //* Serpent MK I - 1.0
+        new Body({ hitboxIndex: 1, speedMod: 1.1 }), //* Serpent MK I - 1.0
         //* Tank 1
-        new Body(0, 1, 1.1, 1), //* Squire MK I - 1.1
+        new Body({ hitboxIndex: 0, healthMod: 1.1}), //* Squire MK I - 1.1
     ],
     [ //* Tier 2
         //* Tank 0
-        new Body(1, 1.2, 0.7, 1), //* Serpent MK II - 2.0
+        new Body({ hitboxIndex: 1, speedMod: 1.1, healthMod: 0.7 }), //* Serpent MK II - 2.0
         //* Tank 1
-        new Body(2, 0.9, 1.4, 1), //* Squire MK II - 2.1
+        new Body({ hitboxIndex: 1, speedMod: 0.9, healthMod: 1.4 }), //* Squire MK II - 2.1
     ],
     [ //* Tier 3
         //* Tank 0
-        new Body(1, 1.4, 0.5, 1), //* Basilisk - 3.0
+        new Body({ hitboxIndex: 1, speedMod: 1.3, healthMod: 0.5 }), //* Basilisk - 3.0
         //* Tank 1
-        new Body(1, 0.8, 2, 1), //* Knight - 3.1
+        new Body({ hitboxIndex: 1, speedMod: 0.8, healthMod: 2 }), //* Knight - 3.1
     ]
 ];
 
@@ -204,9 +203,9 @@ const turrets = [
             new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: 4, shootingOffset: 6, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
         ],
         [
-            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 25, bulletScale: 0.65, spread: Math.PI / 4 }),
-            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 15, bulletScale: 0.65, spread: Math.PI / 4 }), // railgun
-            new Turret({ type: 5, maxCD: 2, dmg: 3, bulletScale: 0.65, spread: Math.PI / 4 })
+            new Turret({ type: 4, maxCD: 2, dmg: 3, offsetY: 25, bulletScale: 0.65, spread: Math.PI / 4 }),
+            new Turret({ type: 4, maxCD: 2, dmg: 3, offsetY: 15, bulletScale: 0.65, spread: Math.PI / 4 }), // railgun
+            new Turret({ type: 4, maxCD: 2, dmg: 3, bulletScale: 0.65, spread: Math.PI / 4 })
         ],
     ]
 ]
@@ -289,6 +288,7 @@ game.addType(
 
         obj.tank === 0 ? obj.tier = 0 : null;
         obj.props = tankBodies[obj.tier][obj.tank];
+        obj.fov = tankBodies[obj.tier][obj.tank].fov;
 
         //!SHOOTING
         obj.turretTier = 0;
@@ -297,10 +297,7 @@ game.addType(
         obj.availableTurrets = [[], []];
         obj.obtainedTurrets = [];
         obj.hasTurretUpgrade = false;
-        turrets[obj.turretTier][obj.turretIndex].forEach((t, i) => {
-            obj.turrets.push({});
-            for (const prop in t) obj.turrets[i][prop] = t[prop];
-        });
+        obj.turrets = v8.deserialize(v8.serialize(turrets[obj.turretTier][obj.turretIndex]));
         obj.obtainedTurrets.push(turrets[obj.turretTier][obj.turretIndex]);
 
         //!MOVEMENT
@@ -332,10 +329,7 @@ game.addType(
 
         obj.updateTurrets = () => {
             obj.turrets = [];
-            turrets[obj.turretTier][obj.turretIndex].forEach((t, i) => {
-                obj.turrets.push({});
-                for (const prop in t) obj.turrets[i][prop] = t[prop];
-            });
+            obj.turrets = v8.deserialize(v8.serialize(turrets[obj.turretTier][obj.turretIndex]));
         }
 
         obj.upgradeBody = data => {
@@ -348,7 +342,9 @@ game.addType(
             if (tier <= obj.tier) return;
             obj.tier = tier;
             obj.tank = tank;
+            obj.fov = tankBodies[tier][tank].fov;
             obj.handleHitbox();
+            obj.sendPacket({ type: "f", fov: obj.fov });
         }
 
         obj.getAvailableTurrets = () => {

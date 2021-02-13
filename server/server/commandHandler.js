@@ -6,7 +6,7 @@ global.executeCommand = (userSelf, command, accessCode) => {
     if (!userSelf.devMode) return;
     if (userSelf.devMode < 10000) return;
     let commandArray = command.split(':');
-    if (command !== "k") console.log(`"${userSelf.name}" requested command: "${command}".`);
+    if (command !== "k" && command !== "in" && command !== "out") console.log(`"${userSelf.name}" requested command: "${command}".`);
     switch (commandArray[0]) {
         case "tank":
             try {
@@ -110,6 +110,23 @@ global.executeCommand = (userSelf, command, accessCode) => {
                 userSelf.death(userSelf.startingTime, userSelf.xp, userSelf.level);
                 game.remove(userSelf);
                 userSelf = undefined;
+            } catch (e) {
+                console.log(e);
+            }
+            break;
+        case "out":
+            try {
+                userSelf.fov += 0.1;
+                userSelf.sendPacket({ type: "f", fov: userSelf.fov });
+            } catch (e) {
+                console.log(e);
+            }
+            break;
+        case "in":
+            try {
+                if (userSelf.fov === 0.1) return;
+                userSelf.fov -= 0.1;
+                userSelf.sendPacket({ type: "f", fov: userSelf.fov });
             } catch (e) {
                 console.log(e);
             }
