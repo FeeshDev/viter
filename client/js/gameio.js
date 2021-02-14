@@ -389,7 +389,7 @@ function gameIO() {
             drawGrid: function () {
                 this.ctx.strokeStyle = "#000000";
                 this.ctx.globalAlpha = 0.05;
-                this.ctx.lineWidth = 4 / this.ratio;
+                this.ctx.lineWidth = 4 / this.ratio / game.me.fov;
                 let gridSpace = 100 / this.ratio / game.me.fov;
                 let gridSetter;
 
@@ -1374,13 +1374,13 @@ function gameIO() {
 
     // Networking Portion
 
-    game.me = { 
-        id: -1, 
-        score: 0, 
-        visual: { position: new game.Vector2(0, 0) }, 
-        new: { position: new game.Vector2(0, 0) }, 
+    game.me = {
+        id: -1,
+        score: 0,
+        visual: { position: new game.Vector2(0, 0) },
+        new: { position: new game.Vector2(0, 0) },
         old: { position: new game.Vector2(0, 0) },
-        fov: 1 
+        fov: 1
     };
     game.ws = { readyState: -1, send: function () { }, close: function () { } };
     game.connecting = false;
