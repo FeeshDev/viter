@@ -23,12 +23,13 @@ class Body {
     /**
      * Generates a tank body
      */
-    constructor({ hitboxIndex, speedMod = 1, healthMod = 1, scale = 1, fov = 1 }) {
+    constructor({ hitboxIndex, speedMod = 1, healthMod = 1, scale = 1, fov = 1, timeToRegen = 20000 }) {
         this.hitbox = hitboxes[hitboxIndex];
         this.speedMod = speedMod;
         this.healthMod = healthMod;
         this.tankSize = scale;
         this.fov = fov;
+        this.timeToRegen = timeToRegen;
     }
 }
 
@@ -41,19 +42,19 @@ let tankBodies = [
         //* Tank 0
         new Body({ hitboxIndex: 1, speedMod: 1.1 }), //* Serpent MK I - 1.0
         //* Tank 1
-        new Body({ hitboxIndex: 0, healthMod: 1.1, fov: 1.2 }), //* Squire MK I - 1.1
+        new Body({ hitboxIndex: 0, healthMod: 1.1, fov: 1.2, timeToRegen: 17000 }), //* Squire MK I - 1.1
     ],
     [ //* Tier 2
         //* Tank 0
         new Body({ hitboxIndex: 1, speedMod: 1.1, healthMod: 0.7 }), //* Serpent MK II - 2.0
         //* Tank 1
-        new Body({ hitboxIndex: 1, speedMod: 0.9, healthMod: 1.4, fov: 1.6 }), //* Squire MK II - 2.1
+        new Body({ hitboxIndex: 1, speedMod: 0.9, healthMod: 1.4, fov: 1.6, timeToRegen: 15000 }), //* Squire MK II - 2.1
     ],
     [ //* Tier 3
         //* Tank 0
         new Body({ hitboxIndex: 1, speedMod: 1.3, healthMod: 0.5 }), //* Basilisk - 3.0
         //* Tank 1
-        new Body({ hitboxIndex: 1, speedMod: 0.8, healthMod: 2, fov: 2 }), //* Knight - 3.1
+        new Body({ hitboxIndex: 1, speedMod: 0.8, healthMod: 2, fov: 2, timeToRegen: 10000 }), //* Knight - 3.1
     ]
 ];
 
@@ -103,8 +104,7 @@ class Turret {
 
             default:
                 console.log(`Error: turret ${type} does not have a length`);
-                process.exit()
-                break;
+                process.exit();
         }
         l *= turretScale;
         let sa = shootingOffset % maxCD

@@ -69,12 +69,22 @@ const obfuscateText = function (data) {
 }
 
 if (encode) {
+    console.log("Beginning minification");
+    const options = {
+        mangle: {
+            toplevel: true,
+        }
+    };
     const es5Code = babel.transformSync(fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8"), {
-        presets: ["@babel/preset-env"],
+        presets: ["@babel/preset-env"]
     });
-    var minifiedScript = UglifyJS.minify(es5Code.code).code;
-    console.log("Finished minifying");
+    var minifiedScript = UglifyJS.minify(es5Code.code, options).code;
     minifiedScript = obfuscateText(minifiedScript);
+    const es5Code2 = babel.transformSync(minifiedScript, {
+        presets: ["@babel/preset-env"]
+    });
+    minifiedScript = UglifyJS.minify(es5Code2.code, options).code;
+    console.log("Finished minifying");
 }
 
 

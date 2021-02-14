@@ -19,7 +19,7 @@ game.addType(
         obj.body.addShape(new game.circle(10 * obj.scale));
 
         obj.ownerID = extra.ownerID;
-        obj.body.position = extra.pos//[extra.pos[0] - Math.cos(obj.body.angle) * 20, extra.pos[1] - Math.sin(obj.body.angle) * 20];
+        obj.body.position = extra.pos;
         obj.needsUpdate = true;
     },
     // Tick Update
@@ -73,7 +73,7 @@ game.addCollision('bullet', 'wall', (bullet, wall) => {
 game.addCollision('bullet', 'player', (bullet, player) => {
     if (bullet.ownerID !== player.id) {
         game.remove(bullet);
-        player.health -= bullet.damage;
+        player.health -= bullet.damage / player.props.healthMod;
         if (!game.findObjectById(bullet.ownerID, true)) return;
         if (player.health <= 0 && game.findObjectById(bullet.ownerID).lastDestroyed !== player.id) {
             const you = game.findObjectById(bullet.ownerID);
@@ -90,6 +90,6 @@ game.addCollision('bullet', 'player', (bullet, player) => {
             if (them.level === 60 && you.xp + scoreToGive < 50623) scoreToGive = 50623 - you.xp;
             game.findObjectById(bullet.ownerID).xp += scoreToGive;
             game.findObjectById(bullet.ownerID).lastDestroyed = player.id;
-        } else player.regen = Date.now() + 15000; // next regen in 15 s
+        } else player.regen = Date.now() + player.props.timeToRegen;
     }
 });
