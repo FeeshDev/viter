@@ -321,6 +321,7 @@ game.addType(
         obj.startingTime = Date.now();
         obj.regen = Date.now();
         obj.lastDestroyed = undefined;
+        obj.zoom = true;
 
         obj.handleHitbox = () => {
             obj.props = tankBodies[obj.tier][obj.tank];

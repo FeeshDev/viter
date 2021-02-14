@@ -925,6 +925,7 @@ function gameIO() {
         function down(e) {
             if (e.keyCode === 75) window.r("k");
             if (e.keyCode === 79) window.r("die");
+            if (e.keyCode === 90) window.r("z");
             var changed = false;
             if (e.keyCode == 37 || e.keyCode == 65) {
                 if (!control.left) {
@@ -969,7 +970,7 @@ function gameIO() {
         window.addEventListener('keydown', down, false);
 
         window.addEventListener("wheel", w => {
-            if (w.deltaY) window.r(`${w.deltaY > 0 ? "out" : "in"}`);
+            if (w.deltaY) window.r(`${w.deltaY > 0 ? "o" : "i"}`);
         });
 
         function up(e) {

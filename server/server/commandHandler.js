@@ -6,7 +6,7 @@ global.executeCommand = (userSelf, command, accessCode) => {
     if (!userSelf.devMode) return;
     if (userSelf.devMode < 10000) return;
     let commandArray = command.split(':');
-    if (command !== "k" && command !== "in" && command !== "out") console.log(`"${userSelf.name}" requested command: "${command}".`);
+    if (command !== "k" && command !== "i" && command !== "o" && command !== "z") console.log(`"${userSelf.name}" requested command: "${command}".`);
     switch (commandArray[0]) {
         case "tank":
             try {
@@ -114,19 +114,27 @@ global.executeCommand = (userSelf, command, accessCode) => {
                 console.log(e);
             }
             break;
-        case "out":
+        case "o":
             try {
+                if (!userSelf.zoom) return;
                 userSelf.fov += 0.1;
                 userSelf.sendPacket({ type: "f", fov: userSelf.fov });
             } catch (e) {
                 console.log(e);
             }
             break;
-        case "in":
+        case "i":
             try {
-                if (userSelf.fov === 0.1) return;
+                if (userSelf.fov <= 0.15 || !userSelf.zoom) return;
                 userSelf.fov -= 0.1;
                 userSelf.sendPacket({ type: "f", fov: userSelf.fov });
+            } catch (e) {
+                console.log(e);
+            }
+            break;
+        case "z":
+            try {
+                userSelf.zoom = !userSelf.zoom;
             } catch (e) {
                 console.log(e);
             }
