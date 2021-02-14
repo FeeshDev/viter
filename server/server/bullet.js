@@ -49,6 +49,17 @@ const handleMovement = (obj) => {
     obj.body.velocity[1] = -Math.sin(obj.body.angle) * 600 * obj.bulletSpeedMult;
 }
 
+game.addCollision("bullet", "bullet", (b1, b2) => {
+    if (b1.ownerID === b2.ownerID) return;
+    // destroyer line bullets destroy other bullets
+    if (b1.bulletType === 6 || b1.bulletType === 7 || b1.bulletType === 8) { 
+        game.remove(b2);
+    }
+    if (b2.bulletType === 6 || b2.bulletType === 7 || b2.bulletType === 8) {
+        game.remove(b1);
+    }
+});
+
 game.addCollision('bullet', 'object', (bullet, object) => {
 
     // hunter bullets goes through trees

@@ -102,6 +102,21 @@ class Turret {
                 l = 41.8;
                 break;
 
+            // destroyer
+            case 6:
+                l = 45.76;
+                break;
+
+            // cannoneer
+            case 7:
+                l = 45.76;
+                break;
+
+            // bomber
+            case 8:
+                l = 45.76;
+                break;
+
             default:
                 console.log(`Error: turret ${type} does not have a length`);
                 process.exit();
@@ -152,7 +167,8 @@ const turrets = [
         [
             new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: -10 }), // twinner (better twin)
             new Turret({ type: 0, maxCD: 7, dmg: 7, offsetX: 10 })
-        ]
+        ],
+        [new Turret({ type: 6, maxCD: 40, dmg: 45, bulletScale: 1.2, bulletSpeedMult: 0.8, lifespanMult: 0.8 })] // destroyer
     ],
     [ // tier 3
         [new Turret({ type: 4, maxCD: 14, dmg: 20, bulletSpeedMult: 2, lifespanMult: 2 })], // predator
@@ -177,6 +193,7 @@ const turrets = [
             new Turret({ type: 5, maxCD: 2, dmg: 4, offsetY: 18, bulletScale: 0.65, spread: Math.PI / 4 }), // pelleteer
             new Turret({ type: 5, maxCD: 2, dmg: 4, bulletScale: 0.65, spread: Math.PI / 4 })
         ],
+        [new Turret({ type: 7, maxCD: 35, dmg: 60, bulletScale: 1.3, bulletSpeedMult: 0.8, lifespanMult: 0.9 })] // cannoneer
     ],
     [ // tier 4
         [
@@ -203,10 +220,11 @@ const turrets = [
             new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: 4, shootingOffset: 6, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
         ],
         [
-            new Turret({ type: 4, maxCD: 2, dmg: 3, offsetY: 25, bulletScale: 0.65, spread: Math.PI / 4 }),
-            new Turret({ type: 4, maxCD: 2, dmg: 3, offsetY: 15, bulletScale: 0.65, spread: Math.PI / 4 }), // railgun
-            new Turret({ type: 4, maxCD: 2, dmg: 3, bulletScale: 0.65, spread: Math.PI / 4 })
+            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 25, bulletScale: 0.65, spread: Math.PI / 4 }),
+            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 15, bulletScale: 0.65, spread: Math.PI / 4 }), // railgun
+            new Turret({ type: 5, maxCD: 2, dmg: 3, bulletScale: 0.65, spread: Math.PI / 4 })
         ],
+        [new Turret({ type: 8, maxCD: 25, dmg: 100, bulletScale: 1.4, bulletSpeedMult: 0.8, lifespanMult: 1 })] // cannoneer
     ]
 ]
 
@@ -216,23 +234,26 @@ const turretTree = [
     ],
     [ // tier 1 upgrades
         [0], // sniper upgrades
-        [1, 2], // machine gun upgrades
+        [1, 2, 4], // machine gun upgrades
         [3] // twin upgrades
     ],
     [ // tier 2 upgrades
         [0], // hunter upgrades
         [4], // sprayer upgrades
         [1], // shotgun upgrades
-        [1, 2, 3] // twinner upgrades
+        [1, 2, 3], // twinner upgrades
+        [5] // destroyer upgrades
     ],
     [ // tier 3 upgrades
         [0], // predator upgrades
         [1], // scatterer upgrades
         [1, 2], // triplet upgrades
         [3], // gunner upgrades
-        [4] // pelleteer upgrades
+        [4], // pelleteer upgrades
+        [5] // cannoneer upgrades
     ],
     [ // tier 4 upgrades
+        [],
         [],
         [],
         [],
