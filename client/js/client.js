@@ -20,7 +20,6 @@ window.onload = function () {
 
     const TYPE_TREE = 0, TYPE_ROCK = 1, TYPE_BRONZE = 2, TYPE_SILVER = 3, TYPE_GOLD = 4;
     const BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, BULLET_MACHINEGUN = 3, BULLET_HUNTER = 4, BULLET_SPRAYER = 5;
-    const TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, TURRET_MACHINEGUN = 3, TURRET_HUNTER = 4, TURRET_SPRAYER = 5;
 
     //#region Add types
     game.addType(
@@ -50,41 +49,16 @@ window.onload = function () {
                     nameColor = "#fff";
                     break;
             }
+
             obj.playerName = new game.text(packet.playerName, 0, 0, nameColor, null, "Montserrat", 26);
             scene.add(obj.playerName, 7);
-
-            let tank = new Image();
-            tank.src = `./client/images/tanks/${packet.tier}/${packet.tank}/tank.png`;
-            obj.visual = new game.image(tank, 0, 0, 160 * packet.scale, 160 * packet.scale);
+            obj.visual = new game.image(imgFromSource(`./client/images/tanks/${packet.tier}/${packet.tank}/tank.png`), 0, 0, 160 * packet.scale, 160 * packet.scale);
             scene.add(obj.visual, 1);
-
-            let cannon = new Image();
-            cannon.src = `./client/images/turrets/default.png`;
-            obj.cannon = new game.image(cannon, 0, 0, 220 * packet.scale, 220 * packet.scale);
+            obj.cannon = new game.image(imgFromSource(`./client/images/turrets/default.png`), 0, 0, 220 * packet.scale, 220 * packet.scale);
             scene.add(obj.cannon, 5);
 
             packet.turrets.forEach(turret => {
-                let turretImg = new Image();
-                switch (turret.type) {
-                    case TURRET_DEFAULT:
-                        turretImg.src = `./client/images/cannons/default.png`;
-                        break;
-                    case TURRET_SHOTGUN:
-                        turretImg.src = `./client/images/cannons/shotgun.png`;
-                        break;
-                    case TURRET_SNIPER:
-                        turretImg.src = `./client/images/cannons/sniper.png`;
-                        break;
-                    case TURRET_MACHINEGUN:
-                        turretImg.src = `./client/images/cannons/machinegun.png`;
-                        break;
-                    case TURRET_HUNTER:
-                        turretImg.src = `./client/images/cannons/hunter.png`;
-                        break;
-                    case TURRET_SPRAYER:
-                        turretImg.src = `./client/images/cannons/sprayer.png`;
-                        break;
-                }
+                let turretImg = turretSwitch(turret.type)
                 let turretObj = new game.image(turretImg, 0, 0, 220 * turret.scale, 220 * turret.scale);
                 turretObj.offsetX = turret.offsetX || 0;
                 turretObj.offsetY = turret.offsetY || 0;
@@ -156,7 +130,7 @@ window.onload = function () {
                 case BULLET_HUNTER:
                     bullet.src = `./client/images/bullets/sniper.png`;
                     break;
-                case BULLET_SPRAYER:    
+                case BULLET_SPRAYER:
                     bullet.src = `./client/images/bullets/shotgun.png`;
                     break;
             }

@@ -11,6 +11,38 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
     return this;
 }
 
+function imgFromSource(source) {
+    let elem = new Image();
+    elem.src = source;
+    return elem;
+}
+
+const TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, TURRET_MACHINEGUN = 3, TURRET_HUNTER = 4, TURRET_SPRAYER = 5;
+function turretSwitch(type) {
+    let turretImg = new Image();
+    switch (type) {
+        case TURRET_DEFAULT:
+            turretImg.src = `./client/images/cannons/default.png`;
+            break;
+        case TURRET_SHOTGUN:
+            turretImg.src = `./client/images/cannons/shotgun.png`;
+            break;
+        case TURRET_SNIPER:
+            turretImg.src = `./client/images/cannons/sniper.png`;
+            break;
+        case TURRET_MACHINEGUN:
+            turretImg.src = `./client/images/cannons/machinegun.png`;
+            break;
+        case TURRET_HUNTER:
+            turretImg.src = `./client/images/cannons/hunter.png`;
+            break;
+        case TURRET_SPRAYER:
+            turretImg.src = `./client/images/cannons/sprayer.png`;
+            break;
+    }
+    return turretImg;
+}
+
 function colorLuminance(hex, lum) {
     // Validate hex string
     hex = String(hex).replace(/[^0-9a-f]/gi, "");
@@ -416,7 +448,7 @@ function gameIO() {
                 this.ctx.globalAlpha = 0.5;
                 this.ctx.fillStyle = `${35 / this.ratio}px Montserrat`;
                 this.ctx.fillText(
-                    "Avg/Min/Max",
+                    "Avg / Min / Max",
                     normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width),
                     normalizeCoords(-(window.innerHeight / 2 - 40 / this.ratio), this.position.y, this.ratio, this.c.height),
                 );
@@ -1529,8 +1561,7 @@ function gameIO() {
 
             if (packet.maxHealth !== undefined) obj.maxHealth = packet.maxHealth;
             if (packet.health !== undefined) obj.health = packet.health;
-
-            if (obj.health) obj.healthBar = new game.object();
+            if (obj.health !== undefined) obj.healthBar = new game.object();
 
             if (packet.objType !== undefined) obj.objType = packet.objType;
             if (packet.subObjType !== undefined) obj.subObjType = packet.subObjType;
@@ -1543,18 +1574,18 @@ function gameIO() {
             obj.visual.position.x = obj.new.position.x;
             obj.visual.position.y = obj.new.position.y;
             obj.visual.rotation = obj.new.rotation;
-            if (obj.cannon) {
+            if (obj.cannon !== undefined) {
                 obj.cannon.position.x = obj.new.position.x;
                 obj.cannon.position.y = obj.new.position.y;
                 obj.cannon.cannon = obj.new.mouseAngle;
             }
-            if (obj.playerName) {
+            if (obj.playerName !== undefined) {
                 console.log(obj.playerName)
                 obj.playerName.fontSize = 26 / game.me.fov;
                 obj.playerName.position.x = obj.new.position.x;
                 obj.playerName.position.y = obj.new.position.y + 60 / game.me.fov;
             }
-            if (obj.healthBar) {
+            if (obj.healthBar !== undefined) {
                 obj.healthBar.position.x = obj.new.position.x;
                 obj.healthBar.position.y = obj.new.position.y - 60 / game.me.fov;
             }
@@ -1565,6 +1596,7 @@ function gameIO() {
                     turret.rotation = obj.new.mouseAngle + turret.offsetAngle;
                 });
             }
+
             game.objects.push(obj);
             return;
         },
@@ -1631,27 +1663,7 @@ function gameIO() {
 
             if (packet.turrets !== undefined)
                 packet.turrets.forEach(turret => {
-                    let turretImg = new Image();
-                    switch (turret.type) {
-                        case 0:
-                            turretImg.src = `./client/images/cannons/default.png`;
-                            break;
-                        case 1:
-                            turretImg.src = `./client/images/cannons/shotgun.png`;
-                            break;
-                        case 2:
-                            turretImg.src = `./client/images/cannons/sniper.png`;
-                            break;
-                        case 3:
-                            turretImg.src = `./client/images/cannons/machinegun.png`;
-                            break;
-                        case 4:
-                            turretImg.src = `./client/images/cannons/hunter.png`;
-                            break;
-                        case 5:
-                            turretImg.src = `./client/images/cannons/sprayer.png`;
-                            break;
-                    }
+                    let turretImg = turretSwitch(turret.type);
                     let turretObj = new game.image(turretImg, 0, 0, 220 * turret.scale, 220 * turret.scale);
                     turretObj.offsetX = turret.offsetX / game.me.fov || 0;
                     turretObj.offsetY = turret.offsetY / game.me.fov || 0;
@@ -1786,27 +1798,7 @@ function gameIO() {
                 let batch = [];
 
                 turretsArray.forEach(turret => {
-                    let turretImg = new Image();
-                    switch (turret.type) {
-                        case 0:
-                            turretImg.src = `./client/images/cannons/default.png`;
-                            break;
-                        case 1:
-                            turretImg.src = `./client/images/cannons/shotgun.png`;
-                            break;
-                        case 2:
-                            turretImg.src = `./client/images/cannons/sniper.png`;
-                            break;
-                        case 3:
-                            turretImg.src = `./client/images/cannons/machinegun.png`;
-                            break;
-                        case 4:
-                            turretImg.src = `./client/images/cannons/hunter.png`;
-                            break;
-                        case 5:
-                            turretImg.src = `./client/images/cannons/sprayer.png`;
-                            break;
-                    }
+                    let turretImg = turretSwitch(turret.type);
                     let turretObj = new game.image(turretImg, 0, 0, 200 * turret.scale, 200 * turret.scale, 100, 0, 0, true);
                     turretObj.offsetX = turret.offsetX || 0;
                     turretObj.offsetY = turret.offsetY || 0;
