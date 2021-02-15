@@ -22,7 +22,8 @@ window.onload = function () {
     const 
         BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, 
         BULLET_MACHINEGUN = 3, BULLET_HUNTER = 4, BULLET_SPRAYER = 5
-        BULLET_DESTROYER = 6, BULLET_CANNONEER = 7, BULLET_BOMBER = 8;
+        BULLET_DESTROYER = 6, BULLET_CANNONEER = 7, BULLET_ROCKET = 8,
+        BULLET_MINIGUN = 9;
 
     //#region Add types
     game.addType(
@@ -61,6 +62,7 @@ window.onload = function () {
             scene.add(obj.cannon, 5);
 
             packet.turrets.forEach(turret => {
+                if (!turret.visible) return;
                 let turretImg = turretSwitch(turret.type)
                 let turretObj = new game.image(turretImg, 0, 0, 220 * turret.scale, 220 * turret.scale);
                 turretObj.offsetX = turret.offsetX || 0;
@@ -140,11 +142,13 @@ window.onload = function () {
                     bullet.src = `./client/images/bullets/shotgun.png`;
                     break;
                 case BULLET_CANNONEER:
-                        bullet.src = `./client/images/bullets/shotgun.png`;
-                        break;
-                case BULLET_BOMBER:
                     bullet.src = `./client/images/bullets/shotgun.png`;
                     break;
+                case BULLET_ROCKET:
+                    bullet.src = `./client/images/bullets/shotgun.png`;
+                    break;
+                case BULLET_MINIGUN:
+                    bullet.src = `./client/images/bullets/shotgun.png`;
             }
             // obj.visual = new game.circle(packet.x, packet.y, 10 * packet.scale, "#000");
             obj.visual = new game.image(bullet, 0, 0, 30 * packet.scale, 30 * packet.scale);

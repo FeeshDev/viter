@@ -67,7 +67,7 @@ class Turret {
         type, maxCD, dmg, offsetX = 0, offsetY = 0,
         offsetAngle = 0, bulletScale = 1, bulletSpeedMult = 1,
         lifespanMult = 1, shootingOffset = 0, turretScale = 1,
-        bulletCount = 1, spread = 0
+        bulletCount = 1, spread = 0, shoot = true, visible = true
     }) {
         let l;
         switch (type) {
@@ -112,9 +112,14 @@ class Turret {
                 l = 45.76;
                 break;
 
-            // bomber
+            // rocket
             case 8:
                 l = 45.76;
+                break;
+
+            // minigun
+            case 9:
+                l = 44.44;
                 break;
 
             default:
@@ -142,6 +147,8 @@ class Turret {
         this.shootingOffset = sa;
         this.bulletCount = bulletCount;
         this.spread = spread;
+        this.shoot = shoot;
+        this.visible = visible;
     }
 }
 
@@ -160,7 +167,7 @@ const turrets = [
     [ // tier 2
         [new Turret({ type: 4, maxCD: 15, dmg: 15, bulletSpeedMult: 2, lifespanMult: 2 })], // hunter
         [
-            new Turret({ type: 5, maxCD: 2, dmg: 2.5, offsetY: 20, bulletScale: 0.65, spread: Math.PI / 4 }), // sprayer
+            new Turret({ type: 5, maxCD: 2, dmg: 2.5, offsetY: 20, bulletScale: 0.65, spread: Math.PI / 4, visible: false }), // sprayer
             new Turret({ type: 5, maxCD: 2, dmg: 2.5, bulletScale: 0.65, spread: Math.PI / 4 })
         ],
         [new Turret({ type: 1, maxCD: 15, dmg: 1.5, bulletScale: 0.6, bulletSpeedMult: 0.9, lifespanMult: 0.6, spread: Math.PI / 8, bulletCount: 6 })], // shotgun
@@ -220,9 +227,9 @@ const turrets = [
             new Turret({ type: 0, maxCD: 9, dmg: 5, offsetX: 4, shootingOffset: 6, bulletSpeedMult: 0.7, bulletScale: 0.8 }),
         ],
         [
-            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 25, bulletScale: 0.65, spread: Math.PI / 4 }),
-            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 15, bulletScale: 0.65, spread: Math.PI / 4 }), // railgun
-            new Turret({ type: 5, maxCD: 2, dmg: 3, bulletScale: 0.65, spread: Math.PI / 4 })
+            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 10, bulletScale: 0.65, spread: Math.PI / 4, visible: false }),
+            new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 10, bulletScale: 0.65, spread: Math.PI / 4, visible: false }), // minigun
+            new Turret({ type: 9, maxCD: 2, dmg: 3, bulletScale: 0.65, spread: Math.PI / 4, })
         ],
         [new Turret({ type: 8, maxCD: 25, dmg: 100, bulletScale: 1.4, bulletSpeedMult: 0.8, lifespanMult: 1 })] // cannoneer
     ]
@@ -584,6 +591,7 @@ const handleMovement = obj => {
 
 const shoot = obj => {
     obj.turrets.forEach(turret => {
+        if (!turret.shoot) return;
         if (turret.shootingOffset && (turret.turretCD === turret.shootingOffset)) turret.turretCD -= 0.5;
         if (turret.turretCD !== 0) return;
         let bulletAngle = obj.playerMouse.angle + turret.offsetAngle;

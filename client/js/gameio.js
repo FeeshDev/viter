@@ -20,7 +20,8 @@ function imgFromSource(source) {
 const 
     TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, 
     TURRET_MACHINEGUN = 3, TURRET_HUNTER = 4, TURRET_SPRAYER = 5
-    TURRET_DESTROYER = 6, TURRET_CANNONEER = 7, TURRET_BOMBER = 8;
+    TURRET_DESTROYER = 6, TURRET_CANNONEER = 7, TURRET_ROCKET = 8,
+    TURRET_MINIGUN = 9;
 function turretSwitch(type) {
     let turretImg = new Image();
     switch (type) {
@@ -48,9 +49,11 @@ function turretSwitch(type) {
         case TURRET_CANNONEER:
             turretImg.src = `./client/images/cannons/cannoneer.png`;
             break;
-        case TURRET_BOMBER:
-            turretImg.src = `./client/images/cannons/bomber.png`;
+        case TURRET_ROCKET:
+            turretImg.src = `./client/images/cannons/rocket.png`;
             break;
+        case TURRET_MINIGUN:
+            turretImg.src = `./client/images/cannons/minigun.png`;
 
     }
     return turretImg;
@@ -1682,19 +1685,20 @@ function gameIO() {
                 });
             }
 
-            if (packet.turrets !== undefined)
+            if (packet.turrets !== undefined) {
                 packet.turrets.forEach(turret => {
+                    if (!turret.visible) return;
                     let turretImg = turretSwitch(turret.type);
                     let turretObj = new game.image(turretImg, 0, 0, 220 * turret.scale, 220 * turret.scale);
                     turretObj.offsetX = turret.offsetX / game.me.fov || 0;
                     turretObj.offsetY = turret.offsetY / game.me.fov || 0;
                     turretObj.ogOffsetX = turret.offsetX || 0;
-                    turretObj.ogOffsetY = turret.offestY || 0;
+                    turretObj.ogOffsetY = turret.offset || 0;
                     turretObj.offsetAngle = turret.offsetAngle || 0;
                     obj.turrets.push(turretObj);
                     game.scenes[0].add(turretObj, 3);
                 });
-
+            }
             obj.health = packet.health;
 
             if (isNaN(obj.old.position.x)) {
@@ -1819,6 +1823,7 @@ function gameIO() {
                 let batch = [];
 
                 turretsArray.forEach(turret => {
+                    if (!turret.visible) return;
                     let turretImg = turretSwitch(turret.type);
                     let turretObj = new game.image(turretImg, 0, 0, 200 * turret.scale, 200 * turret.scale, 100, 0, 0, true);
                     turretObj.offsetX = turret.offsetX || 0;
