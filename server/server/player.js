@@ -374,11 +374,17 @@ game.addType(
             let availableTurretIndexes = turretTree[obj.turretTier][obj.turretIndex];
             if (availableTurretIndexes !== []) {
                 availableTurretIndexes.forEach(turreti => {
-                    turretsArray[0].push([obj.turretTier + 1, turreti]);
-                    turretsArray[1].push(turrets[obj.turretTier + 1][turreti]);
+                    if (Array.isArray(turreti)) {
+                        if (Math.floor(obj.level / 10) >= turreti[1]) {
+                            turretsArray[0].push([turreti[1], turreti[0]]);
+                            turretsArray[1].push(turrets[turreti[1]][turreti[0]]);
+                        }
+                    } else {
+                        turretsArray[0].push([obj.turretTier + 1, turreti]);
+                        turretsArray[1].push(turrets[obj.turretTier + 1][turreti]);
+                    }
                 });
             }
-
             return turretsArray;
         }
 
@@ -412,20 +418,24 @@ game.addType(
             return;
         }
 
+        let send = false;
+
         if (obj.xp >= obj.levelThreshold) {
             if (obj.level !== 60) {
                 while (obj.xp >= obj.levelThreshold) {
                     obj.level++;
+                    if (!(obj.level % 10)) send = true;
                     obj.levelThreshold = l[obj.level];
                 }
                 if (obj.level > 60) obj.level = 60;
             }
         }
 
-        obj.hasBodyUpgrade = (obj.level >= ((obj.tier + 1) * 10 + (obj.tier) * 10)) ? true : false;
-        obj.hasTurretUpgrade = (obj.level >= ((obj.turretTier + 1) * 10)) ? true : false;
-
         obj.availableTurrets = obj.getAvailableTurrets();
+        if (send) obj.sendPacket({ type: "tt", turrets: obj.availableTurrets });
+
+        obj.hasBodyUpgrade = !!(obj.level >= ((obj.tier + 1) * 10 + (obj.tier) * 10));
+        obj.hasTurretUpgrade = !!(obj.level / 10 >= (obj.turretTier + 1));
 
         if (Date.now() > obj.regen) obj.health = Math.min(obj.health + 0.3, obj.maxHealth);
 

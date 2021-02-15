@@ -171,14 +171,21 @@ function gameIO() {
         });
         window.addEventListener("mousedown", function (event) {
             if (event.button === 0) {
+                let send = true;
                 for (const key in game.renderers[0].UI.buttons) {
                     game.renderers[0].UI.buttons[key].forEach(button => {
                         if (!button.enabled) return;
-                        if (button.isPointInside({ x: mouse.x, y: mouse.y })) { button.onclick(); button.pressed = true }
+                        if (button.isPointInside({ x: mouse.x, y: mouse.y })) { 
+                            button.onclick(); 
+                            button.pressed = true;
+                            send = false;
+                        }
                     });
                 }
-                mouse.clicking = true;
-                mouse.changed = true;
+                if (send) {
+                    mouse.changed = true;
+                    mouse.clicking = true;
+                }
             }
             else if (event.button == 2) {
                 mouse.rightClicking = true
