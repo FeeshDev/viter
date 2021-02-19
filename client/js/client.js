@@ -22,7 +22,7 @@ window.onload = function () {
     const 
         BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, 
         BULLET_MACHINEGUN = 3, BULLET_HUNTER = 4, BULLET_SPRAYER = 5
-        BULLET_DESTROYER = 6, BULLET_CANNONEER = 7, BULLET_ROCKET = 8,
+        BULLET_DESTROYER = 6, BULLET_CANNONEER = 7, BULLET_BOMBER = 8,
         BULLET_MINIGUN = 9;
 
     //#region Add types
@@ -144,7 +144,7 @@ window.onload = function () {
                 case BULLET_CANNONEER:
                     bullet.src = `./client/images/bullets/shotgun.png`;
                     break;
-                case BULLET_ROCKET:
+                case BULLET_BOMBER:
                     bullet.src = `./client/images/bullets/shotgun.png`;
                     break;
                 case BULLET_MINIGUN:

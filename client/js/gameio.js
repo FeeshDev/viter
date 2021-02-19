@@ -20,7 +20,7 @@ function imgFromSource(source) {
 const 
     TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, 
     TURRET_MACHINEGUN = 3, TURRET_HUNTER = 4, TURRET_SPRAYER = 5
-    TURRET_DESTROYER = 6, TURRET_CANNONEER = 7, TURRET_ROCKET = 8,
+    TURRET_DESTROYER = 6, TURRET_CANNONEER = 7, TURRET_BOMBER = 8,
     TURRET_MINIGUN = 9;
 function turretSwitch(type) {
     let turretImg = new Image();
@@ -49,8 +49,8 @@ function turretSwitch(type) {
         case TURRET_CANNONEER:
             turretImg.src = `./client/images/cannons/cannoneer.png`;
             break;
-        case TURRET_ROCKET:
-            turretImg.src = `./client/images/cannons/rocket.png`;
+        case TURRET_BOMBER:
+            turretImg.src = `./client/images/cannons/bomber.png`;
             break;
         case TURRET_MINIGUN:
             turretImg.src = `./client/images/cannons/minigun.png`;

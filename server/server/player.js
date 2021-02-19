@@ -112,7 +112,7 @@ class Turret {
                 l = 45.76;
                 break;
 
-            // rocket
+            // bomber
             case 8:
                 l = 45.76;
                 break;
@@ -231,7 +231,7 @@ const turrets = [
             new Turret({ type: 5, maxCD: 2, dmg: 3, offsetY: 10, bulletScale: 0.65, spread: Math.PI / 4, visible: false }), // minigun
             new Turret({ type: 9, maxCD: 2, dmg: 3, bulletScale: 0.65, spread: Math.PI / 4, })
         ],
-        [new Turret({ type: 8, maxCD: 25, dmg: 100, bulletScale: 1.4, bulletSpeedMult: 0.8, lifespanMult: 1 })] // cannoneer
+        [new Turret({ type: 8, maxCD: 25, dmg: 100, bulletScale: 1.4, bulletSpeedMult: 0.8, lifespanMult: 1 })] // bomber
     ]
 ]
 

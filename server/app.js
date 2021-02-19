@@ -80,10 +80,6 @@ if (encode) {
     });
     var minifiedScript = UglifyJS.minify(es5Code.code, options).code;
     minifiedScript = obfuscateText(minifiedScript);
-    const es5Code2 = babel.transformSync(minifiedScript, {
-        presets: ["@babel/preset-env"]
-    });
-    minifiedScript = UglifyJS.minify(es5Code2.code, options).code;
     console.log("Finished minifying");
 }
 
