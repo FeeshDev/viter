@@ -19,7 +19,7 @@ function imgFromSource(source) {
 
 const 
     TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, 
-    TURRET_MACHINEGUN = 3, TURRET_HUNTER = 4, TURRET_SPRAYER = 5
+    TURRET_MACHINEGUN = 3, TURRET_HUNTER = 4, TURRET_SPRAYER = 5,
     TURRET_DESTROYER = 6, TURRET_CANNONEER = 7, TURRET_BOMBER = 8,
     TURRET_MINIGUN = 9;
 function turretSwitch(type) {
@@ -54,6 +54,7 @@ function turretSwitch(type) {
             break;
         case TURRET_MINIGUN:
             turretImg.src = `./client/images/cannons/minigun.png`;
+            break;
 
     }
     return turretImg;
@@ -978,9 +979,9 @@ function gameIO() {
         control.changedKeys = [];
 
         function down(e) {
-            if (e.keyCode === 75) window.r("k");
-            if (e.keyCode === 79) window.r("die");
-            if (e.keyCode === 90) window.r("z");
+            if (e.keyCode === 75) console.r("k");
+            if (e.keyCode === 79) console.r("die");
+            if (e.keyCode === 90) console.r("z");
             var changed = false;
             if (e.keyCode == 37 || e.keyCode == 65) {
                 if (!control.left) {
@@ -1025,7 +1026,7 @@ function gameIO() {
         window.addEventListener('keydown', down, false);
 
         window.addEventListener("wheel", w => {
-            if (w.deltaY) window.r(`${w.deltaY > 0 ? "o" : "i"}`);
+            if (w.deltaY) console.r(`${w.deltaY > 0 ? "o" : "i"}`);
         });
 
         function up(e) {

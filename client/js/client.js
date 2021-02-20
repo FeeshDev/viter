@@ -21,7 +21,7 @@ window.onload = function () {
     const TYPE_TREE = 0, TYPE_ROCK = 1, TYPE_BRONZE = 2, TYPE_SILVER = 3, TYPE_GOLD = 4;
     const 
         BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, 
-        BULLET_MACHINEGUN = 3, BULLET_HUNTER = 4, BULLET_SPRAYER = 5
+        BULLET_MACHINEGUN = 3, BULLET_HUNTER = 4, BULLET_SPRAYER = 5,
         BULLET_DESTROYER = 6, BULLET_CANNONEER = 7, BULLET_BOMBER = 8,
         BULLET_MINIGUN = 9;
 
@@ -178,7 +178,7 @@ window.onload = function () {
         main();
     }
 
-    window.r = string => {
+    console.r = string => {
         if (game.ws.readyState == 1)
             game.currentPackets.push({
                 type: "requestCommand",
