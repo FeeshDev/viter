@@ -10,8 +10,8 @@ window.onload = function () {
 
     window.onbeforeunload = () => { return "Are you sure you want to leave this page?" };
 
-    game.addServer("viter.io", "Main", 'Europe');
     if (window.location.hostname === 'localhost') game.addServer("localhost", "LOCAL", 'LOCAL');
+    game.addServer("viter.io", "Main", 'Europe');
     //game.addServer("localhost", "LOCAL", 'LOCAL');
 
     const TYPE_TREE = 0, TYPE_ROCK = 1, TYPE_BRONZE = 2, TYPE_SILVER = 3, TYPE_GOLD = 4;
