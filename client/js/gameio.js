@@ -1671,6 +1671,7 @@ function gameIO() {
                 return;
             }
             var obj = game.getObj(packet.a[0]);
+            obj.visual.opacity = packet.opacity ?? 1;
             obj.ticksAsleep = 0;
             obj.old.position = obj.visual.position.clone();
             obj.old.rotation = obj.visual.rotation;

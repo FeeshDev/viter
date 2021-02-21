@@ -42,19 +42,19 @@ let tankBodies = [
         //* Tank 0
         new Body({ hitboxIndex: 1, speedMod: 1.1 }), //* Serpent MK I - 1.0
         //* Tank 1
-        new Body({ hitboxIndex: 0, healthMod: 1.1, fov: 1.2, timeToRegen: 17000 }), //* Squire MK I - 1.1
+        new Body({ hitboxIndex: 0, healthMod: 1.1, fov: 1.1, timeToRegen: 17000 }), //* Squire MK I - 1.1
     ],
     [ //* Tier 2
         //* Tank 0
         new Body({ hitboxIndex: 1, speedMod: 1.1, healthMod: 0.7 }), //* Serpent MK II - 2.0
         //* Tank 1
-        new Body({ hitboxIndex: 1, speedMod: 0.9, healthMod: 1.4, fov: 1.6, timeToRegen: 15000 }), //* Squire MK II - 2.1
+        new Body({ hitboxIndex: 1, speedMod: 0.9, healthMod: 1.4, fov: 1.3, timeToRegen: 15000 }), //* Squire MK II - 2.1
     ],
     [ //* Tier 3
         //* Tank 0
         new Body({ hitboxIndex: 1, speedMod: 1.3, healthMod: 0.5 }), //* Basilisk - 3.0
         //* Tank 1
-        new Body({ hitboxIndex: 1, speedMod: 0.8, healthMod: 2, fov: 2, timeToRegen: 10000 }), //* Knight - 3.1
+        new Body({ hitboxIndex: 1, speedMod: 0.8, healthMod: 2, fov: 1.6, timeToRegen: 10000 }), //* Knight - 3.1
     ]
 ];
 
@@ -350,6 +350,8 @@ game.addType(
         obj.regen = Date.now();
         obj.lastDestroyed = undefined;
         obj.zoom = true;
+        obj.spawnProt = Date.now() + 10000; // 10 seconds of spawn protection
+        obj.opacity = 0;
 
         obj.handleHitbox = () => {
             obj.props = tankBodies[obj.tier][obj.tank];
@@ -425,6 +427,8 @@ game.addType(
             return;
         }
 
+        if (obj.spawnProt && obj.spawnProt < Date.now()) obj.spawnProt = 0;
+
         let send = false;
 
         if (obj.xp >= obj.levelThreshold) {
@@ -490,6 +494,7 @@ game.addType(
 
         packet.turrets = obj.turrets;
 
+        packet.opacity = obj.spawnProt ? 0.5 : 1;
         packet.lb = leaderboard;
     },
     // Add
@@ -522,6 +527,7 @@ const handleHitbox = (obj) => {
 const handleMovement = obj => {
     let nextDir = `${obj.playerInput.up}${obj.playerInput.down}${obj.playerInput.left}${obj.playerInput.right}`;
     if (obj.dirString !== nextDir) {
+        obj.spawnProt = 0;
         let keysToSubtract = [];
         let keysToAdd = [];
         let keysDown = {
@@ -590,6 +596,7 @@ const handleMovement = obj => {
 }
 
 const shoot = obj => {
+    obj.spawnProt = 0;
     obj.turrets.forEach(turret => {
         if (!turret.shoot) return;
         if (turret.shootingOffset && (turret.turretCD === turret.shootingOffset)) turret.turretCD -= 0.5;
