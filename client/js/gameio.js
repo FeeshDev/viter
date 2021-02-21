@@ -17,8 +17,8 @@ function imgFromSource(source) {
     return elem;
 }
 
-const 
-    TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2, 
+const
+    TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2,
     TURRET_MACHINEGUN = 3, TURRET_HUNTER = 4, TURRET_SPRAYER = 5,
     TURRET_DESTROYER = 6, TURRET_CANNONEER = 7, TURRET_BOMBER = 8,
     TURRET_MINIGUN = 9;
@@ -116,8 +116,45 @@ function gameIO() {
         leaderboard: [],
         serverStats: [],
         pingArray: [],
-        pingValues: []
+        pingValues: [],
+        servers: {}
     };
+    game.addServer = function (ip, display, reg, customPort) {
+        let serverSelector = document.getElementById('serverSelect');
+
+        let protocol = reg === 'LOCAL' ? 'ws' : 'wss';
+        let port = customPort || (reg === 'LOCAL' ? '80' : '443');
+
+        if (serverSelector.getElementsByTagName('optgroup').length === 0) {
+            let optgroup = document.createElement('optgroup');
+            optgroup.label = reg;
+            let option = document.createElement('option');
+            option.value = `${protocol}:${ip}:${port}/ws`;
+            option.innerHTML = display;
+            optgroup.appendChild(option);
+            serverSelector.add(optgroup);
+            return;
+        } else {
+            var optgroups = [...serverSelector.getElementsByTagName('optgroup')];
+            let foundIndex = optgroups.findIndex(e => e.label === reg);
+            if (foundIndex >= 0) {
+                let option = document.createElement('option');
+                option.value = `${protocol}:${ip}:${port}/ws`;
+                option.innerHTML = display;
+                optgroups[foundIndex].appendChild(option);
+                /* vendors contains the element we're looking for */
+            } else {
+                let optgroup = document.createElement('optgroup');
+                optgroup.label = reg;
+                serverSelector.add(optgroup);
+                let option = document.createElement('option');
+                option.value = `${protocol}:${ip}:${port}/ws`;
+                option.innerHTML = display;
+                optgroup.appendChild(option);
+            }
+        }
+        this.servers[reg] = { ip: `${protocol}:${ip}:${port}/ws`, name: display };
+    }
     game.gameScale = 1;
     game.gamepad = function () {
         var gamepads = [];
@@ -179,8 +216,8 @@ function gameIO() {
                 for (const key in game.renderers[0].UI.buttons) {
                     game.renderers[0].UI.buttons[key].forEach(button => {
                         if (!button.enabled) return;
-                        if (button.isPointInside({ x: mouse.x, y: mouse.y })) { 
-                            button.onclick(); 
+                        if (button.isPointInside({ x: mouse.x, y: mouse.y })) {
+                            button.onclick();
                             button.pressed = true;
                             send = false;
                         }

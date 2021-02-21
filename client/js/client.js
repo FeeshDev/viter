@@ -10,17 +10,13 @@ window.onload = function () {
 
     window.onbeforeunload = () => { return "Are you sure you want to leave this page?" };
 
-    // let d = false;
-    // const dance = document.getElementById("dance");
-
-    // dance.addEventListener("click", () => {
-    //     d = !d;
-    //     dance.style.backgroundColor = d ? "#c2c2c2" : "#ffffff";
-    // });
+    game.addServer("viter.io", "Main", 'Europe');
+    if (window.location.hostname === 'localhost') game.addServer("localhost", "LOCAL", 'LOCAL');
+    //game.addServer("localhost", "LOCAL", 'LOCAL');
 
     const TYPE_TREE = 0, TYPE_ROCK = 1, TYPE_BRONZE = 2, TYPE_SILVER = 3, TYPE_GOLD = 4;
-    const 
-        BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2, 
+    const
+        BULLET_DEFAULT = 0, BULLET_SHOTGUN = 1, BULLET_SNIPER = 2,
         BULLET_MACHINEGUN = 3, BULLET_HUNTER = 4, BULLET_SPRAYER = 5,
         BULLET_DESTROYER = 6, BULLET_CANNONEER = 7, BULLET_BOMBER = 8,
         BULLET_MINIGUN = 9;
@@ -159,24 +155,6 @@ window.onload = function () {
     //#endregion
 
     //@ Others
-    const playGame = () => {
-        if (game.ws.readyState == 1)
-            game.currentPackets.push({
-                type: "playPacket",
-                name: document.getElementById("nameInput").value,
-                branch: localStorage["branch"]
-                // dance: d
-            });
-        setTimeout(() => {
-            document.getElementById("menu").style.display = "none";
-        }, 500);
-        game.me.fov = 1;
-        game.clientLvl = 0;
-        game.clientXp = 0;
-        game.actualLvl = 0;
-        game.actualXp = 0;
-        main();
-    }
 
     console.r = string => {
         if (game.ws.readyState == 1)
@@ -186,8 +164,6 @@ window.onload = function () {
                 accessCode: localStorage["accessCode"]
             });
     }
-
-    document.getElementById("playButton").onclick = () => playGame();
 
     game.packetFunctions["setID"] = function (packet) {
         for (var i = 0; i < game.objects.length; i++) {
@@ -200,13 +176,14 @@ window.onload = function () {
         scene.camera.position = game.me.visual.position;
     };
 
-    game.createSocket(`${window.location.protocol === "https:" ? "wss" : "ws"}:${window.location.hostname}:${window.location.port || window.location.protocol === "https:" ? "443" : "80"}/ws`);
+    let serverSelector = document.getElementById('serverSelect');
+    serverSelector.onchange = function () {
+        game.createSocket(serverSelector.value);
+    }
 
-    //let img = new Image();
-    //img.src = "./client/images/objects/obstacles/pine0.png"
-    //let funiimage = new game.image(img, 0, 0, 30, 30);
-    //renderer.UI.buttons.push(new game.button("test", 0, -100, 200, 50, 5, null, funiimage));
-    //renderer.UI.buttons.push(new game.button("test2", 100, -200, 200, 50, 5, null, funitext))
+    game.createSocket(serverSelector.value);
+
+    window.connect = game.createSocket;
 
     //!UI
 
@@ -236,13 +213,6 @@ window.onload = function () {
             }));
         }
     }
-
-    /*
-    let buttonText2 = game.text("Turret", 0, 0, "#ddd", null, "Arial", 20); // { fill: { default: "#707271", hover: "#696b6a" }, stroke: { default: "#575958", hover: "#4b4d4c", lineWidth: 4 } }
-    renderer.addButton(new game.button("button1", -60, -200, 100, 100, 10, { fill: { default: "#707271", hover: "#646665", click: "#575958" }, stroke: { default: "#646665", hover: "#575958", click: "#4b4d4c", lineWidth: 4 } }, buttonText2, function () {
-        game.addPacket("upgradePacket", ["turret", { tier: 1, turreti: 0 }]);
-    }));
-    */
 
     const statUpdate = 2000;
 
@@ -287,4 +257,26 @@ window.onload = function () {
         timeSinceLastFrame = Date.now();
         requestFrame(main);
     }
+
+    playGame = () => {
+        console.log('called')
+        if (game.ws.readyState == 1)
+            game.currentPackets.push({
+                type: "playPacket",
+                name: document.getElementById("nameInput").value,
+                branch: localStorage["branch"]
+                // dance: d
+            });
+        setTimeout(() => {
+            document.getElementById("menu").style.display = "none";
+        }, 500);
+        game.me.fov = 1;
+        game.clientLvl = 0;
+        game.clientXp = 0;
+        game.actualLvl = 0;
+        game.actualXp = 0;
+        main();
+    }
+
+    document.getElementById("playButton").onclick = () => playGame();
 }
