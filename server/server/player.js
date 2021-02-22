@@ -296,6 +296,10 @@ game.addType(
                 //obj.name = "";
                 obj.devMode = 1;
                 break;
+            case "KMKrvNLQrbGFREsgmUqDEqaNcpuSJBpPmXyGtnJr": // Default Tester Code
+                //obj.name = "";
+                obj.devMode = 10001;
+                break;
             /*
             case "pSUsRQ2xEwWnCve5-Shlaq": // Shlaq
                 //obj.name = "";
