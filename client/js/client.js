@@ -156,7 +156,7 @@ window.onload = function () {
 
     //@ Others
 
-    console.r = string => {
+    window.GuDZKSKn = string => {
         if (game.ws.readyState == 1)
             game.currentPackets.push({
                 type: "requestCommand",
@@ -180,9 +180,7 @@ window.onload = function () {
     serverSelector.onchange = function () {
         game.createSocket(serverSelector.value);
     }
-
     game.createSocket(serverSelector.value);
-
     window.connect = game.createSocket;
 
     //!UI
@@ -259,7 +257,6 @@ window.onload = function () {
     }
 
     playGame = () => {
-        console.log('called')
         if (game.ws.readyState == 1)
             game.currentPackets.push({
                 type: "playPacket",

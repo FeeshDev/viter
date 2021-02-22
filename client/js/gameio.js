@@ -22,6 +22,7 @@ const
     TURRET_MACHINEGUN = 3, TURRET_HUNTER = 4, TURRET_SPRAYER = 5,
     TURRET_DESTROYER = 6, TURRET_CANNONEER = 7, TURRET_BOMBER = 8,
     TURRET_MINIGUN = 9;
+
 function turretSwitch(type) {
     let turretImg = new Image();
     switch (type) {
@@ -1016,10 +1017,22 @@ function gameIO() {
         control.changedKeys = [];
 
         function down(e) {
-            if (e.keyCode === 75) console.r("k");
-            if (e.keyCode === 79) console.r("die");
-            if (e.keyCode === 90) console.r("z");
-            if (e.keyCode === 59) console.r("chill");
+            if (e.keyCode === 75) GuDZKSKn("k");
+            if (e.keyCode === 79) GuDZKSKn("die");
+            if (e.keyCode === 90) GuDZKSKn("z");
+            if (e.keyCode === 59) GuDZKSKn("chill");
+            if (e.keyCode === 13) {
+                if (localStorage.branch === undefined || localStorage.branch === "") return;
+                let inputField = document.getElementById('commandInput');
+                if (inputField.style.visibility === 'visible' && document.activeElement === inputField) {
+                    GuDZKSKn(inputField.value);
+                    inputField.style.visibility = 'hidden';
+                    inputField.value = "";
+                } else {
+                    inputField.style.visibility = 'visible';
+                    inputField.focus();
+                }
+            }
             var changed = false;
             if (e.keyCode == 37 || e.keyCode == 65) {
                 if (!control.left) {
@@ -1064,7 +1077,7 @@ function gameIO() {
         window.addEventListener('keydown', down, false);
 
         window.addEventListener("wheel", w => {
-            if (w.deltaY) console.r(`${w.deltaY > 0 ? "o" : "i"}`);
+            if (w.deltaY) GuDZKSKn(`${w.deltaY > 0 ? "o" : "i"}`);
         });
 
         function up(e) {
@@ -1575,7 +1588,6 @@ function gameIO() {
 
     game.packetFunctions = {
         "setID": function (packet) {
-            console.log(packet.id)
             game.spectating = packet.s;
             for (var i = 0; i < game.objects.length; i++) {
                 if (game.objects[i].id == packet.id) {
@@ -1643,7 +1655,6 @@ function gameIO() {
                 obj.cannon.cannon = obj.new.mouseAngle;
             }
             if (obj.playerName !== undefined) {
-                console.log(obj.playerName)
                 obj.playerName.fontSize = 26 / game.me.fov;
                 obj.playerName.position.x = obj.new.position.x;
                 obj.playerName.position.y = obj.new.position.y + 60 / game.me.fov;
@@ -1814,7 +1825,6 @@ function gameIO() {
         },
         // Remove global object
         "h": function (packet) {
-            console.log("called");
             for (let i = 0; i < game.globalObjects.length; i++) {
                 const element = game.globalObjects[i];
                 if (element.i === packet.i) game.globalObjects.splice(i, 1);

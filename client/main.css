@@ -152,3 +152,22 @@ p {
     height: 40px;
     font-size: 1.2rem;
 }
+
+#gameArea {
+    position: absolute;
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#commandInput {
+    position: absolute;
+    font-size: 1.2rem;
+    margin-top: 24rem;
+    height: 40px;
+    visibility: hidden;
+}
