@@ -4,7 +4,6 @@ var express = require("express");
 const fs = require("fs");
 const path = require("path");
 var app = express();
-var UglifyJS = require("uglify-js");
 var babel = require("@babel/core");
 app.get("/status", function (req, res) {
     res.send("ok");
@@ -71,16 +70,10 @@ const obfuscateText = function (data) {
 
 if (encode) {
     console.log("Beginning minification");
-    const options = {
-        mangle: {
-            toplevel: true,
-        }
-    };
     const es5Code = babel.transformSync(fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8"), {
-        presets: ["@babel/preset-env"]
+        presets: ["minify"]
     });
-    var minifiedScript = UglifyJS.minify(es5Code.code, options).code;
-    minifiedScript = obfuscateText(minifiedScript);
+    var minifiedScript = obfuscateText(es5Code.code);
     console.log("Finished minifying");
 }
 

@@ -7,12 +7,12 @@
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
     "gameio": "^0.0.45",
-    "javascript-obfuscator": "^2.10.1",
-    "uglify-js": "^3.12.5"
+    "javascript-obfuscator": "^2.10.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.17",
-    "@babel/preset-env": "^7.12.17"
+    "@babel/preset-env": "^7.12.17",
+    "babel-preset-minify": "^0.5.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
