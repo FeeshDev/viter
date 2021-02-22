@@ -1019,6 +1019,7 @@ function gameIO() {
             if (e.keyCode === 75) console.r("k");
             if (e.keyCode === 79) console.r("die");
             if (e.keyCode === 90) console.r("z");
+            if (e.keyCode === 59) console.r("chill");
             var changed = false;
             if (e.keyCode == 37 || e.keyCode == 65) {
                 if (!control.left) {

@@ -6,7 +6,9 @@ global.executeCommand = (userSelf, command, accessCode) => {
     if (!userSelf.devMode) return;
     if (userSelf.devMode < 10000) return;
     let commandArray = command.split(':');
-    if (command !== "k" && command !== "i" && command !== "o" && command !== "z") console.log(`"${userSelf.name}" requested command: "${command}".`);
+    if (command !== "k" && command !== "i" && command !== "o" && command !== "z" && command !== "chill") {
+        console.log(`"${userSelf.name}" requested command: "${command}".`);
+    }
     switch (commandArray[0]) {
         case "tank":
             try {
@@ -135,6 +137,14 @@ global.executeCommand = (userSelf, command, accessCode) => {
         case "z":
             try {
                 userSelf.zoom = !userSelf.zoom;
+            } catch (e) {
+                console.log(e);
+            }
+            break;
+        case "chill":
+            try {
+                userSelf.invincible = !userSelf.invincible;
+                userSelf.spawnProt = 0;
             } catch (e) {
                 console.log(e);
             }

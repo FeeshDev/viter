@@ -84,7 +84,7 @@ game.addCollision('bullet', 'wall', (bullet, wall) => {
 game.addCollision('bullet', 'player', (bullet, player) => {
     if (bullet.ownerID !== player.id) {
         game.remove(bullet);
-        if (player.spawnProt) return;
+        if (player.invincible) return;
         player.health -= bullet.damage / player.props.healthMod;
         if (!game.findObjectById(bullet.ownerID, true)) return;
         if (player.health <= 0 && game.findObjectById(bullet.ownerID).lastDestroyed !== player.id) {

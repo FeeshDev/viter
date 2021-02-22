@@ -351,7 +351,7 @@ game.addType(
         obj.lastDestroyed = undefined;
         obj.zoom = true;
         obj.spawnProt = Date.now() + 10000; // 10 seconds of spawn protection
-        obj.opacity = 0;
+        obj.invincible = true;
 
         obj.handleHitbox = () => {
             obj.props = tankBodies[obj.tier][obj.tank];
@@ -427,7 +427,10 @@ game.addType(
             return;
         }
 
-        if (obj.spawnProt && obj.spawnProt < Date.now()) obj.spawnProt = 0;
+        if (obj.spawnProt && obj.spawnProt < Date.now()) {
+            obj.invincible = false;
+            obj.spawnProt = 0;
+        }
 
         let send = false;
 
@@ -494,7 +497,7 @@ game.addType(
 
         packet.turrets = obj.turrets;
 
-        packet.opacity = obj.spawnProt ? 0.5 : 1;
+        packet.opacity = obj.invincible ? 0.5 : 1;
         packet.lb = leaderboard;
     },
     // Add
@@ -517,6 +520,8 @@ game.addType(
         packet.turrets = obj.turrets;
         packet.playerName = obj.name;
         packet.devMode = obj.devMode;
+
+        packet.opacity = obj.invincible ? 0.5 : 1;
     }
 );
 
@@ -527,7 +532,10 @@ const handleHitbox = (obj) => {
 const handleMovement = obj => {
     let nextDir = `${obj.playerInput.up}${obj.playerInput.down}${obj.playerInput.left}${obj.playerInput.right}`;
     if (obj.dirString !== nextDir) {
-        obj.spawnProt = 0;
+        if (obj.spawnProt) {
+            obj.spawnProt = 0;
+            obj.invincible = false;
+        }
         let keysToSubtract = [];
         let keysToAdd = [];
         let keysDown = {
@@ -596,7 +604,10 @@ const handleMovement = obj => {
 }
 
 const shoot = obj => {
-    obj.spawnProt = 0;
+    if (obj.spawnProt) {
+        obj.spawnProt = 0;
+        obj.invincible = false;
+    }
     obj.turrets.forEach(turret => {
         if (!turret.shoot) return;
         if (turret.shootingOffset && (turret.turretCD === turret.shootingOffset)) turret.turretCD -= 0.5;
