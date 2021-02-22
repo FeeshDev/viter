@@ -39,9 +39,11 @@ window.onload = function () {
                 case 1:
                     nameColor = "#f6730b";
                     break;
-                case 10002:
-                    nameColor = "#7fd5ff";
-                    break;
+                /*
+            case 10002:
+                nameColor = "#7fd5ff";
+                break;
+                */
                 case 3:
                     nameColor = "#ae0505";
                     break;

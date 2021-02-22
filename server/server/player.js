@@ -36,7 +36,7 @@ class Body {
 let tankBodies = [
     [ //* Tier 0
         //* Tank 0
-        new Body({ hitboxIndex: 0 } ) //* Default - 0.0
+        new Body({ hitboxIndex: 0 }) //* Default - 0.0
     ],
     [ //* Tier 1
         //* Tank 0
@@ -81,7 +81,7 @@ class Turret {
             case 1:
                 l = 32.56;
                 break;
-            
+
             // sniper
             case 2:
                 l = 51.04;
@@ -94,9 +94,9 @@ class Turret {
 
             // hunter
             case 4:
-                l = 51.04;  
+                l = 51.04;
                 break;
-            
+
             // sprayer
             case 5:
                 l = 41.8;
@@ -296,10 +296,12 @@ game.addType(
                 //obj.name = "";
                 obj.devMode = 1;
                 break;
+            /*
             case "pSUsRQ2xEwWnCve5-Shlaq": // Shlaq
                 //obj.name = "";
                 obj.devMode = 10002;
                 break;
+                */
             case "pSUsRQ2xEwWnCve5-Pig": // Nation
                 //obj.name = "";
                 obj.devMode = 3;
@@ -622,7 +624,7 @@ const shoot = obj => {
             game.create("bullet", {
                 type: turret.type,
                 pos: [
-                    obj.body.position[0] + finalPosition.x, 
+                    obj.body.position[0] + finalPosition.x,
                     obj.body.position[1] + finalPosition.y
                 ],
                 angle: ba,
