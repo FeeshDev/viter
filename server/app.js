@@ -12,6 +12,7 @@ app.get("/status", function (req, res) {
 
 let key = 'Ln5bdDbGJVJ8AQA3Lemgwnf9Xq7Qfjpr8Njr3ssbbmeEQqtekmLbyyjtDSQZ';
 
+let playerCount = 0;
 
 //! CERTIFICATE DETECTION -- USE THIS FOR ANYTHING MEANT ONLY TO HAPPEN ON THE VPS
 
@@ -103,6 +104,10 @@ if (fs.existsSync(pathToCheck)) {
     app.get("/client/js/", function (req, res) {
         res.send("Don't even try :)");
     });
+    app.get("/playerCount", function (req, res) {
+        res.json({ clients: game.clients.length, players: playerCount });
+    });
+    //playerCount
 }
 
 
@@ -157,7 +162,7 @@ require("./server/commandHandler.js");
 //! WEBSOCKET EVENTS
 game.wsopen = function (ws) {
     console.log(`Client (${ws.ipAdress}) connected.`);
-    ws.isPlaying - false;
+    ws.isPlaying = false;
     ws.currentPackets.push({ type: "p", count: game.clients.length });
     setInterval(() => {
         if (ws.isPlaying !== true) if (ws.currentPackets !== undefined) ws.currentPackets.push({ type: "p", count: game.clients.length });
@@ -171,6 +176,7 @@ game.wsopen = function (ws) {
 }
 
 game.wsclose = function (ws) {
+    if (ws.isPlaying) playerCount--;
     if (ws.self) game.remove(ws.self);
 }
 
@@ -204,6 +210,7 @@ game.addPacketType(
                 startXp: ws.startingXp
                 // dance: packet.dance 
             });
+            playerCount++;
             ws.isPlaying = true;
             if (ws.currentPackets !== []) ws.currentPackets.push({ type: "i", list: game.globalCoordPackets });
             if (ws.currentPackets !== []) ws.currentPackets.push({ type: "s", scale: MAP_SCALE });
@@ -212,6 +219,7 @@ game.addPacketType(
                 ws.self = undefined;
                 ws.isPlaying = false;
                 ws.startingXp = Math.round(Math.ceil(Math.pow((lvl + 2), 2.635)) / 4);
+                playerCount--;
             }
             ws.self.sendPacket = (packet) => {
                 if (ws.currentPackets === undefined) return;
