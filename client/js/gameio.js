@@ -17,6 +17,16 @@ function imgFromSource(source) {
     return elem;
 }
 
+async function fetchUrlReturnJson(url) {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+    } catch (e) {
+        return undefined;
+    }
+}
+
 const
     TURRET_DEFAULT = 0, TURRET_SHOTGUN = 1, TURRET_SNIPER = 2,
     TURRET_MACHINEGUN = 3, TURRET_HUNTER = 4, TURRET_SPRAYER = 5,
@@ -118,20 +128,27 @@ function gameIO() {
         serverStats: [],
         pingArray: [],
         pingValues: [],
-        servers: {}
+        servers: []
     };
-    game.addServer = function (ip, display, reg, customPort) {
+    game.addServer = async function (ip, display, reg, customPort) {
         let serverSelector = document.getElementById('serverSelect');
 
-        let protocol = reg === 'LOCAL' ? 'ws' : 'wss';
-        let port = customPort || (reg === 'LOCAL' ? '80' : '443');
+        let players = "...";
+        let webprotocol = reg === 'TESTREGION' ? 'http' : 'https';
+        let wsprotocol = reg === 'TESTREGION' ? 'ws' : 'wss';
+        let port = customPort || (reg === 'TESTREGION' ? '80' : '443');
+        this.servers.push(`${wsprotocol}:${ip}:${port}/ws`);
 
         if (serverSelector.getElementsByTagName('optgroup').length === 0) {
             let optgroup = document.createElement('optgroup');
             optgroup.label = reg;
             let option = document.createElement('option');
-            option.value = `${protocol}:${ip}:${port}/ws`;
-            option.innerHTML = display;
+
+            let jsonUrl = `${webprotocol}://${ip}:${port}/playerCount`;
+            let jsonObj = await fetchUrlReturnJson(jsonUrl);
+            if (jsonObj !== undefined) players = jsonObj.players;
+
+            option.innerHTML = `${display} [${players} players]`;
             optgroup.appendChild(option);
             serverSelector.add(optgroup);
             return;
@@ -140,21 +157,27 @@ function gameIO() {
             let foundIndex = optgroups.findIndex(e => e.label === reg);
             if (foundIndex >= 0) {
                 let option = document.createElement('option');
-                option.value = `${protocol}:${ip}:${port}/ws`;
-                option.innerHTML = display;
+
+                let jsonUrl = `${webprotocol}://${ip}:${port}/playerCount`;
+                let jsonObj = await fetchUrlReturnJson(jsonUrl);
+                if (jsonObj !== undefined) players = jsonObj.players;
+
+                option.innerHTML = `${display} [${players} players]`;
                 optgroups[foundIndex].appendChild(option);
-                /* vendors contains the element we're looking for */
             } else {
                 let optgroup = document.createElement('optgroup');
                 optgroup.label = reg;
                 serverSelector.add(optgroup);
                 let option = document.createElement('option');
-                option.value = `${protocol}:${ip}:${port}/ws`;
-                option.innerHTML = display;
+
+                let jsonUrl = `${webprotocol}://${ip}:${port}/playerCount`;
+                let jsonObj = await fetchUrlReturnJson(jsonUrl);
+                if (jsonObj !== undefined) players = jsonObj.players;
+
+                option.innerHTML = `${display} [${players} players]`;
                 optgroup.appendChild(option);
             }
         }
-        this.servers[reg] = { ip: `${protocol}:${ip}:${port}/ws`, name: display };
     }
     game.gameScale = 1;
     game.gamepad = function () {

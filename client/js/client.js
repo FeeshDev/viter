@@ -10,7 +10,7 @@ window.onload = function () {
 
     window.onbeforeunload = () => { return "Are you sure you want to leave this page?" };
 
-    if (window.location.hostname === 'localhost') game.addServer("localhost", "LOCAL", 'LOCAL');
+    if (window.location.hostname === 'localhost') game.addServer("localhost", "LOCAL", 'TESTREGION');
     game.addServer("viter.io", "Main", 'Europe');
     //game.addServer("localhost", "LOCAL", 'LOCAL');
 
@@ -180,10 +180,9 @@ window.onload = function () {
 
     let serverSelector = document.getElementById('serverSelect');
     serverSelector.onchange = function () {
-        game.createSocket(serverSelector.value);
+        game.createSocket(game.servers[serverSelector.selectedIndex]);
     }
-    game.createSocket(serverSelector.value);
-    window.connect = game.createSocket;
+    game.createSocket(game.servers[0]);
 
     //!UI
 
