@@ -1,0 +1,19 @@
+{
+  "name": "viter-server",
+  "version": "1.0.0",
+  "description": "game server",
+  "main": "app.js",
+  "dependencies": {
+    "express-ws": "^4.0.0",
+    "express": "^4.17.1",
+    "gameio": "^0.0.45",
+    "javascript-obfuscator": "^2.10.1",
+    "uglify-js": "^3.12.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "alez",
+  "license": "ISC"
+}
