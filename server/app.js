@@ -72,10 +72,10 @@ const obfuscateText = function (data) {
 
 if (encode) {
     console.log("Beginning minification");
-    const es5Code = babel.transformSync(fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8"), {
+    var minifiedScript = babel.transformSync(fs.readFileSync(path.resolve("..", "client", "js", "client.js"), "utf8") + "; " + fs.readFileSync(path.resolve("..", "client", "js", "gameio.js"), "utf8"), {
         presets: ["minify"]
     });
-    var minifiedScript = obfuscateText(es5Code.code);
+    minifiedScript = obfuscateText(minifiedScript.code);
     console.log("Finished minifying");
 }
 

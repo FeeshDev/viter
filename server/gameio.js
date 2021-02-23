@@ -400,26 +400,43 @@ exports.game = function (options) {
             });
         },
         updateCloseObjects: function (client) {
-            var closeObjects = [];
+            let pass1 = [];
+            let closeObjects = [];
+            const x = client.self.fov * 960 + 500;
+            const y = client.self.fov * 540 + 500;
             for (var i = 0; i < game.objects.length; i++) {
-                if (!game.objects[i].updateAtAll)
-                    continue;
-                if (game.notUpdatedIsClose(client, game.objects[i], client.self.fov)) {
-                    closeObjects.push(game.objects[i]);
-                    if (client.closeObjects.indexOf(game.objects[i]) == -1) {
+                if (!game.objects[i].updateAtAll) continue;
+                if (
+                    game.objects[i].body.position[0] >= client.self.body.position[0] - x
+                    && 
+                    game.objects[i].body.position[0] <= client.self.body.position[0] + x
+                ) {
+                    pass1.push(game.objects[i]);
+                } else if (client.closeObjects.indexOf(game.objects[i]) != -1) {
+                    client.currentPackets.push(game.removePacket(game.objects[i]));
+                }
+            }
+            pass1.forEach(obj => {
+                if (
+                    obj.body.position[1] >= client.self.body.position[1] - y
+                    && 
+                    obj.body.position[1] <= client.self.body.position[1] + y
+                ) {
+                    closeObjects.push(obj);
+                    if (client.closeObjects.indexOf(obj) == -1) {
                         if (!client.self || client.self.fov === 1) {
-                            client.currentPackets.push(game.add(game.objects[i]))
+                            client.currentPackets.push(game.add(obj))
                         } else {
-                            const p = game.add(game.objects[i]);
+                            const p = game.add(obj);
                             p.x /= client.self.fov;
                             p.y /= client.self.fov;
                             client.currentPackets.push(p);
                         }
                     }
-                } else if (client.closeObjects.indexOf(game.objects[i]) != -1) {
-                    client.currentPackets.push(game.removePacket(game.objects[i]));
+                } else if (client.closeObjects.indexOf(obj) != -1) {
+                    client.currentPackets.push(game.removePacket(obj));
                 }
-            }
+            });
             client.closeObjects = closeObjects;
         },
         mainLoop: function () { },
