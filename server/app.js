@@ -13,7 +13,7 @@ app.get("/status", function (req, res) {
 let key = 'Ln5bdDbGJVJ8AQA3Lemgwnf9Xq7Qfjpr8Njr3ssbbmeEQqtekmLbyyjtDSQZ';
 
 let playerCount = 0;
-let servers = [];
+//let servers = [];
 
 //! CERTIFICATE DETECTION -- USE THIS FOR ANYTHING MEANT ONLY TO HAPPEN ON THE VPS
 
@@ -131,25 +131,6 @@ function postData(url = '', data = {}) {
 
 postData('http://localhost/masterServer', { players: playerCount });
 */
-
-
-/*
-const obfuscateClientCode = function () {
-    fs.readdir(path.resolve("..", "client", "js"), function (err, files) {
-        files.forEach(function (file) {
-            if (!file.includes(".js")) {
-            } else {
-                fs.copyFile(path.resolve("..", "client", "js", file), path.resolve("..", "client", "clean_js", file), (err) => {
-                    if (err) throw err;
-                    console.log(`${file} was copied to clean_js/${file}`);
-                });
-
-                obfuscatePathToFile(path.resolve("..", "client", "js", file));
-            }
-        });
-    });
-    console.log('Obfuscation process ended.');
-}*/
 
 if (cert) {
     let app2 = express();
