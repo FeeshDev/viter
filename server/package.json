@@ -7,7 +7,8 @@
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
     "gameio": "^0.0.45",
-    "javascript-obfuscator": "^2.10.1"
+    "javascript-obfuscator": "^2.10.1",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.17",

@@ -1,8 +1,9 @@
 var gameIO = require("./gameio.js");
-// var gameIO = require("gameio");
 var express = require("express");
+// var gameIO = require("gameio");
 const fs = require("fs");
 const path = require("path");
+const fetch = require('node-fetch');
 var app = express();
 var babel = require("@babel/core");
 app.get("/status", function (req, res) {
@@ -12,6 +13,7 @@ app.get("/status", function (req, res) {
 let key = 'Ln5bdDbGJVJ8AQA3Lemgwnf9Xq7Qfjpr8Njr3ssbbmeEQqtekmLbyyjtDSQZ';
 
 let playerCount = 0;
+let servers = [];
 
 //! CERTIFICATE DETECTION -- USE THIS FOR ANYTHING MEANT ONLY TO HAPPEN ON THE VPS
 
@@ -100,8 +102,35 @@ if (fs.existsSync(pathToCheck)) {
     app.get("/playerCount", function (req, res) {
         res.json({ clients: game.clients.length, players: playerCount });
     });
-    //playerCount
+    /*
+    app.post("/masterServer", function (req, res) {
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+        req.on('end', () => {
+            let parsedBody = JSON.parse(body);
+            parsedBody.name = req.connection.localAddress;
+            servers.push(parsedBody)
+        });
+    });
+    app.get("/masterServer", function (req, res) {
+        res.json(servers);
+    });
+    */
 }
+
+/*
+function postData(url = '', data = {}) {
+    fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+    })
+}
+
+postData('http://localhost/masterServer', { players: playerCount });
+*/
 
 
 /*
