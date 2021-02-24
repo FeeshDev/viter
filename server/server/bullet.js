@@ -90,13 +90,17 @@ game.addCollision('bullet', 'player', (bullet, player) => {
         if (player.health <= 0 && game.findObjectById(bullet.ownerID).lastDestroyed !== player.id) {
             const you = game.findObjectById(bullet.ownerID);
             const them = game.findObjectById(player.id);
+            let theirScore = game.findObjectById(player.id).xp;
+            if (theirScore > 50623) {
+                theirScore -= (theirScore - 50623) * 9/10;
+            }
             let scoreToGive = Math.round(
                 Math.min(
                     Math.max(
-                        Math.round(them.xp * (0.5 * (them.level / (you.level || 1)))),
-                        them.xp * 0.1
+                        Math.round(theirScore * (0.5 * (them.level / (you.level || 1)))),
+                        theirScore * 0.1
                     ),
-                    them.xp * 0.9
+                    theirScore * 0.9
                 )
             );
             if (them.level === 60 && you.xp + scoreToGive < 50623) scoreToGive = 50623 - you.xp;
