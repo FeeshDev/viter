@@ -41,13 +41,14 @@ p {
     text-indent: 10px;
     font-family: 'Montserrat', sans-serif;
     font-size: 30px;
+    margin-top: 60px;
     width: 200px;
     height: 60px;
 }
 
 #playButton {
     font-family: 'Montserrat', sans-serif;
-    margin-top: 15px;
+    margin-top: 10px;
     width: 160px;
     height: 60px;
     font-size: 20px;
@@ -138,11 +139,6 @@ p {
     top: 3px;
 }
 
-#logo {
-    width: 800px;
-    height: auto;
-}
-
 #playerCount {
     position: absolute;
     top: 0px;
@@ -151,7 +147,7 @@ p {
 }
 
 #serverSelect {
-    margin-top: 15px;
+    margin-top: 10px;
     width: 200px;
     height: 40px;
     font-size: 1.2rem;
