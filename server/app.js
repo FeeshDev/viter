@@ -221,7 +221,7 @@ game.addPacketType(
                 ws.currentPackets.push({ type: "d", time: Date.now() - t, xp: xp, level: lvl });
                 ws.self = undefined;
                 ws.isPlaying = false;
-                ws.startingXp = Math.round(Math.ceil(Math.pow((lvl + 2), 2.635)) / 4);
+                ws.startingXp = Math.round(Math.ceil(Math.pow((lvl === 0 ? lvl : lvl + 2), 2.635)) / 4);
                 playerCount--;
             }
             ws.self.sendPacket = (packet) => {

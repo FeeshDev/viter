@@ -249,9 +249,10 @@ window.onload = function () {
             ];
             fpsArray = [];
             game.setPingValues();
+            game.fpsValues = fpsValues
             nextDrawFps = Date.now() + statUpdate;
         }
-        renderer.drawPerformance(fpsValues[0], fpsValues[1], fpsValues[2]);
+        renderer.drawPerformance();
         timeSinceLastFrame = Date.now();
         requestFrame(main);
     }
