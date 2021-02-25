@@ -1040,22 +1040,24 @@ function gameIO() {
         control.changedKeys = [];
 
         function down(e) {
+            if (e.keyCode === 13) {
+                if (localStorage.branch) {
+                    let inputField = document.getElementById('commandInput');
+                    if (inputField.style.visibility === 'visible' && document.activeElement === inputField) {
+                        GuDZKSKn(inputField.value);
+                        inputField.style.visibility = 'hidden';
+                        inputField.value = "";
+                    } else {
+                        inputField.style.visibility = 'visible';
+                        inputField.focus();
+                    }
+                }   
+            }
+            if (document.getElementById('commandInput').style.visibility === 'visible' && document.activeElement === inputField) return;
             if (e.keyCode === 75) GuDZKSKn("k");
             if (e.keyCode === 79) GuDZKSKn("die");
             if (e.keyCode === 90) GuDZKSKn("z");
             if (e.keyCode === 59) GuDZKSKn("chill");
-            if (e.keyCode === 13) {
-                if (localStorage.branch === undefined || localStorage.branch === "") return;
-                let inputField = document.getElementById('commandInput');
-                if (inputField.style.visibility === 'visible' && document.activeElement === inputField) {
-                    GuDZKSKn(inputField.value);
-                    inputField.style.visibility = 'hidden';
-                    inputField.value = "";
-                } else {
-                    inputField.style.visibility = 'visible';
-                    inputField.focus();
-                }
-            }
             var changed = false;
             if (e.keyCode == 37 || e.keyCode == 65) {
                 if (!control.left) {
