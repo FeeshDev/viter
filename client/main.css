@@ -24,39 +24,6 @@ p {
     font-size: 40px;
 }
 
-#Menu {
-    display: flex;
-    font-size: 4rem;
-    text-align: center;
-    color: aliceblue;
-}
-
-#playMenu {
-    font-size: 60px;
-    text-align: center;
-    height: 100px;
-}
-
-#nameInput {
-    text-indent: 10px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 30px;
-    margin-top: 60px;
-    width: 200px;
-    height: 60px;
-}
-
-#playButton {
-    font-family: 'Montserrat', sans-serif;
-    margin-top: 10px;
-    width: 160px;
-    height: 60px;
-    font-size: 20px;
-}
-#playButton:hover {
-    cursor: pointer;
-}
-
 #settings {
     position: absolute;
     width: 200px;
@@ -71,23 +38,6 @@ p {
 #settings-text {
     font-size: 20px;
     margin-top: 13px;
-}
-
-#dance {
-    width: 25px;
-    height: 25px;
-    background-color: #ffffff;
-    margin-top: -5px;
-    margin-left: 15px;
-}
-#dance:hover {
-    cursor: pointer;
-}
-
-#dance-text {
-    font-size: 18px;
-    margin-top: -23px;
-    margin-left: 40px;
 }
 
 #death-screen {
@@ -131,14 +81,6 @@ p {
     cursor: pointer;
 }
 
-#title {
-    position: absolute;
-    left: 0;
-    right: 0;
-    width: 100%;
-    top: 3px;
-}
-
 #playerCount {
     position: absolute;
     top: 0px;
@@ -146,11 +88,99 @@ p {
     font-size: 1.2rem;
 }
 
+#title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    top: 0.5vh;
+}
+#logo {
+    margin-top: 16vh;
+    width: 30vw;
+    height: auto;
+}
+
+#Menu {
+    display: flex;
+    text-align: center;
+    color: aliceblue;
+}
+#playMenu {
+    text-align: center;
+    height: 100px;
+}
+
+#nameInput {
+    margin-top: 10vh;
+    text-indent: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5vw;
+    width: 12vw;
+    height: 6vh;
+    font-weight: bold;
+    color: white;
+    background-color: #378056;
+    border-color: #385243;
+    border-radius: 1.2vw;
+    border-width: 0.2vw;
+    border-style: solid;
+}
+#nameInput::placeholder {
+    font-weight: bold;
+    color: white;
+}
+#nameInput:focus {
+    outline: none;
+    border-color: white;
+    box-shadow: 0 0 1vw white;
+}
+
 #serverSelect {
-    margin-top: 10px;
-    width: 200px;
-    height: 40px;
-    font-size: 1.2rem;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 1.5vh;
+    width: 10.5vw;
+    height: 4vh;
+    font-size: 0.8vw;
+    color: white;
+    font-weight: bold;
+    background-color: #378056;
+    border-color: #385243;
+    border-radius: 0.4vw;
+    border-width: 0.2vw;
+    border-style: solid;
+}
+#serverSelect:focus {
+    outline: none;
+    border-color: white;
+    box-shadow: 0 0 1vw white;
+}
+
+#playButton {
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 1.5vh;
+    width: 8vw;
+    height: 6vh;
+    font-size: 1.5vw;
+    font-weight: bold;
+    color: white;
+    background-color: #30AE68;
+    border-color: #385243;
+    border-radius: 0.4vw;
+    border-width: 0.2vw;
+    border-style: solid;
+}
+#playButton:focus {
+    outline: none;
+    border-color: white;
+    box-shadow: 0 0 1vw white;
+}
+#playButton:hover {
+    cursor: pointer;
+    opacity: 0.9;
+}
+#playButton:active {
+    opacity: 0.8;
 }
 
 #gameArea {
