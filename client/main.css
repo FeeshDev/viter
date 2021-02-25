@@ -73,9 +73,9 @@ p {
 
 #discord {
     position: absolute;
-    height: 60px;
-    right: 7px;
-    top: 7px;
+    height: 7vh;
+    right: 0.5vw;
+    top: 0.5vw;
 }
 #discord:hover {
     cursor: pointer;
@@ -84,8 +84,9 @@ p {
 #playerCount {
     position: absolute;
     top: 0px;
-    left: 20px;
-    font-size: 1.2rem;
+    left: 1vw;
+    font-weight: bold;
+    font-size: 1vw;
 }
 
 #title {
@@ -112,12 +113,12 @@ p {
 }
 
 #nameInput {
-    margin-top: 10vh;
+    margin-top: 6vw;
     text-indent: 10px;
     font-family: 'Montserrat', sans-serif;
     font-size: 1.5vw;
     width: 12vw;
-    height: 6vh;
+    height: 3vw;
     font-weight: bold;
     color: white;
     background-color: #378056;
@@ -140,7 +141,7 @@ p {
     font-family: 'Montserrat', sans-serif;
     margin-top: 1.5vh;
     width: 10.5vw;
-    height: 4vh;
+    height: 2vw;
     font-size: 0.8vw;
     color: white;
     font-weight: bold;
@@ -160,7 +161,7 @@ p {
     font-family: 'Montserrat', sans-serif;
     margin-top: 1.5vh;
     width: 8vw;
-    height: 6vh;
+    height: 3vw;
     font-size: 1.5vw;
     font-weight: bold;
     color: white;
