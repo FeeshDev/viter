@@ -118,6 +118,8 @@ p {
     font-size: 30px;
     width: 220px;
     height: 50px;
+    font-weight: bold;
+    color: white;
     background-color: #378056;
     border-color: #385243;
     border-radius: 16px;
@@ -125,6 +127,7 @@ p {
     border-style: solid;
 }
 #nameInput::placeholder {
+    font-weight: bold;
     color: white;
 }
 #nameInput:focus {
