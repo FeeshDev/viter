@@ -143,37 +143,11 @@ p {
     height: auto;
 }
 
-#Menu {
-    display: flex;
-    font-size: 4rem;
-    text-align: center;
-    color: aliceblue;
-}
-#playMenu {
-    font-size: 60px;
-    text-align: center;
-    height: 100px;
-}
-
-#nameInput {
-    text-indent: 10px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 30px;
-    width: 220px;
-    height: 50px;
-    background-color: #378056;
-    border-color: #385243;
-    border-radius: 16px;
-    border-width: 3px;
-    border-style: solid;
-}
-#nameInput::placeholder {
-    color: white;
-}
-#nameInput:focus {
-    outline: none;
-    border-color: white;
-    box-shadow: 0 0 10px white;
+#playerCount {
+    position: absolute;
+    top: 0px;
+    left: 20px;
+    font-size: 1.2rem;
 }
 
 #serverSelect {
