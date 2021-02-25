@@ -128,6 +128,7 @@ function gameIO() {
         serverStats: [],
         pingArray: [],
         pingValues: [],
+        fpsValues: [],
         servers: []
     };
     game.addServer = async function (ip, display, reg, customPort) {
@@ -538,7 +539,7 @@ function gameIO() {
                     normalizeCoords(-(window.innerHeight / 2 - 40 / this.ratio), this.position.y, this.ratio, this.c.height),
                 );
                 this.ctx.fillText(
-                    `FPS: ${Math.round(avg)} ${Math.round(min)} ${Math.round(max)}`,
+                    `FPS: ${Math.round(game.fpsValues[0])} ${Math.round(game.fpsValues[1])} ${Math.round(game.fpsValues[2])}`,
                     normalizeCoords(window.innerWidth / 2 - 200 / this.ratio, this.position.x, this.ratio, this.c.width),
                     normalizeCoords(-(window.innerHeight / 2 - 70 / this.ratio), this.position.y, this.ratio, this.c.height),
                 );
