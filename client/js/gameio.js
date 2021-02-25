@@ -117,6 +117,7 @@ let themes = [
 ];
 
 var fps = { startTime: 0, frameNumber: 0, getFPS: function () { this.frameNumber++; var d = new Date().getTime(), currentTime = (d - this.startTime) / 1000, result = Math.floor((this.frameNumber / currentTime)); if (currentTime > 1) { this.startTime = new Date().getTime(); this.frameNumber = 0; } return result; } };
+let perf = false;
 function gameIO() {
     // Rendering Portion
     var game = {
@@ -530,7 +531,8 @@ function gameIO() {
                 }
                 this.ctx.globalAlpha = 1;
             },
-            drawPerformance: function (avg, min, max) {
+            drawPerformance: function () {
+                if (!perf) return;
                 this.ctx.globalAlpha = 0.5;
                 this.ctx.fillStyle = `${35 / this.ratio}px Montserrat`;
                 this.ctx.fillText(
@@ -613,6 +615,7 @@ function gameIO() {
             renderer.ratio *= renderSize;
             renderer.ctx.imageSmoothingEnabled = renderer.smoothingEnabled;
         });
+        document.getElementById("return").style.marginTop = window.innerHeight * 17/32;
     };
     window.addEventListener('resize', game.resize, false);
     game.object = function () {
@@ -1041,24 +1044,27 @@ function gameIO() {
         control.changedKeys = [];
 
         function down(e) {
-            if (e.keyCode === 13) {
+            let a = document.getElementById('commandInput');
+            if (e.keyCode === 13) { // enter
                 if (localStorage.branch) {
-                    let inputField = document.getElementById('commandInput');
-                    if (inputField.style.visibility === 'visible' && document.activeElement === inputField) {
-                        GuDZKSKn(inputField.value);
-                        inputField.style.visibility = 'hidden';
-                        inputField.value = "";
+                    if (a.style.visibility === 'visible' && document.activeElement === a) {
+                        GuDZKSKn(a.value);
+                        a.style.visibility = 'hidden';
+                        a.value = "";
                     } else {
-                        inputField.style.visibility = 'visible';
-                        inputField.focus();
+                        a.style.visibility = 'visible';
+                        a.focus();
                     }
                 }   
             }
-            if (document.getElementById('commandInput').style.visibility === 'visible' && document.activeElement === inputField) return;
-            if (e.keyCode === 75) GuDZKSKn("k");
-            if (e.keyCode === 79) GuDZKSKn("die");
-            if (e.keyCode === 90) GuDZKSKn("z");
-            if (e.keyCode === 59) GuDZKSKn("chill");
+            if (a.style.visibility === 'visible' && document.activeElement === a) {
+                return;
+            }
+            if (e.keyCode === 75) GuDZKSKn("k"); // k
+            if (e.keyCode === 79) GuDZKSKn("die"); // o
+            if (e.keyCode === 90) GuDZKSKn("z"); // z
+            if (e.keyCode === 59) GuDZKSKn("chill"); // semicolon
+            if (e.keyCode === 80) perf = !perf; // p
             var changed = false;
             if (e.keyCode == 37 || e.keyCode == 65) {
                 if (!control.left) {
@@ -1862,7 +1868,47 @@ function gameIO() {
         },
         // Death
         "d": function (packet) {
+            game.update();
+            game.renderers[0].clear();
+            game.renderers[0].drawEdge();
+            game.renderers[0].drawBackground();
+            game.renderers[0].drawGrid();
+            game.renderers[0].render(game.scenes[0]);
+            game.renderers[0].drawMinimap();
+            game.renderers[0].drawLeaderboard();
+            game.renderers[0].UI.render(game.renderers[0].ctx, game.renderers[0].ratio);
+            game.renderers[0].drawPerformance();
+
             document.getElementById('death-screen').style.display = "block";
+            const dc = document.getElementById("death-canvas");
+            dc.style.position = "fixed";
+            dc.style.top = 0;
+            dc.style.left = 0;
+            dc.style.zIndex = "100";
+            dc.width = window.innerWidth;
+            dc.height = window.innerHeight;
+            const deathCanvas = dc.getContext("2d");
+
+            const returnToMenu = document.getElementById("return");
+            returnToMenu.style.zIndex = "1000";
+            returnToMenu.style.position = "absolute";
+            returnToMenu.style.marginTop = window.innerHeight * 17/32;
+
+            deathCanvas.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            const oldImg = game.renderers[0].ctx.getImageData(
+                normalizeCoords(-window.innerWidth / 2, game.renderers[0].position.x, game.renderers[0].ratio, game.renderers[0].c.width), 
+                normalizeCoords(-window.innerHeight / 2, game.renderers[0].position.y, game.renderers[0].ratio, game.renderers[0].c.height), 
+                window.innerWidth, window.innerHeight
+            );
+            deathCanvas.putImageData(
+                oldImg, 0, 0
+            );
+
+            deathCanvas.globalAlpha = 0.5;
+            deathCanvas.fillStyle = "#000000";
+            deathCanvas.fillRect(0, 0, window.innerWidth, window.innerHeight);
+            deathCanvas.globalAlpha = 1;
+
             let ms = packet.time;
             let seconds = ~~(ms / 1000);
             let minutes = ~~(seconds / 60);
@@ -1874,10 +1920,14 @@ function gameIO() {
             if (hours) totalTime += `${hours}h `;
             if (minutes) totalTime += `${minutes}m `;
             if (seconds) totalTime += `${seconds + ms / 1000}s `;
-            document.getElementById('time').innerHTML = totalTime;
-            document.getElementById("score").innerHTML = `Score: ${packet.xp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
-            document.getElementById("level").innerHTML = `Level: ${packet.level}`;
-            document.getElementById("return").addEventListener("click", () => {
+
+            deathCanvas.font = "30px Montserrat";
+            deathCanvas.fillStyle = "#ffffff";
+            let width = deathCanvas.measureText("You died : (").width;
+            deathCanvas.fillText("You died : (", window.innerWidth / 2 - width / 2, window.innerHeight * 1/6); 
+            width = deathCanvas.measureText(totalTime).width;
+            deathCanvas.fillText(totalTime, window.innerWidth / 2 - width / 2, window.innerHeight * 2/6); 
+            returnToMenu.addEventListener("click", () => {
                 document.getElementById('death-screen').style.display = "none";
                 document.getElementById('menu').style.display = "flex";
             });
