@@ -93,37 +93,36 @@ p {
     left: 0;
     right: 0;
     width: 100%;
-    top: 3px;
+    top: 0.5vh;
 }
 #logo {
-    width: 800px;
+    width: 30vw;
     height: auto;
 }
 
 #Menu {
     display: flex;
-    font-size: 4rem;
     text-align: center;
     color: aliceblue;
 }
 #playMenu {
-    font-size: 60px;
     text-align: center;
     height: 100px;
 }
 
 #nameInput {
+    margin-top: 25vh;
     text-indent: 10px;
     font-family: 'Montserrat', sans-serif;
-    font-size: 30px;
-    width: 220px;
-    height: 50px;
+    font-size: 1.5vw;
+    width: 12vw;
+    height: 6vh;
     font-weight: bold;
     color: white;
     background-color: #378056;
     border-color: #385243;
-    border-radius: 16px;
-    border-width: 3px;
+    border-radius: 1.2vw;
+    border-width: 0.2vw;
     border-style: solid;
 }
 #nameInput::placeholder {
@@ -133,47 +132,47 @@ p {
 #nameInput:focus {
     outline: none;
     border-color: white;
-    box-shadow: 0 0 10px white;
+    box-shadow: 0 0 1vw white;
 }
 
 #serverSelect {
     font-family: 'Montserrat', sans-serif;
-    margin-top: 15px;
-    width: 200px;
-    height: 40px;
-    font-size: 1rem;
+    margin-top: 1.5vh;
+    width: 10.5vw;
+    height: 4vh;
+    font-size: 0.8vw;
     color: white;
     font-weight: bold;
     background-color: #378056;
     border-color: #385243;
-    border-radius: 8px;
-    border-width: 3px;
+    border-radius: 0.4vw;
+    border-width: 0.2vw;
     border-style: solid;
 }
 #serverSelect:focus {
     outline: none;
     border-color: white;
-    box-shadow: 0 0 10px white;
+    box-shadow: 0 0 1vw white;
 }
 
 #playButton {
     font-family: 'Montserrat', sans-serif;
-    margin-top: 15px;
-    width: 160px;
-    height: 60px;
-    font-size: 30px;
+    margin-top: 1.5vh;
+    width: 8vw;
+    height: 6vh;
+    font-size: 1.5vw;
     font-weight: bold;
     color: white;
     background-color: #30AE68;
     border-color: #385243;
-    border-radius: 8px;
-    border-width: 3px;
+    border-radius: 0.4vw;
+    border-width: 0.2vw;
     border-style: solid;
 }
 #playButton:focus {
     outline: none;
     border-color: white;
-    box-shadow: 0 0 10px white;
+    box-shadow: 0 0 1vw white;
 }
 #playButton:hover {
     cursor: pointer;
