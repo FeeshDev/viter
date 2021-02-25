@@ -58,13 +58,30 @@ p {
 }
 
 #return {
-    width: 200px;
-    height: 60px;
-    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
     transform: translate(-50%, 0);
+    width: 8vw;
+    height: 5vw;
+    font-size: 1.5vw;
+    font-weight: bold;
+    color: white;
+    background-color: #30AE68;
+    border-color: #385243;
+    border-radius: 0.4vw;
+    border-width: 0.2vw;
+    border-style: solid;
+}
+#return:focus {
+    outline: none;
+    border-color: white;
+    box-shadow: 0 0 1vw white;
 }
 #return:hover {
     cursor: pointer;
+    opacity: 0.9;
+}
+#return:active {
+    opacity: 0.8;
 }
 
 #time, #return, #ded {
