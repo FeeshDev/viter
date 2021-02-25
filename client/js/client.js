@@ -7,7 +7,6 @@ function onSignIn(googleUser) {
 }
 
 window.onload = function () {
-
     //! Constants and vars
     var game = new gameIO();
     var renderer = new game.renderer();
