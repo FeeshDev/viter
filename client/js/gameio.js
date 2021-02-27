@@ -130,7 +130,8 @@ function gameIO() {
         pingArray: [],
         pingValues: [],
         fpsValues: [],
-        servers: []
+        servers: [],
+        totalTime: undefined
     };
     game.addServer = async function (ip, display, reg, customPort) {
         let serverSelector = document.getElementById('serverSelect');
@@ -357,6 +358,7 @@ function gameIO() {
             ratio: 1,
             qualitySize: 1,
             smoothingEnabled: true,
+            onDeathScreen: false,
             UI: {
                 buttons: {
                     tankButton: [],
@@ -582,6 +584,45 @@ function gameIO() {
             game.renderers[0].UI.getLabelById("level").anchors.y = Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1);
             game.renderers[0].UI.getLabelById("level_behind").anchors.y = Math.max(1 + 0.5 - (window.innerHeight / 722 * 0.5), 1);
         }
+
+        if (game.renderers[0].onDeathScreen) {
+            game.update();
+            game.renderers[0].clear();
+            game.renderers[0].drawEdge();
+            game.renderers[0].drawBackground();
+            game.renderers[0].drawGrid();
+            game.renderers[0].render(game.scenes[0]);
+            game.renderers[0].drawMinimap();
+            game.renderers[0].drawLeaderboard();
+            game.renderers[0].UI.render(game.renderers[0].ctx, game.renderers[0].ratio);
+            game.renderers[0].drawPerformance();
+
+            const dc = document.getElementById("death-canvas");
+            dc.width = window.innerWidth;
+            dc.height = window.innerHeight;
+            const deathCanvas = dc.getContext("2d");
+
+            deathCanvas.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            const oldImg = game.renderers[0].ctx.getImageData(
+                normalizeCoords(-window.innerWidth / 2, game.renderers[0].position.x, game.renderers[0].ratio, game.renderers[0].c.width), 
+                normalizeCoords(-window.innerHeight / 2, game.renderers[0].position.y, game.renderers[0].ratio, game.renderers[0].c.height), 
+                window.innerWidth, window.innerHeight
+            );
+            deathCanvas.putImageData(oldImg, 0, 0);
+
+            deathCanvas.globalAlpha = 0.5;
+            deathCanvas.fillStyle = "#000000";
+            deathCanvas.fillRect(0, 0, window.innerWidth, window.innerHeight);
+            deathCanvas.globalAlpha = 1;
+
+            deathCanvas.font = "30px Montserrat";
+            deathCanvas.fillStyle = "#ffffff";
+            let width = deathCanvas.measureText("You died : (").width;
+            deathCanvas.fillText("You died : (", window.innerWidth / 2 - width / 2, window.innerHeight * 1/6); 
+            width = deathCanvas.measureText(game.totalTime).width;
+            deathCanvas.fillText(game.totalTime, window.innerWidth / 2 - width / 2, window.innerHeight * 2/6); 
+        }
+
         var renderSize = 1;
         game.renderers.forEach(function (renderer) {
             renderSize = renderer.qualitySize;
@@ -1879,6 +1920,8 @@ function gameIO() {
             game.renderers[0].UI.render(game.renderers[0].ctx, game.renderers[0].ratio);
             game.renderers[0].drawPerformance();
 
+            game.renderers[0].onDeathScreen = true;
+
             document.getElementById('death-screen').style.display = "block";
             const dc = document.getElementById("death-canvas");
             dc.style.position = "fixed";
@@ -1900,9 +1943,7 @@ function gameIO() {
                 normalizeCoords(-window.innerHeight / 2, game.renderers[0].position.y, game.renderers[0].ratio, game.renderers[0].c.height), 
                 window.innerWidth, window.innerHeight
             );
-            deathCanvas.putImageData(
-                oldImg, 0, 0
-            );
+            deathCanvas.putImageData(oldImg, 0, 0);
 
             deathCanvas.globalAlpha = 0.5;
             deathCanvas.fillStyle = "#000000";
@@ -1919,7 +1960,8 @@ function gameIO() {
             let totalTime = "Time alive: ";
             if (hours) totalTime += `${hours}h `;
             if (minutes) totalTime += `${minutes}m `;
-            if (seconds) totalTime += `${seconds + ms / 1000}s `;
+            if (seconds) totalTime += `${seconds}s `;
+            if (ms) totalTime += `${ms}ms `;
 
             deathCanvas.font = "30px Montserrat";
             deathCanvas.fillStyle = "#ffffff";
@@ -1927,9 +1969,11 @@ function gameIO() {
             deathCanvas.fillText("You died : (", window.innerWidth / 2 - width / 2, window.innerHeight * 1/6); 
             width = deathCanvas.measureText(totalTime).width;
             deathCanvas.fillText(totalTime, window.innerWidth / 2 - width / 2, window.innerHeight * 2/6); 
+            game.totalTime = totalTime;
             returnToMenu.addEventListener("click", () => {
                 document.getElementById('death-screen').style.display = "none";
                 document.getElementById('menu').style.display = "flex";
+                game.renderers[0].onDeathScreen = false;
             });
         },
         // Clear and update turrets
