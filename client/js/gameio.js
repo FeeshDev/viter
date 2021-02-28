@@ -1743,7 +1743,6 @@ function gameIO() {
                     turret.rotation = obj.new.mouseAngle + turret.offsetAngle;
                 });
             }
-
             game.objects.push(obj);
             return;
         },
@@ -1960,8 +1959,7 @@ function gameIO() {
             let totalTime = "Time alive: ";
             if (hours) totalTime += `${hours}h `;
             if (minutes) totalTime += `${minutes}m `;
-            if (seconds) totalTime += `${seconds}s `;
-            if (ms) totalTime += `${ms}ms `;
+            totalTime += `${seconds}.${('000' + ms).slice(-3)}s`;
 
             deathCanvas.font = "30px Montserrat";
             deathCanvas.fillStyle = "#ffffff";
