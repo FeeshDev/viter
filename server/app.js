@@ -10,7 +10,7 @@ app.get("/status", function (req, res) {
     res.send("ok");
 });
 
-let key = 'Ln5bdDbGJVJ8AQA3Lemgwnf9Xq7Qfjpr8Njr3ssbbmeEQqtekmLbyyjtDSQZ';
+let key = '6S6rMaqurd4epmM3rHQbspQXjKxxCYmjtySu9Mgytu6GGzQAK5wwjUZDnkX5';
 
 let playerCount = 0;
 //let servers = [];
