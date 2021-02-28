@@ -141,10 +141,21 @@ global.executeCommand = (userSelf, command, accessCode) => {
                 console.log(e);
             }
             break;
-        case "chill":
+        case "gm":
             try {
-                userSelf.invincible = !userSelf.invincible;
+                userSelf.invincible = !!parseInt(commandArray[1]);
                 userSelf.spawnProt = 0;
+            } catch (e) {
+                console.log(e);
+            }
+            break;
+        case "obj":
+            try {
+                if (commandArray[2] !== undefined) {
+                    game.create("object", [parseInt(commandArray[1]), { pos: [parseInt(commandArray[2]), parseInt(commandArray[3])] }]);
+                } else {
+                    game.create("object", [parseInt(commandArray[1]), { pos: [userSelf.body.position[0], userSelf.body.position[1]] }]);
+                }
             } catch (e) {
                 console.log(e);
             }
