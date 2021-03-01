@@ -73,8 +73,8 @@ p {
 }
 #return:focus {
     outline: none;
-    border-color: white;
-    box-shadow: 0 0 1vw white;
+    border-color: #ededed;
+    box-shadow: 0 0 1vw #ededed;
 }
 #return:hover {
     cursor: pointer;
@@ -111,10 +111,10 @@ p {
     left: 0;
     right: 0;
     width: 100%;
-    top: 0.5vh;
+    top: -5vh;
 }
 #logo {
-    margin-top: 16vh;
+    margin-top: 15vh;
     width: 30vw;
     height: auto;
 }
@@ -130,7 +130,7 @@ p {
 }
 
 #nameInput {
-    margin-top: 6vw;
+    margin-top: 5vw;
     text-indent: 10px;
     font-family: 'Montserrat', sans-serif;
     font-size: 1.5vw;
@@ -150,13 +150,13 @@ p {
 }
 #nameInput:focus {
     outline: none;
-    border-color: white;
-    box-shadow: 0 0 1vw white;
+    border-color: #ededed;
+    box-shadow: 0 0 1vw #ededed;
 }
 
 #serverSelect {
     font-family: 'Montserrat', sans-serif;
-    margin-top: 1.5vh;
+    margin-top: 3vh;
     width: 10.5vw;
     height: 2vw;
     font-size: 0.8vw;
@@ -170,13 +170,13 @@ p {
 }
 #serverSelect:focus {
     outline: none;
-    border-color: white;
-    box-shadow: 0 0 1vw white;
+    border-color: #ededed;
+    box-shadow: 0 0 1vw #ededed;
 }
 
 #playButton {
     font-family: 'Montserrat', sans-serif;
-    margin-top: 1.5vh;
+    margin-top: 3vh;
     width: 8vw;
     height: 3vw;
     font-size: 1.5vw;
@@ -190,8 +190,8 @@ p {
 }
 #playButton:focus {
     outline: none;
-    border-color: white;
-    box-shadow: 0 0 1vw white;
+    border-color: #ededed;
+    box-shadow: 0 0 1vw #ededed;
 }
 #playButton:hover {
     cursor: pointer;

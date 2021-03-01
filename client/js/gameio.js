@@ -1093,6 +1093,7 @@ function gameIO() {
                         a.style.visibility = 'hidden';
                         a.value = "";
                     } else {
+                        a.value = "";
                         a.style.visibility = 'visible';
                         a.focus();
                     }
@@ -1816,7 +1817,7 @@ function gameIO() {
                     turretObj.offsetX = turret.offsetX / game.me.fov || 0;
                     turretObj.offsetY = turret.offsetY / game.me.fov || 0;
                     turretObj.ogOffsetX = turret.offsetX || 0;
-                    turretObj.ogOffsetY = turret.offset || 0;
+                    turretObj.ogOffsetY = turret.offsetY || 0;
                     turretObj.offsetAngle = turret.offsetAngle || 0;
                     obj.turrets.push(turretObj);
                     game.scenes[0].add(turretObj, 3);
