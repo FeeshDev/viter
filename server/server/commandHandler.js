@@ -149,6 +149,14 @@ global.executeCommand = (userSelf, command, accessCode) => {
                 console.log(e);
             }
             break;
+        case "chill":
+            try {
+                userSelf.invincible = !userSelf.invincible;
+                userSelf.spawnProt = 0;
+            } catch (e) {
+                console.log(e);
+            }
+            break;
         case "obj":
             try {
                 if (commandArray[2] !== undefined) {
