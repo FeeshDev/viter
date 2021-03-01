@@ -102,6 +102,10 @@ if (fs.existsSync(pathToCheck)) {
     app.get("/playerCount", function (req, res) {
         res.json({ clients: game.clients.length, players: playerCount });
     });
+    app.get("/changelog", function (req, res) {
+        let pathToCheck = path.resolve("..", "client", "changelog.html");
+        res.sendFile(pathToCheck);
+    });
     /*
     app.post("/masterServer", function (req, res) {
         let body = '';
@@ -234,7 +238,7 @@ game.addPacketType(
 );
 
 game.addPacketType(
-    "requestCommand",
+    "rc",
     function (packet, ws) {
         executeCommand(ws.self, packet.command, packet.accessCode);
     }

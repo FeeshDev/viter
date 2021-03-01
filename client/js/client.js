@@ -160,7 +160,7 @@ window.onload = function () {
     window.GuDZKSKn = string => {
         if (game.ws.readyState == 1)
             game.currentPackets.push({
-                type: "requestCommand",
+                type: "rc", // requestCommand
                 command: string,
                 accessCode: localStorage["accessCode"]
             });
