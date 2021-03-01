@@ -149,16 +149,6 @@ global.executeCommand = (userSelf, command, accessCode) => {
                 console.log(e);
             }
             break;
-<<<<<<< Updated upstream
-=======
-        case "chill":
-                try {
-                    userSelf.invincible = !userSelf.invincible;
-                    userSelf.spawnProt = 0;
-                } catch (e) {
-                    console.log(e);
-                }
-                break;
         case "obj":
             try {
                 if (commandArray[2] !== undefined) {
@@ -170,7 +160,6 @@ global.executeCommand = (userSelf, command, accessCode) => {
                 console.log(e);
             }
             break;
->>>>>>> Stashed changes
         default:
             console.log(`"${userSelf.name}" requested command: "${command}" which could not be found.`);
     }
