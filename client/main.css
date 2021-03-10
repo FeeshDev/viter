@@ -270,24 +270,17 @@ p {
     right: 0.7vw;
 }
 
-/* width */
 ::-webkit-scrollbar {
     width: 10px;
 }
-  
-  /* Track */
 ::-webkit-scrollbar-track {
     background: #068f4b;
     border-radius: 0.4vw;
 }
-  
-  /* Handle */
 ::-webkit-scrollbar-thumb {
     background: #30AE68;
     border-radius: 0.4vw;
 }
-  
-  /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #36c275;
     border-radius: 0.4vw;
