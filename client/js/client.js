@@ -7,6 +7,8 @@ window.onload = function () {
     var controls = new game.keyboard();
     var mouse = new game.mouse();
 
+    if (localStorage["lastUsedName"]) document.getElementById("nameInput").value = localStorage["lastUsedName"];
+
     window.onbeforeunload = () => { return "Are you sure you want to leave this page?" };
 
     if (window.location.hostname === 'localhost') game.addServer("localhost", "LOCAL", 'TESTREGION');
@@ -258,6 +260,7 @@ window.onload = function () {
     }
 
     playGame = () => {
+        localStorage["lastUsedName"] = document.getElementById('nameInput').value;
         if (game.ws.readyState == 1)
             game.currentPackets.push({
                 type: "playPacket",
