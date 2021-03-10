@@ -223,45 +223,72 @@ p {
 #changelog {
     font-family: 'Montserrat', sans-serif;
     position: fixed;
-    height: 300px;
-    width: 250px;
-    bottom: 3vw;
+    height: 400px;
+    width: 280px;
+    bottom: 2vw;
     right: 0.5vw;
     background-color: #068f4b;
     overflow-x: hidden;
     overflow-y: scroll;
     text-align: center;
-}
 
+    border-color: #385243;
+    border-radius: 0.4vw;
+    border-width: 0.2vw;
+    border-style: solid;
+
+    opacity: 0.8;
+}
 #changelog-p {
     margin-top: 23px;
     color: #ffffff;
     font: 30px Montserrat;
 }
-
 .update {
     margin-left: auto;
     margin-right: auto;
     margin-top: -15px;
     color: #ffffff;
-    font: 20px Montserrat;
+    font: 16px Montserrat;
     width: 250px;
     word-wrap: break-word;
+    font-weight: bold;
 }
-
 .log {
     width: 200px;
     margin-left: auto;
     margin-right: auto;
     word-wrap: break-word;
     color: #ffffff;
-    font: 15px Montserrat;
+    font: 14px Montserrat;
 }
-
 #changelog-link {
     font: 20px Montserrat;
     color: #ffffff;
     position: fixed;
     bottom: -0.5vw;
     right: 0.7vw;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+  /* Track */
+::-webkit-scrollbar-track {
+    background: #068f4b;
+    border-radius: 0.4vw;
+}
+  
+  /* Handle */
+::-webkit-scrollbar-thumb {
+    background: #30AE68;
+    border-radius: 0.4vw;
+}
+  
+  /* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #36c275;
+    border-radius: 0.4vw;
 }
