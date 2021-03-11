@@ -24,22 +24,6 @@ p {
     font-size: 40px;
 }
 
-#settings {
-    position: absolute;
-    width: 200px;
-    height: 100px;
-    background-color: #dbdbdb;
-    bottom: 10px;
-    left: 10px;
-    border-radius: 10px;
-    color: #404040;
-}
-
-#settings-text {
-    font-size: 20px;
-    margin-top: 13px;
-}
-
 #death-screen {
     display: none;
     font-size: 4rem;
@@ -139,10 +123,8 @@ p {
     font-weight: bold;
     color: white;
     background-color: #378056;
-    border-color: #385243;
+
     border-radius: 1.2vw;
-    border-width: 0.2vw;
-    border-style: solid;
 }
 #nameInput::placeholder {
     font-weight: bold;
@@ -154,19 +136,25 @@ p {
     box-shadow: 0 0 1vw #ededed;
 }
 
+#settings {
+    margin-top: 2vh;
+    width: 6vw;
+    height: 2vw;
+
+    background-color: #30AE68;
+    font-size: 1vw;
+    color: white;
+}
+
 #serverSelect {
     font-family: 'Montserrat', sans-serif;
-    margin-top: 3vh;
+    margin-top: 2vh;
     width: 10.5vw;
     height: 2vw;
     font-size: 0.8vw;
     color: white;
     font-weight: bold;
     background-color: #378056;
-    border-color: #385243;
-    border-radius: 0.4vw;
-    border-width: 0.2vw;
-    border-style: solid;
 }
 #serverSelect:focus {
     outline: none;
@@ -176,17 +164,13 @@ p {
 
 #playButton {
     font-family: 'Montserrat', sans-serif;
-    margin-top: 3vh;
+    margin-top: 2vh;
     width: 8vw;
     height: 3vw;
     font-size: 1.5vw;
     font-weight: bold;
     color: white;
     background-color: #30AE68;
-    border-color: #385243;
-    border-radius: 0.4vw;
-    border-width: 0.2vw;
-    border-style: solid;
 }
 #playButton:focus {
     outline: none;
@@ -199,6 +183,12 @@ p {
 }
 #playButton:active {
     opacity: 0.8;
+}
+.defaultBorder {
+    border-color: #385243;
+    border-radius: 0.4vw;
+    border-width: 0.2vw;
+    border-style: solid;
 }
 
 #gameArea {
