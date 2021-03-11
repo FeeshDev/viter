@@ -225,8 +225,8 @@ p {
     position: fixed;
     height: 400px;
     width: 280px;
-    bottom: 2vw;
-    right: 0.5vw;
+    bottom: 1vw;
+    right: 1vw;
     background-color: #068f4b;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -261,13 +261,6 @@ p {
     word-wrap: break-word;
     color: #ffffff;
     font: 14px Montserrat;
-}
-#changelog-link {
-    font: 20px Montserrat;
-    color: #ffffff;
-    position: fixed;
-    bottom: -0.5vw;
-    right: 0.7vw;
 }
 
 ::-webkit-scrollbar {
