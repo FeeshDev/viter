@@ -39,7 +39,8 @@
             <select id="serverSelect" class="defaultBorder">
             </select><br>
             <button id="playButton" class="customBtn defaultBorder">Play</button><br>
-            <button class="customBtn defaultBorder" id="settings">Settings</button><br>
+            <button onclick="document.getElementById('settingsDiv').style.visibility = 'visible'"
+                class="customBtn defaultBorder" id="settings">Settings</button><br>
         </div>
         <p id="playerCount">0 players shooting.</p>
         <img id="discord" src="./client/images/menu/discord.png" onclick="window.open('https://discord.gg/hkUpzpyFDT')">
@@ -58,11 +59,16 @@
                 <br><br>
             </div>
         </div>
+        <div id="settingsDiv" class="defaultBorder">
+            <button onclick="document.getElementById('settingsDiv').style.visibility = 'hidden'" id="closeButton"
+                class="customBtn defaultBorder">×</button>
+            <h2>Setting</h2>
+        </div>
     </div>
     <div id="death-screen">
         <div id="death-menu">
             <canvas id="death-canvas"></canvas>
-            <button id="return">Return to Menu</button>
+            <button id="return" class="customBtn defaultBorder">Return to Menu</button>
         </div>
     </div>
 </body>

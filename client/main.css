@@ -40,7 +40,6 @@ p {
     top: 16vh;
     font-family: 'Montserrat', sans-serif;
 }
-
 #return {
     font-family: 'Montserrat', sans-serif;
     transform: translate(-50%, 0);
@@ -50,24 +49,7 @@ p {
     font-weight: bold;
     color: white;
     background-color: #30AE68;
-    border-color: #385243;
-    border-radius: 0.4vw;
-    border-width: 0.2vw;
-    border-style: solid;
 }
-#return:focus {
-    outline: none;
-    border-color: #ededed;
-    box-shadow: 0 0 1vw #ededed;
-}
-#return:hover {
-    cursor: pointer;
-    opacity: 0.9;
-}
-#return:active {
-    opacity: 0.8;
-}
-
 #time, #return, #ded {
     font-family: 'Montserrat', sans-serif;
 }
@@ -83,6 +65,7 @@ p {
 }
 
 #playerCount {
+    color: white;
     position: absolute;
     top: 0px;
     left: 1vw;
@@ -98,23 +81,18 @@ p {
     top: -5vh;
 }
 #logo {
-    margin-top: 15vh;
+    margin-top: 20vh;
     width: 30vw;
     height: auto;
 }
 
-#Menu {
-    display: flex;
-    text-align: center;
-    color: aliceblue;
-}
 #playMenu {
     text-align: center;
     height: 100px;
 }
 
 #nameInput {
-    margin-top: 5vw;
+    margin-top: 2vw;
     text-indent: 10px;
     font-family: 'Montserrat', sans-serif;
     font-size: 1.5vw;
@@ -145,6 +123,35 @@ p {
     font-size: 1vw;
     color: white;
 }
+#settingsDiv {
+    visibility: hidden;
+    position: absolute;
+    width: 20vw;
+    height: 20vw;
+    left: 40%;
+
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+
+    background-color: rgba(47,126,82,0.6);
+    border-color: rgba(50,99,71,0.6);
+
+    font-size: 1vw;
+    color: white;
+}
+#closeButton {
+    text-align: center;
+    width: 2.4vw;
+    height: 2.4vw;
+    font-size: 1.8vw;
+    background-color: #30AE68;
+    font-weight: bold;
+    color: white;
+}
+#settingsDiv h2 {
+    margin-left: 20px;
+}
 
 #serverSelect {
     font-family: 'Montserrat', sans-serif;
@@ -172,18 +179,20 @@ p {
     color: white;
     background-color: #30AE68;
 }
-#playButton:focus {
+
+.customBtn:focus {
     outline: none;
     border-color: #ededed;
     box-shadow: 0 0 1vw #ededed;
 }
-#playButton:hover {
+.customBtn:hover {
     cursor: pointer;
     opacity: 0.9;
 }
-#playButton:active {
+.customBtn:active {
     opacity: 0.8;
 }
+
 .defaultBorder {
     border-color: #385243;
     border-radius: 0.4vw;
