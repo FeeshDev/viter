@@ -142,7 +142,7 @@ function gameIO() {
         let port = customPort || (reg === 'TESTREGION' ? '80' : '443');
         this.servers.push(`${wsprotocol}:${ip}:${port}/ws`);
 
-        if (serverSelector.getElementsByTagName('optgroup').length === 0) {
+        if (this.servers.length === 0) {
             let optgroup = document.createElement('optgroup');
             optgroup.label = reg;
             let option = document.createElement('option');
@@ -604,8 +604,8 @@ function gameIO() {
 
             deathCanvas.clearRect(0, 0, window.innerWidth, window.innerHeight);
             const oldImg = game.renderers[0].ctx.getImageData(
-                normalizeCoords(-window.innerWidth / 2, game.renderers[0].position.x, game.renderers[0].ratio, game.renderers[0].c.width), 
-                normalizeCoords(-window.innerHeight / 2, game.renderers[0].position.y, game.renderers[0].ratio, game.renderers[0].c.height), 
+                normalizeCoords(-window.innerWidth / 2, game.renderers[0].position.x, game.renderers[0].ratio, game.renderers[0].c.width),
+                normalizeCoords(-window.innerHeight / 2, game.renderers[0].position.y, game.renderers[0].ratio, game.renderers[0].c.height),
                 window.innerWidth, window.innerHeight
             );
             deathCanvas.putImageData(oldImg, 0, 0);
@@ -618,9 +618,9 @@ function gameIO() {
             deathCanvas.font = "30px Montserrat";
             deathCanvas.fillStyle = "#ffffff";
             let width = deathCanvas.measureText("You died : (").width;
-            deathCanvas.fillText("You died : (", window.innerWidth / 2 - width / 2, window.innerHeight * 1/6); 
+            deathCanvas.fillText("You died : (", window.innerWidth / 2 - width / 2, window.innerHeight * 1 / 6);
             width = deathCanvas.measureText(game.totalTime).width;
-            deathCanvas.fillText(game.totalTime, window.innerWidth / 2 - width / 2, window.innerHeight * 2/6); 
+            deathCanvas.fillText(game.totalTime, window.innerWidth / 2 - width / 2, window.innerHeight * 2 / 6);
         }
 
         var renderSize = 1;
@@ -656,7 +656,7 @@ function gameIO() {
             renderer.ratio *= renderSize;
             renderer.ctx.imageSmoothingEnabled = renderer.smoothingEnabled;
         });
-        document.getElementById("return").style.marginTop = window.innerHeight * 17/32;
+        document.getElementById("return").style.marginTop = window.innerHeight * 17 / 32;
     };
     window.addEventListener('resize', game.resize, false);
     game.object = function () {
@@ -1097,7 +1097,7 @@ function gameIO() {
                         a.style.visibility = 'visible';
                         a.focus();
                     }
-                }   
+                }
             }
             if (a.style.visibility === 'visible' && document.activeElement === a) {
                 return;
@@ -1935,12 +1935,12 @@ function gameIO() {
             const returnToMenu = document.getElementById("return");
             returnToMenu.style.zIndex = "1000";
             returnToMenu.style.position = "absolute";
-            returnToMenu.style.marginTop = window.innerHeight * 17/32;
+            returnToMenu.style.marginTop = window.innerHeight * 17 / 32;
 
             deathCanvas.clearRect(0, 0, window.innerWidth, window.innerHeight);
             const oldImg = game.renderers[0].ctx.getImageData(
-                normalizeCoords(-window.innerWidth / 2, game.renderers[0].position.x, game.renderers[0].ratio, game.renderers[0].c.width), 
-                normalizeCoords(-window.innerHeight / 2, game.renderers[0].position.y, game.renderers[0].ratio, game.renderers[0].c.height), 
+                normalizeCoords(-window.innerWidth / 2, game.renderers[0].position.x, game.renderers[0].ratio, game.renderers[0].c.width),
+                normalizeCoords(-window.innerHeight / 2, game.renderers[0].position.y, game.renderers[0].ratio, game.renderers[0].c.height),
                 window.innerWidth, window.innerHeight
             );
             deathCanvas.putImageData(oldImg, 0, 0);
@@ -1965,9 +1965,9 @@ function gameIO() {
             deathCanvas.font = "30px Montserrat";
             deathCanvas.fillStyle = "#ffffff";
             let width = deathCanvas.measureText("You died : (").width;
-            deathCanvas.fillText("You died : (", window.innerWidth / 2 - width / 2, window.innerHeight * 1/6); 
+            deathCanvas.fillText("You died : (", window.innerWidth / 2 - width / 2, window.innerHeight * 1 / 6);
             width = deathCanvas.measureText(totalTime).width;
-            deathCanvas.fillText(totalTime, window.innerWidth / 2 - width / 2, window.innerHeight * 2/6); 
+            deathCanvas.fillText(totalTime, window.innerWidth / 2 - width / 2, window.innerHeight * 2 / 6);
             game.totalTime = totalTime;
             returnToMenu.addEventListener("click", () => {
                 document.getElementById('death-screen').style.display = "none";
