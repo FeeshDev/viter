@@ -3,13 +3,14 @@
 viter.io is an abandonned .io game, created by Alez and Garklein.
 We have decided to make all the code public, because we think that others might find it interesting (there aren't many public code .io games).  
 viter.io is made with:  
-*![node.js](https://nodejs.org/)
-*![Game.IO](https://github.com/PineappleGD/GameIO)
-*![Express](https://expressjs.com/)
-*![msgpack-lite](https://www.npmjs.com/package/msgpack-lite)  
+* ![node.js](https://nodejs.org/)
+* ![Game.IO](https://github.com/PineappleGD/GameIO)
+* ![Express](https://expressjs.com/)
+* ![msgpack-lite](https://www.npmjs.com/package/msgpack-lite)  
 and various other minor libraries.
 
 ## how to run
+make sure you have the latest version of node.js installed first (see link above)
 1. clone the repository
 2. cd to the folder root
 3. cd server
