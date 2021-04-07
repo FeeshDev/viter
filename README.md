@@ -1,5 +1,23 @@
 # viter.io docs
 
+viter.io is an abandonned .io game, created by Alez and Garklein.
+We have decided to make all the code public, because we think that others might find it interesting (there aren't many public code .io games).  
+viter.io is made with:  
+*![node.js](https://nodejs.org/)
+*![Game.IO](https://github.com/PineappleGD/GameIO)
+*![Express](https://expressjs.com/)
+*![msgpack-lite](https://www.npmjs.com/package/msgpack-lite)  
+and various other minor libraries.
+
+## how to run
+1. clone the repository
+2. cd to the folder root
+3. cd server
+4. run `node app`
+5. the game is now running on http://localhost:80
+6. this brings you to index2.html
+7. to try the game, go to http://localhost:80/6S6rMaqurd4epmM3rHQbspQXjKxxCYmjtySu9Mgytu6GGzQAK5wwjUZDnkX5
+
 ## files
 
 ### ![server](/server)
@@ -54,7 +72,7 @@ The changelog HTML page.
 The ![index.html](/client/index.html) css file.
 
 ![client/msgpack.js](/client/msgpack.js)
-idk
+Used for encoding ws messages.
 
 
 #### ![client/images](/client/images)
