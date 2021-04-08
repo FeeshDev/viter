@@ -284,31 +284,17 @@ game.addType(
         obj.startXp = extra.startXp || 0;
 
         switch (obj.devID) {
-            case "3CkhWrJQeR3svJHs8VXz": //! Alez
+            case "code1": //! Alez
                 obj.name = "> Alez - Developer <";
                 obj.devMode = 69420;
                 break;
-            case "TUnSbTafPZgu7yfckH3m": //* Gark
+            case "code2": //* Gark
                 obj.name = "> Garklein - Developer <";
                 obj.devMode = 69421;
                 break;
-            case "pSUsRQ2xEwWnCve5-Sam": // Sample
-                //obj.name = "";
-                obj.devMode = 1;
-                break;
-            case "KMKrvNLQrbGFREsgmUqDEqaNcpuSJBpPmXyGtnJr": // Default Tester Code
+            case "default_code": // Default Tester Code
                 //obj.name = "";
                 obj.devMode = 10001;
-                break;
-            /*
-            case "pSUsRQ2xEwWnCve5-Shlaq": // Shlaq
-                //obj.name = "";
-                obj.devMode = 10002;
-                break;
-                */
-            case "pSUsRQ2xEwWnCve5-Pig": // Nation
-                //obj.name = "";
-                obj.devMode = 3;
                 break;
         }
 
