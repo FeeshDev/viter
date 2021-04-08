@@ -17,7 +17,7 @@ make sure you have the latest version of node.js installed first (see link above
 4. run `node app`
 5. the game is now running on http://localhost:80
 6. this brings you to index2.html
-7. to try the game, go to http://localhost:80/6S6rMaqurd4epmM3rHQbspQXjKxxCYmjtySu9Mgytu6GGzQAK5wwjUZDnkX5
+7. to try the game, go to http://localhost:80/play
 
 ## files
 
