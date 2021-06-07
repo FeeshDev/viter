@@ -87,3 +87,7 @@ JavaScript file written by us. gameio.js setup, and main loop. Handles Also hand
 
 ![client/js/gameio.js](/client/js/gameio.js)
 File initially taken from the gameio library. Handles game rendering, user input, game state array (all players/objects/etc you can see), and most client packet handling.
+
+
+### NB
+You can do a lot of funky stuff by sending invalid packets. There should be better checking there, but we never got around to it.
